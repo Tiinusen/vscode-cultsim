@@ -1,0 +1,287 @@
+/*
+ * General
+ */
+
+body {
+	justify-content: center;
+	align-items: center;
+	margin: 1em 2em;
+	font-family: Lato, Verdana, Arial, sans-serif;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	margin: 0px;
+	padding: 0px;
+}
+
+#board {
+	width: 100%;
+	height: 99%;
+	background-color: var(--vscode-editor-background);
+}
+
+/*
+ * HUD
+ */
+.hud[hide] {
+	display: none;
+}
+
+/*
+ * Board Widget (base)
+ */
+
+.board-widget {
+	position: absolute !important;
+}
+
+.board-widget>.frame {
+	background-color: #111122;
+	border: thick solid black;
+}
+
+.board-widget h1, input {
+	font-size: 20px;
+}
+
+.board-widget input, .board-widget textarea {
+	background-color: transparent;
+}
+
+.board-widget input {
+	border-bottom: thin solid #FFFFFF;
+	bottom: auto;
+	margin-top: 10px;
+}
+
+.board-widget .icon {
+	border: 2px solid black;
+	border-radius: 12px;
+	position: absolute;
+	top: -52px;
+	left: -52px;
+	cursor: pointer;
+}
+
+.board-widget[open] .icon {
+	top: -20px;
+	left: -20px;
+}
+
+.board-widget .header {
+	height: 80px;
+	padding-left: 90px;
+	padding-right: 20px;
+}
+
+.board-widget .header input[name="label"] {
+	float: left;
+	width: 90%;
+}
+
+.board-widget .header i[close] {
+	position: relative;
+	float: right;
+	font-size: 35px;
+	top: 5px;
+	left: 5px;
+	cursor: pointer;
+
+}
+
+.board-widget .header i[close]:hover {
+	color: #fffd92
+}
+
+.board-widget .footer {
+	background-color: #111122;
+	vertical-align: bottom;
+	height: 40px;
+	padding: 5px;
+}
+
+.board-widget button, .hud button {
+	background-color: #84866b;
+	width: auto;
+	border-radius: 15px;
+	float: right;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 6px;
+	padding-bottom: 4px;
+	font-size: 15px;
+	font-weight: bold;
+	color: #111111;
+	margin-left: 10px;
+}
+
+/*
+ * Select Content Type Widget
+ */
+
+.select-content-type-widget {
+	position: relative;
+	width: 660px !important;
+	height: 200px !important;
+	top: -150px;
+	left: -330px;
+}
+
+.select-content-type-widget .icon {
+	top: -30px;
+	left: -30px;
+	cursor: default;
+}
+
+/*
+ * Synopsis Widget
+ */
+
+.synopsis-widget {
+	position: relative;
+	width: 550px !important;
+	height: 300px !important;
+	top: -150px;
+	left: -275px;
+}
+
+.synopsis-widget .icon {
+	top: -20px;
+	left: -20px;
+	cursor: default;
+}
+
+.synopsis-widget .header {
+	height: 50px;
+}
+
+.synopsis-widget .content {
+	height: 225px;
+	background-color: #202041;
+	padding-top: 25px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.synopsis-widget input[name="version"] {
+	display: inline;
+	width: 160px;
+	clear: none;
+}
+
+.synopsis-widget .version button {
+	display: inline-block;
+	float: none;
+	margin-left: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+/*
+ * Verb Widget
+ */
+
+.verb-widget[open] {
+	width: 550px !important;
+	height: 300px !important;
+	position: relative;
+	top: -150px;
+	left: -275px;
+}
+
+.verb-widget .box {
+	position: relative;
+	top: -68px;
+	left: -68px;
+	width: 140px;
+	height: 140px;
+	border: 39px groove #09626a;
+}
+
+.verb-widget[open] .box {
+	display: none;
+}
+
+.verb-widget:not([open]) .frame {
+	display: none;
+}
+
+.verb-widget[large] {
+	width: 625px !important;
+}
+
+.verb-widget .header {
+	height: 50px;
+}
+
+.verb-widget .content {
+	height: 225px;
+	background-color: #202041;
+	padding-top: 25px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.verb-widget textarea {
+	resize: none;
+	background-color: #0f0f27;
+	font-size: 16px;
+	padding: 10px;
+	height: 160px;
+	width: 270px;
+	border-radius: 12px;
+}
+
+/*
+ * Slot Widget
+ */
+
+.board-widget .slots {
+	vertical-align: top;
+}
+
+.board-widget .slot {
+	float: left;
+	margin-top: 15px;
+	margin-left: 15px;
+	height: 90px;
+	width: 60px;
+	border: 3px solid #002147;
+	border-radius: 5px;
+	background-color: #0a0a1b;
+}
+
+.board-widget .slot:hover {
+	background-color: #10102e;
+	cursor: pointer;
+}
+
+.board-widget .slot input {
+	font-size: 12px;
+	border: none;
+}
+
+.board-widget .slot input[name="label"] {
+	position: relative;
+	top: -34px;
+	font-size: 12px;
+	text-align: center;
+}
+
+.board-widget .slot:not([open]) .panel {
+	display: none;
+}
+
+.board-widget .slot[open] .panel {
+	position: relative;
+	top: -100px;
+	left: -75px;
+	width: 200px;
+	height: 200px;
+	border: 3px solid #002147;
+	background-color: #111122;
+	padding: 10px;
+}

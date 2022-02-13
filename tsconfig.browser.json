@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES2019",
+		"lib": [
+			"es2019",
+            "DOM"
+		],
+		"typeRoots": [
+			"src/typings",
+			"node_modules/@types"
+		],
+		"outDir": "out",
+		"sourceMap": true,
+		"rootDir": "src"
+	},
+	"exclude": [
+		"node_modules",
+		".vscode-test",
+		"temp/fa"
+	]
+}
