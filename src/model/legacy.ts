@@ -20,7 +20,7 @@ interface ILegacySerialized {
 /**
  * 
  */
-export class Legacy extends Entity implements ILegacySerialized {
+export class Legacy extends Entity<ILegacySerialized> implements ILegacySerialized {
     // id
     public get id(): string {
         return this.get('id');
@@ -135,7 +135,7 @@ export class Legacy extends Entity implements ILegacySerialized {
         };
     }
 
-    public fromJSON(obj: ILegacySerialized) {
+    public fromJSON(obj: ILegacySerialized): Legacy {
         this.id = obj?.id;
         this.label = obj?.label;
         this.image = obj?.image;
@@ -148,5 +148,6 @@ export class Legacy extends Entity implements ILegacySerialized {
         this.newstart = obj?.newstart;
         this.fromEnding = obj?.fromEnding;
         this.availableWithoutEndingMatch = obj?.availableWithoutEndingMatch;
+        return this;
     }
 }

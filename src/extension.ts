@@ -7,10 +7,12 @@ import { NewProjectCommand } from './command/new_project_command';
 import { ShowDocumentationCommand } from './command/show_documentation_command';
 import { ShowReferenceCommand } from './command/show_reference_command';
 import { ToggleEditorCommand } from './command/toggle_editor_command';
+import { Content } from './model/content';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
+	console.log(await Content.fromCore());
 
 	// Commands
 	new NewProjectCommand(context);
@@ -23,6 +25,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	new BoardEditor(context);
 }
+
+
 
 // this method is called when your extension is deactivated
 export function deactivate() {

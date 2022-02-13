@@ -1,6 +1,3 @@
-import path = require("path");
-import { FileType, Uri, workspace } from "vscode";
-import { SerializationHelper } from "../util/serialization";
 import { Deck } from "./deck";
 import { CElement } from "./element";
 import { Ending } from "./ending";
@@ -9,6 +6,8 @@ import { Legacy } from "./legacy";
 import { Recipe } from "./recipe";
 import { Synopsis } from "./synopsis";
 import { Verb } from "./verb";
+import { SerializationHelper } from "../util/serialization";
+import { FileType, Uri, workspace } from "vscode";
 
 export enum ContentType {
     Unknown,
@@ -92,16 +91,16 @@ export class Content {
         if (from == null) {
             return this;
         }
-        from._elements.forEach(element => this._elements.push(element));
-        from._recipes.forEach(recipe => this._recipes.push(recipe));
-        from._decks.forEach(deck => this._decks.push(deck));
-        from._legacies.forEach(legacy => this._legacies.push(legacy));
-        from._endings.forEach(ending => this._endings.push(ending));
-        from._verbs.forEach(verb => this._verbs.push(verb));
+        from._elements.forEach(element => this._elements.find(item => element.id = item.id)?.fromJSON(element) || this._elements.push(element));
+        from._recipes.forEach(recipe => this._recipes.find(item => recipe.id == item.id)?.fromJSON(recipe) || this._recipes.push(recipe));
+        from._decks.forEach(deck => this._decks.find(item => deck.id == item.id)?.fromJSON(deck) || this._decks.push(deck));
+        from._legacies.forEach(legacy => this._legacies.find(item => legacy.id == item.id)?.fromJSON(legacy) || this._legacies.push(legacy));
+        from._endings.forEach(ending => this._endings.find(item => ending.id == item.id)?.fromJSON(ending) || this._endings.push(ending));
+        from._verbs.forEach(verb => this._verbs.find(item => verb.id == item.id)?.fromJSON(verb) || this._verbs.push(verb));
         return this;
     }
 
-    public has(entity: Entity): boolean {
+    public has(entity: Entity<any>): boolean {
         if (entity instanceof Synopsis) {
             return entity == this.synopsis;
         } else if (entity instanceof CElement) {
@@ -152,7 +151,7 @@ export class Content {
         return entity;
     }
 
-    public remove(entity: Entity) {
+    public remove(entity: Entity<any>) {
         if (entity instanceof Synopsis) {
             this._synopsis = entity;
         } else if (entity instanceof CElement) {
@@ -224,7 +223,7 @@ export class Content {
         return new Content(jsonObj);
     }
 
-    public fromJSON(obj: object) {
+    public fromJSON(obj: any) {
         if (obj && Object.keys(obj).length === 0 && Object.getPrototypeOf(obj) === Object.prototype) {
             return;
         }

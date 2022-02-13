@@ -36,7 +36,7 @@ interface IRecipeSerialized {
 /**
  * 
  */
-export class Recipe extends Entity implements IRecipeSerialized {
+export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerialized {
     // id
     public get id(): string {
         return this.get('id');
@@ -277,7 +277,7 @@ export class Recipe extends Entity implements IRecipeSerialized {
         };
     }
 
-    public fromJSON(obj: IRecipeSerialized) {
+    public fromJSON(obj: IRecipeSerialized): Recipe {
         this.id = obj?.id;
         this.label = obj?.label;
         this.maxexecutions = obj?.maxexecutions;
@@ -304,5 +304,6 @@ export class Recipe extends Entity implements IRecipeSerialized {
         this.mutations = obj?.mutations;
         this.alt = obj?.alt;
         this.linked = obj?.linked;
+        return this;
     }
 }

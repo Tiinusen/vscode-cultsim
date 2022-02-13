@@ -11,7 +11,7 @@ interface IDeckSerialized {
     drawmessages: any
 }
 
-export class Deck extends Entity implements IDeckSerialized {
+export class Deck extends Entity<IDeckSerialized> implements IDeckSerialized {
     // id
     public get id(): string {
         return this.get('id');
@@ -80,7 +80,7 @@ export class Deck extends Entity implements IDeckSerialized {
         };
     }
 
-    public fromJSON(obj: IDeckSerialized) {
+    public fromJSON(obj: IDeckSerialized): Deck {
         this.id = obj?.id;
         this.label = obj?.label;
         this.description = obj?.description;
@@ -88,5 +88,6 @@ export class Deck extends Entity implements IDeckSerialized {
         this.spec = obj?.spec;
         this.defaultcard = obj?.defaultcard;
         this.drawmessages = obj?.drawmessages;
+        return this;
     }
 }

@@ -15,7 +15,7 @@ interface IEndingSerialized {
 /**
  * 
  */
-export class Ending extends Entity implements IEndingSerialized {
+export class Ending extends Entity<IEndingSerialized> implements IEndingSerialized {
     // id
     public get id(): string {
         return this.get('id');
@@ -85,7 +85,7 @@ export class Ending extends Entity implements IEndingSerialized {
         };
     }
 
-    public fromJSON(obj: IEndingSerialized) {
+    public fromJSON(obj: IEndingSerialized) : Ending {
         this.id = obj?.id;
         this.label = obj?.label;
         this.description = obj?.description;
@@ -93,5 +93,6 @@ export class Ending extends Entity implements IEndingSerialized {
         this.flavour = obj?.flavour;
         this.anim = obj?.anim;
         this.achievementid = obj?.achievementid;
+        return this;
     }
 }

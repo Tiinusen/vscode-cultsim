@@ -20,14 +20,13 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
         super(board, data, html, "verb-widget");
         this.onRedraw = (element) => {
             const icon: HTMLElement = element.querySelector('.icon');
-            icon.setAttribute('src', 'https://www.frangiclave.net/static/images/icons100/verbs/' + (this.data?.id?this.data.id:"work") + '.png');
-            
+            icon.setAttribute('src', 'https://www.frangiclave.net/static/images/icons100/verbs/' + (this.data?.id ? this.data.id : "work") + '.png');
+
             // Dragging
-            this.dragging.enable();
             let isDragging = false;
             this.on('dragstart', () => isDragging = true);
             this.on('dragend', setDebounce(() => isDragging = false, 10));
-            
+
             // Open / Close
             const closeButton: HTMLElement = element.querySelector('.header i[close]');
             closeButton.onclick = (e) => {
@@ -63,7 +62,7 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
             // Inputs
             element.querySelectorAll('input[name],textarea[name]').forEach((input: HTMLInputElement) => {
                 const name = input.getAttribute('name');
-                if (!has(this.data, name)) {
+                if (!(name in this.data)) {
                     return;
                 }
                 input.value = get(this.data, name, "");

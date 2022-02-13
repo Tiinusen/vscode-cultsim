@@ -116,6 +116,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
     }
 
     public redraw() {
+        this.dragging.enable();
         if (this._element && this.onRedraw) {
             this.onRedraw(this._element);
         }

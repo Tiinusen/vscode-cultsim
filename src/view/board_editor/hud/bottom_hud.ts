@@ -64,11 +64,13 @@ export class BottomHUD extends L.Control {
                     }
                     return null;
                 })();
-                if (!widget) throw new Error("content type does not support add");
+                if (!widget) throw new Error("Add not supported yet for this content type");
+                this.board.widgets.forEach(widget => widget.close());
                 this.board.addWidget(widget);
                 widget.xy = this.board.map.getBounds().getCenter().xy;
                 widget.save();
             } catch (e) {
+                console.error(e);
                 VSCode.emitError(e);
             }
         };

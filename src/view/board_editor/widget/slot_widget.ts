@@ -41,7 +41,7 @@ export class SlotWidget<T> {
                 e.stopPropagation();
             };
             const name = input.getAttribute('name');
-            if (!has(this.data, name)) {
+            if (!(name in this.data)) {
                 return;
             }
             input.value = get(this.data, name, "");

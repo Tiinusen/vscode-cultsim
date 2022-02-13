@@ -15,10 +15,10 @@ interface ISlotSerialized {
 /**
  * 
  */
-export class Slot extends Entity implements ISlotSerialized {
+export class Slot extends Entity<ISlotSerialized> implements ISlotSerialized {
     // id
     public get id(): string {
-        return this.get('id');
+        return this.get('id') || "";
     }
     public set id(value: string) {
         this.set('id', value);
@@ -26,7 +26,7 @@ export class Slot extends Entity implements ISlotSerialized {
 
     // label
     public get label(): string {
-        return this.get('label');
+        return this.get('label') || "";
     }
     public set label(value: string) {
         this.set('label', value);
@@ -34,7 +34,7 @@ export class Slot extends Entity implements ISlotSerialized {
 
     // description
     public get description(): string {
-        return this.get('description');
+        return this.get('description') || "";
     }
     public set description(value: string) {
         this.set('description', value);
@@ -42,7 +42,7 @@ export class Slot extends Entity implements ISlotSerialized {
 
     // required
     public get required(): Map<string, number> {
-        return this.get('required');
+        return this.get('required') || new Map<string, number>();
     }
     public set required(value: Map<string, number>) {
         this.set('required', value);
@@ -50,7 +50,7 @@ export class Slot extends Entity implements ISlotSerialized {
 
     // forbidden
     public get forbidden(): Map<string, number> {
-        return this.get('forbidden');
+        return this.get('forbidden') || new Map<string, number>();
     }
     public set forbidden(value: Map<string, number>) {
         this.set('forbidden', value);
@@ -58,7 +58,7 @@ export class Slot extends Entity implements ISlotSerialized {
 
     // consumes
     public get consumes(): boolean {
-        return this.get('consumes');
+        return this.get('consumes') || false;
     }
     public set consumes(value: boolean) {
         this.set('consumes', value);
@@ -66,7 +66,7 @@ export class Slot extends Entity implements ISlotSerialized {
 
     // actionId
     public get actionId(): string {
-        return this.get('actionId');
+        return this.get('actionId') || "";
     }
     public set actionId(value: string) {
         this.set('actionId', value);
@@ -74,7 +74,7 @@ export class Slot extends Entity implements ISlotSerialized {
 
     // greedy
     public get greedy(): boolean {
-        return this.get('greedy');
+        return this.get('greedy') || false;
     }
     public set greedy(value: boolean) {
         this.set('greedy', value);
@@ -82,25 +82,26 @@ export class Slot extends Entity implements ISlotSerialized {
 
     public toJSON(): ISlotSerialized {
         return {
-            id: this.id,
-            label: this.label,
-            description: this.description,
-            required: this.required,
-            forbidden: this.forbidden,
-            consumes: this.consumes,
-            actionId: this.actionId,
-            greedy: this.greedy,
+            id: this.get('id'),
+            label: this.get('label'),
+            description: this.get('description'),
+            required: this.get('required'),
+            forbidden: this.get('forbidden'),
+            consumes: this.get('consumes'),
+            actionId: this.get('actionId'),
+            greedy: this.get('greedy'),
         };
     }
 
-    public fromJSON(obj: ISlotSerialized) {
-        this.id = obj?.id;
-        this.label = obj?.label;
-        this.description = obj?.description;
-        this.required = obj?.required;
-        this.forbidden = obj?.forbidden;
-        this.consumes = obj?.consumes;
-        this.actionId = obj?.actionId;
-        this.greedy = obj?.greedy;
+    public fromJSON(obj: ISlotSerialized): Slot {
+        this.id = obj?.id || this.id;
+        this.label = obj?.label || this.label;
+        this.description = obj?.description || this.description;
+        this.required = obj?.required || this.required;
+        this.forbidden = obj?.forbidden || this.forbidden;
+        this.consumes = obj?.consumes || this.consumes;
+        this.actionId = obj?.actionId || this.actionId;
+        this.greedy = obj?.greedy || this.greedy;
+        return this;
     }
 }

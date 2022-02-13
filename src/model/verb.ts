@@ -12,11 +12,10 @@ interface IVerbSerialized {
 /**
  * 
  */
-export class Verb extends Entity implements IVerbSerialized {
-
+export class Verb extends Entity<IVerbSerialized> implements IVerbSerialized {
     // id
     public get id(): string {
-        return this.get('id');
+        return this.get('id') || "";
     }
     public set id(value: string) {
         this.set('id', value);
@@ -24,7 +23,7 @@ export class Verb extends Entity implements IVerbSerialized {
 
     // label
     public get label(): string {
-        return this.get('label');
+        return this.get('label') || "";
     }
     public set label(value: string) {
         this.set('label', value);
@@ -32,7 +31,7 @@ export class Verb extends Entity implements IVerbSerialized {
 
     // description
     public get description(): string {
-        return this.get('description');
+        return this.get('description') || "";
     }
     public set description(value: string) {
         this.set('description', value);
@@ -40,7 +39,7 @@ export class Verb extends Entity implements IVerbSerialized {
 
     // slot
     public get slot(): Slot {
-        return this.get('slot');
+        return this.get('slot') || this.set('slot', new Slot());
     }
     public set slot(value: Slot) {
         this.set('slot', value);
@@ -48,19 +47,19 @@ export class Verb extends Entity implements IVerbSerialized {
 
 
     public toJSON(): IVerbSerialized | any {
-        console.log(this);
         return {
-            id: this.id,
-            label: this.label,
-            description: this.description,
-            slot: this.slot,
+            id: this.get('id'),
+            label: this.get('label'),
+            description: this.get('description'),
+            slot: this.get('slot'),
         };
     }
 
-    public fromJSON(obj: IVerbSerialized) {
-        this.id = obj?.id;
-        this.label = obj?.label;
-        this.description = obj?.description;
-        this.slot = obj?.slot;
+    public fromJSON(obj: IVerbSerialized): Verb {
+        this.id = obj?.id || this.id;
+        this.label = obj?.label || this.label;
+        this.description = obj?.description || this.description;
+        this.slot = obj?.slot ? this.slot.fromJSON(obj.slot) : this.slot;
+        return this;
     }
 }

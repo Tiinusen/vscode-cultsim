@@ -12,7 +12,7 @@ interface ISynopsisSerialized {
 /**
  * 
  */
-export class Synopsis extends Entity implements ISynopsisSerialized {
+export class Synopsis extends Entity<ISynopsisSerialized> implements ISynopsisSerialized {
 
     public get name(): string {
         return this.get('name');
@@ -59,11 +59,12 @@ export class Synopsis extends Entity implements ISynopsisSerialized {
         };
     }
 
-    public fromJSON(obj: ISynopsisSerialized) {
+    public fromJSON(obj: ISynopsisSerialized): Synopsis {
         this.name = obj?.name;
         this.author = obj?.author;
         this.version = obj?.version;
         this.description = obj?.description;
         this.description_long = obj?.description_long;
+        return this;
     }
 }

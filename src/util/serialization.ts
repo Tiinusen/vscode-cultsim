@@ -1,7 +1,7 @@
 
 
 export class SerializationHelper {
-    static toInstance<T>(obj: T, json: object | string): T {
+    static toInstance<T, State>(obj: T, json: State | string): T {
         let jsonObj: any = json;
         if (typeof jsonObj === 'string') {
             jsonObj = JSON.parse(jsonObj);

@@ -138,7 +138,7 @@ export class Board {
             }
 
             // Update/Remove
-            this._widgets = this.widgets.filter((widget: Widget<Entity, IWidgetState>) => {
+            this._widgets = this.widgets.filter((widget: Widget<Entity<any>, IWidgetState>) => {
                 if (widget instanceof SelectContentTypeWidget) {
                     if (this.content.type == ContentType.Unspecified) {
                         return true;

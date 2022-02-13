@@ -27,7 +27,7 @@ interface IElementSerialized {
     uniquenessgroup: any
 }
 
-export class CElement extends Entity implements IElementSerialized {
+export class CElement extends Entity<IElementSerialized> implements IElementSerialized {
     // id
     public get id(): string {
         return this.get('id');
@@ -202,7 +202,7 @@ export class CElement extends Entity implements IElementSerialized {
         };
     }
 
-    public fromJSON(obj: IElementSerialized) {
+    public fromJSON(obj: IElementSerialized): CElement {
         this.id = obj?.id;
         this.label = obj?.label;
         this.description = obj?.description;
@@ -220,5 +220,6 @@ export class CElement extends Entity implements IElementSerialized {
         this.lifetime = obj?.lifetime;
         this.resaturate = obj?.resaturate;
         this.slots = obj?.slots;
+        return this;
     }
 }
