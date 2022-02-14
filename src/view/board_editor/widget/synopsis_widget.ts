@@ -13,7 +13,7 @@ export class SynopsisWidget extends Widget<Synopsis, any> {
 
     }
 
-    onRedraw() {
+    onUpdate() {
         this.element.querySelector('.icon').setAttribute('src', 'https://www.frangiclave.net/static/images/icons40/aspects/winter.png');
         this.element.querySelectorAll('button[version-type]').forEach((button: HTMLButtonElement) => {
             button.onclick = () => this.onSelectVersionType(button.getAttribute('version-type'));

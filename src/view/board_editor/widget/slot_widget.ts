@@ -34,7 +34,7 @@ export class SlotWidget<T> {
         return this._element;
     }
 
-    public onRedraw() {
+    public onUpdate() {
         this.element.setAttribute('title', (this.data?.description) + "\n\nClick to open slot");
         this.element.querySelectorAll('input[name],textarea[name]').forEach((input: HTMLInputElement) => {
             input.onclick = (e) => {

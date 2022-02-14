@@ -27,7 +27,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
     private static focused: Widget<any, IWidgetState>;
 
     // Events
-    onRedraw?(): any;
+    onUpdate?(): any;
     onOpen?(): any;
     onClose?(): any;
 
@@ -123,8 +123,8 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
 
     public async redraw() {
         this.dragging.enable();
-        if (this._element && this.onRedraw) {
-            await this.onRedraw();
+        if (this._element && this.onUpdate) {
+            await this.onUpdate();
         }
     }
 

@@ -10,7 +10,7 @@ export class SelectContentTypeWidget extends Widget<any, any> {
         super(board, {}, html, "select-content-type-widget");
     }
 
-    onRedraw() {
+    onUpdate() {
         this.element.querySelector('.icon').setAttribute('src', 'https://www.frangiclave.net/static/images/icons40/aspects/_x.png');
         (this.element.querySelector('button[content="Elements"]') as HTMLButtonElement).onclick = () => {
             this.board.content.type = ContentType.Elements;

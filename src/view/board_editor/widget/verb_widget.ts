@@ -21,7 +21,7 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
         super(board, data, html, "verb-widget");
     }
 
-    async onRedraw() {
+    async onUpdate() {
         const icon: HTMLElement = this.element.querySelector('.icon');
         const imageURL: string = await VSCode.request('image', 'verb', this.data?.id);
         icon.setAttribute('src', imageURL);
@@ -48,7 +48,7 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
             this.slot = new SlotWidget<VerbWidget>(this.board, this.data.slot, this, slotElement);
         }
         this.slot.data = this.data.slot;
-        this.slot.onRedraw();
+        this.slot.onUpdate();
     }
 
     onClickClose() {
