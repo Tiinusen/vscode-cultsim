@@ -5,7 +5,7 @@
 import { Board, BOARD_SIZE_HEIGHT, BOARD_SIZE_WIDTH } from "../board";
 import * as L from 'leaflet';
 import { VSCode } from "../vscode";
-import { newNonce } from "../../../util/helpers";
+import { newNonce, setDebounce } from "../../../util/helpers";
 
 export interface IWidgetState {
     x: number
@@ -22,12 +22,14 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
     private _className: string
     private _element: HTMLElement
     private _initialized = false
+    private _isDragging = false
     private static xIndexCounter = 1;
     private static focused: Widget<any, IWidgetState>;
 
-    protected onRedraw: (element: Element) => void
-    protected onOpen: (element: Element) => void
-    protected onClose: (element: Element) => void
+    // Events
+    onRedraw?(): any;
+    onOpen?(): any;
+    onClose?(): any;
 
     constructor(board: Board, data: EntityState, html?: string, className?: string) {
         super(L.latLng(0, 0));
@@ -105,6 +107,10 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
         this.setLatLng(L.latLng(value[1], value[0]));
     }
 
+    public get isDragging(): boolean {
+        return this._isDragging;
+    }
+
     public save(local = false) {
         const state = this.state as IWidgetState;
         state.x = this.x;
@@ -118,13 +124,13 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
     public async redraw() {
         this.dragging.enable();
         if (this._element && this.onRedraw) {
-            await this.onRedraw(this._element);
+            await this.onRedraw();
         }
     }
 
     public open(init = false) {
         if (this.element.hasAttribute('open')) {
-            if (init && this.onOpen) this.onOpen(this.element);
+            if (init && this.onOpen) this.onOpen();
             return;
         }
         Widget.focused = null;
@@ -135,7 +141,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
         this.element.setAttribute('open', '');
         this.bringToFront();
         this.save(true);
-        if (this.onOpen) this.onOpen(this.element);
+        if (this.onOpen) this.onOpen();
     }
 
     public close(init = false) {
@@ -143,7 +149,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
             Widget.focused = null;
         }
         if (!this.element.hasAttribute('open')) {
-            if (init && this.onClose) this.onClose(this.element);
+            if (init && this.onClose) this.onClose();
             return;
         }
         this.setZIndexOffset(0);
@@ -151,7 +157,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
         (this.state as IWidgetState).open = false;
         this.element.removeAttribute('open');
         this.save(true);
-        if (this.onClose) this.onClose(this.element);
+        if (this.onClose) this.onClose();
     }
 
     public bringToFront() {
@@ -161,7 +167,33 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
         this.setZIndexOffset(Widget.xIndexCounter * ((this.state as IWidgetState)?.open ? 1000000 : 1000));
     }
 
-    protected async init(force = false) {
+    protected bindInput(input: HTMLInputElement) {
+        input.onclick = (e) => {
+            e.stopPropagation();
+        };
+        const fieldName = input.getAttribute('name');
+        if (!(fieldName in this.data)) {
+            return;
+        }
+        input.value = this.data[fieldName];
+        input.onkeyup = () => {
+            if (this.data[fieldName] == input.value) {
+                return;
+            }
+            this.data[fieldName] = input.value;
+            this.board.save();
+        };
+    }
+
+    protected notWhenDragged(fn: (e?: MouseEvent) => void): (e?: MouseEvent) => void {
+        return (e?: MouseEvent) => {
+            if (this.isDragging) return;
+            e?.stopPropagation();
+            return fn(e);
+        };
+    }
+
+    private async init(force = false) {
         this._state = VSCode.getWidgetState(this._className + "|" + ((this.data as any)?.id));
         this.xy = [
             this._state?.x ? this._state.x : BOARD_SIZE_WIDTH / 2,
@@ -176,9 +208,14 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
         this.setOpacity(100);
         this._initialized = true;
         this.on('mousedown', () => this.bringToFront());
+
+        // Dragging
+        this.on('dragstart', () => this._isDragging = true);
+        this.on('dragend', setDebounce(() => this._isDragging = false, 10));
         this.on('dragend', (e) => {
             this.save(true);
         });
+
         if (this.state) {
             if ((this.state as IWidgetState)?.open) {
                 this.open(true);

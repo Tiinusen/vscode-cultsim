@@ -10,8 +10,8 @@ import { Verb } from "../../model/verb";
 import { VerbWidget } from "./widget/verb_widget";
 import { Entity } from "../../model/entity";
 import { BottomHUD } from "./hud/bottom_hud";
-import { kill } from "process";
 import { Arrange } from "../../util/layout";
+import { PickIDImageOverlay } from "./overlay/pick_id_image_overlay";
 
 export const BOARD_SIZE_WIDTH = 1920;
 export const BOARD_SIZE_HEIGHT = 1104;
@@ -19,12 +19,17 @@ export class Board {
     private _assetsBase = null;
     private _map: L.Map;
     private _bottomHUD: BottomHUD = null;
+    private _pickIDImageOverlay: PickIDImageOverlay = null;
     private _widgets: Array<any> = [];
     private _bounds = L.latLngBounds(xy(0, 0), xy(BOARD_SIZE_WIDTH, BOARD_SIZE_HEIGHT));
     private _content?: Content;
 
     public get hud(): BottomHUD {
         return this._bottomHUD;
+    }
+
+    public get pickIDImageOverlay(): PickIDImageOverlay {
+        return this._pickIDImageOverlay;
     }
 
     public get map(): L.Map {
@@ -110,7 +115,7 @@ export class Board {
         try {
             const init = !this._content;
             this._content = Content.fromString(state.document);
-            this.redraw();
+            this.redraw(init);
             if (init) {
                 this.xy = state.camera;
                 if (VSCode.state.widgetState.size == 0) {
@@ -123,8 +128,12 @@ export class Board {
         }
     }
 
-    public async redraw() {
+    public async redraw(init = false) {
         try {
+            if (init) {
+                new PickIDImageOverlay(this);
+            }
+
             if (this.content == null) {
                 for (const widget of this.widgets) {
                     widget.remove();

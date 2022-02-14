@@ -41,7 +41,7 @@ export class BottomHUD extends L.Control {
     onAdd(map: L.Map): HTMLElement {
         this._element = document.createElement('div');
         this._element.innerHTML = html;
-        this._element = this._element.querySelector('.hud');
+        this._element = this._element.firstElementChild as HTMLElement;
         this.init();
         return this._element;
     }
@@ -49,30 +49,32 @@ export class BottomHUD extends L.Control {
     init() {
         const sortButton = this.element.querySelector('button[action="Sort"]') as HTMLButtonElement;
         const addButton = this.element.querySelector('button[action="Add"]') as HTMLButtonElement;
+        sortButton.onclick = () => this.onSortClick();
+        addButton.onclick = () => this.onAddClick();
+    }
 
-        sortButton.onclick = () => {
+    onSortClick() {
+        this.board.widgets.forEach(widget => widget.close());
+        Arrange.Grid(this.board.widgets, this.board.map.getBounds());
+    }
+
+    onAddClick() {
+        try {
+            const widget = (() => {
+                switch (this.board.content.type) {
+                    case ContentType.Verbs:
+                        return new VerbWidget(this.board, this.board.content.add(new Verb()));
+                }
+                return null;
+            })();
+            if (!widget) throw new Error("Add not supported yet for this content type");
             this.board.widgets.forEach(widget => widget.close());
-            Arrange.Grid(this.board.widgets, this.board.map.getBounds());
-        };
-
-        addButton.onclick = () => {
-            try {
-                const widget = (() => {
-                    switch (this.board.content.type) {
-                        case ContentType.Verbs:
-                            return new VerbWidget(this.board, this.board.content.add(new Verb()));
-                    }
-                    return null;
-                })();
-                if (!widget) throw new Error("Add not supported yet for this content type");
-                this.board.widgets.forEach(widget => widget.close());
-                this.board.addWidget(widget);
-                widget.xy = this.board.map.getBounds().getCenter().xy;
-                widget.save();
-            } catch (e) {
-                console.error(e);
-                VSCode.emitError(e);
-            }
-        };
+            this.board.addWidget(widget);
+            widget.xy = this.board.map.getBounds().getCenter().xy;
+            widget.save();
+        } catch (e) {
+            console.error(e);
+            VSCode.emitError(e);
+        }
     }
 }

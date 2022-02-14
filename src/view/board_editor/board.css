@@ -31,6 +31,22 @@ html, body {
 }
 
 /*
+ * Pick ID Image Overlay
+ */
+.pick-id-image-overlay {
+	display: block;
+	position: absolute;
+	background-color: red;
+	width: 100% !important;
+	height: 100% !important;
+}
+
+
+.pick-id-image-overlay[hide] {
+	display: none;
+}
+
+/*
  * Board Widget (base)
  */
 

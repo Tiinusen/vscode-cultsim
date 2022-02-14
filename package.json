@@ -11,9 +11,9 @@
 	],
 	"activationEvents": [
 		"onCustomEditor:cultsim.editor.board",
-		"onCommand:cultsim.newProject",
-		"onCommand:cultsim.showDocumentation",
-		"onCommand:cultsim.showReference",
+		"onCommand:cultsim.new.project",
+		"onCommand:cultsim.show.documentation",
+		"onCommand:cultsim.show.reference",
 		"onLanguage:json"
 	],
 	"main": "./dist/extension.js",

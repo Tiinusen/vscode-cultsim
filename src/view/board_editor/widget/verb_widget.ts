@@ -16,75 +16,60 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
     private slot?: SlotWidget<VerbWidget>;
     private slotsElement?: Element;
     private slotTemplateElement?: Element;
+
     constructor(board: Board, data: Verb) {
         super(board, data, html, "verb-widget");
-        this.onRedraw = async (element) => {
-            const icon: HTMLElement = element.querySelector('.icon');
-            const imageURL: string = await VSCode.request('image', 'verb', this.data?.id);
-            icon.setAttribute('src', imageURL);
-
-            // Dragging
-            let isDragging = false;
-            this.on('dragstart', () => isDragging = true);
-            this.on('dragend', setDebounce(() => isDragging = false, 10));
-
-            // Open / Close
-            const closeButton: HTMLElement = element.querySelector('.header i[close]');
-            closeButton.onclick = (e) => {
-                if (isDragging) return;
-                e.stopPropagation();
-                this.close();
-            };
-            this.onClose = (element) => {
-                icon.setAttribute('title', this.data.id + "\n\nClick to open verb");
-                icon.onclick = null;
-                this.removeEventListener('click');
-                this.once('click', () => {
-                    this.open();
-                });
-            };
-            this.onOpen = (element) => {
-                icon.setAttribute('title', this.data.id + "\n\nClick to edit ID or image");
-                icon.onclick = (e) => {
-                    if (isDragging) return;
-                    e.stopPropagation();
-                    // Something else
-                    VSCode.emitInfo("Edit ID and Picture");
-                };
-            };
-
-            // Remove slot template
-            if (!this.slotsElement) {
-                this.slotsElement = element.querySelector('.slots');
-                this.slotTemplateElement = this.slotsElement.querySelector('.slot');
-                this.slotsElement.removeChild(this.slotTemplateElement);
-            }
-
-            // Inputs
-            element.querySelectorAll('input[name],textarea[name]').forEach((input: HTMLInputElement) => {
-                const name = input.getAttribute('name');
-                if (!(name in this.data)) {
-                    return;
-                }
-                input.value = get(this.data, name, "");
-                input.onkeyup = () => {
-                    if (get(this.data, name, "") == input.value) {
-                        return;
-                    }
-                    set(this.data, name, input.value);
-                    this.save();
-                };
-            });
-
-            // Slot
-            if (!this.slot) {
-                const slotElement = this.slotTemplateElement.cloneNode(true) as HTMLElement;
-                this.slotsElement.appendChild(slotElement);
-                this.slot = new SlotWidget<VerbWidget>(board, this.data.slot, this, slotElement);
-            }
-            this.slot.data = this.data.slot;
-            this.slot.onRedraw();
-        };
     }
 
+    async onRedraw() {
+        const icon: HTMLElement = this.element.querySelector('.icon');
+        const imageURL: string = await VSCode.request('image', 'verb', this.data?.id);
+        icon.setAttribute('src', imageURL);
+
+
+        // Remove slot template
+        if (!this.slotsElement) {
+            this.slotsElement = this.element.querySelector('.slots');
+            this.slotTemplateElement = this.slotsElement.querySelector('.slot');
+            this.slotsElement.removeChild(this.slotTemplateElement);
+        }
+
+        // Buttons
+        const closeButton: HTMLElement = this.element.querySelector('.header i[close]');
+        closeButton.onclick = this.notWhenDragged((e) => this.onClickClose());
+
+        // Inputs
+        this.element.querySelectorAll('input[name],textarea[name]').forEach((input: HTMLInputElement) => this.bindInput(input));
+
+        // Slot
+        if (!this.slot) {
+            const slotElement = this.slotTemplateElement.cloneNode(true) as HTMLElement;
+            this.slotsElement.appendChild(slotElement);
+            this.slot = new SlotWidget<VerbWidget>(this.board, this.data.slot, this, slotElement);
+        }
+        this.slot.data = this.data.slot;
+        this.slot.onRedraw();
+    }
+
+    onClickClose() {
+        this.close();
+    }
+
+    onOpen() {
+        const icon: HTMLElement = this.element.querySelector('.icon');
+        icon.setAttribute('title', this.data.id + "\n\nClick to edit ID or image");
+        icon.onclick = this.notWhenDragged((e) => {
+            VSCode.emitInfo("Edit ID and Picture");
+        });
+    }
+
+    onClose() {
+        const icon: HTMLElement = this.element.querySelector('.icon');
+        icon.setAttribute('title', this.data.id + "\n\nClick to open verb");
+        icon.onclick = null;
+        this.removeEventListener('click');
+        this.once('click', () => {
+            this.open();
+        });
+    }
 }
