@@ -87,7 +87,7 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 						webviewPanel.webview.postMessage({
 							type: 'response',
 							id: e.id,
-							response: await this.request(e.method, ...e.args)
+							response: await this.request(webviewPanel.webview, e.method, ...e.args)
 						});
 						return;
 				}
@@ -99,18 +99,26 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 		updateWebview();
 	}
 
-	private request(method: string, ...args: any[]): Promise<any> {
+	private request(webview: vscode.Webview, method: string, ...args: any[]): Promise<any> {
 		method = method[0].toUpperCase() + method.substring(1);
 		if (!(`request${method}` in this)) throw new Error(`Request method "${method}" unsupported`);
-		return this[`request${method}`](...args);
+		return this[`request${method}`](webview, ...args);
 	}
 
-	private async requestImage(type: string, id?: string): Promise<string> {
+	private async requestImage(webview: vscode.Webview, type: string, id?: string): Promise<string> {
 		try {
 			if (!id) throw new Error("No ID");
 			if (!type) throw new Error("No Type provided");
 			switch (type) {
 				case 'element': {
+					const filesElements = await vscode.workspace.findFiles(`images/elements/${id}.png`);
+					if (filesElements.length > 0) {
+						return webview.asWebviewUri(filesElements[0]).toString();
+					}
+					const filesAspects = await vscode.workspace.findFiles(`images/aspects/${id}.png`);
+					if (filesAspects.length > 0) {
+						return webview.asWebviewUri(filesAspects[0]).toString();
+					}
 					const element = this._coreContent.elements.find(element => element.id == id);
 					if (element) {
 						if (element.isAspect) {
@@ -121,6 +129,10 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 					break;
 				}
 				case 'legacy': {
+					const files = await vscode.workspace.findFiles(`images/legacies/${id}.png`);
+					if (files.length > 0) {
+						return webview.asWebviewUri(files[0]).toString();
+					}
 					const legacy = this._coreContent.legacies.find(legacy => legacy.id == id);
 					if (legacy) {
 						return `https://www.frangiclave.net/static/images/icons100/legacies/${legacy.id}.png`;
@@ -128,6 +140,10 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 					break;
 				}
 				case 'ending': {
+					const files = await vscode.workspace.findFiles(`images/endings/${id}.png`);
+					if (files.length > 0) {
+						return webview.asWebviewUri(files[0]).toString();
+					}
 					const ending = this._coreContent.endings.find(ending => ending.id == id);
 					if (ending) {
 						return `https://www.frangiclave.net/static/images/endingArt/${ending.id}.png`;
@@ -135,6 +151,10 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 					break;
 				}
 				case 'verb': {
+					const files = await vscode.workspace.findFiles(`images/verbs/${id}.png`);
+					if (files.length > 0) {
+						return webview.asWebviewUri(files[0]).toString();
+					}
 					const verb = this._coreContent.verbs.find(verb => verb.id == id);
 					if (verb) {
 						return `https://www.frangiclave.net/static/images/icons100/verbs/${verb.id}.png`;
@@ -148,7 +168,7 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 		}
 	}
 
-	private async requestIDs(type: string): Promise<string[]> {
+	private async requestIDs(webview: vscode.Webview, type: string): Promise<string[]> {
 		try {
 			if (!type) throw new Error("No Type provided");
 			switch (type) {

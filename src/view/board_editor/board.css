@@ -192,6 +192,11 @@ html, body {
 	left: -275px;
 }
 
+.verb-widget .icon {
+	width: 104px !important;
+	height: 104px !important;
+}
+
 .verb-widget .box {
 	position: relative;
 	top: -68px;
