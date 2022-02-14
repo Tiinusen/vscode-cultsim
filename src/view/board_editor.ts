@@ -3,48 +3,27 @@ import path = require('path');
 import { Renderer } from '../util/renderer';
 import { Uri } from 'vscode';
 import { Content, ContentType } from '../model/content';
+import { VSCode } from './board_editor/vscode';
 
-export class BoardEditor {
-	constructor(context: vscode.ExtensionContext) {
-		context.subscriptions.push(BoardEditorProvider.register(context));
-	}
-}
-
-/**
- * Provider for cat scratch editors.
- * 
- * Cat scratch editors are used for `.cscratch` files, which are just json files.
- * To get started, run this extension and open an empty `.cscratch` file in VS Code.
- * 
- * This provider demonstrates:
- * 
- * - Setting up the initial webview for a custom editor.
- * - Loading scripts and styles in a custom editor.
- * - Synchronizing changes between a text document and a custom editor.
- */
-export class BoardEditorProvider implements vscode.CustomTextEditorProvider {
+export class BoardEditor implements vscode.CustomTextEditorProvider {
 	static UI_PATH = null;
-	public static register(context: vscode.ExtensionContext): vscode.Disposable {
-		const provider = new BoardEditorProvider(context);
-		const providerRegistration = vscode.window.registerCustomEditorProvider(BoardEditorProvider.viewType, provider);
-		return providerRegistration;
+
+	public static register(context: vscode.ExtensionContext, coreContent?: Content) {
+		const provider = new BoardEditor(context, coreContent);
+		const providerRegistration = vscode.window.registerCustomEditorProvider(BoardEditor.viewType, provider);
+		context.subscriptions.push(providerRegistration);
 	}
 
 	private static readonly viewType = 'cultsim.editor.board';
 
-	private static readonly scratchCharacters = ['😸', '😹', '😺', '😻', '😼', '😽', '😾', '🙀', '😿', '🐱'];
+	private _context: vscode.ExtensionContext;
+	private _coreContent: Content;
 
-	constructor(
-		private readonly context: vscode.ExtensionContext
-	) {
-
+	constructor(private readonly context: vscode.ExtensionContext, coreContent?: Content) {
+		this._context = context;
+		this._coreContent = coreContent;
 	}
 
-	/**
-	 * Called when our custom editor is opened.
-	 * 
-	 * 
-	 */
 	public async resolveCustomTextEditor(
 		document: vscode.TextDocument,
 		webviewPanel: vscode.WebviewPanel,
@@ -68,16 +47,6 @@ export class BoardEditorProvider implements vscode.CustomTextEditorProvider {
 			return;
 		}
 
-		// console.log(await Content.fromCore());
-
-		// Hook up event handlers so that we can synchronize the webview with the text document.
-		//
-		// The text document acts as our model, so we have to sync change in the document to our
-		// editor and sync changes in the editor back to the document.
-		// 
-		// Remember that a single text document can also be shared between multiple custom
-		// editors (this happens for example when you split a custom editor)
-
 		const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
 			if (e.document.uri.toString() === document.uri.toString()) {
 				updateWebview();
@@ -90,38 +59,125 @@ export class BoardEditorProvider implements vscode.CustomTextEditorProvider {
 		});
 
 		// Receive message from the webview.
-		webviewPanel.webview.onDidReceiveMessage(e => {
-			switch (e.type) {
-				case 'toggle-editor':
-					vscode.window.showWarningMessage(e.message);
-					vscode.commands.executeCommand('workbench.action.toggleEditorType');
-					return;
-				case 'reload':
-					vscode.window.showWarningMessage(e.message);
-					vscode.commands.executeCommand('workbench.action.webview.reloadWebviewAction');
-					return;
-				case 'error':
-					vscode.window.showErrorMessage(e.message);
-					return;
-				case 'info':
-					vscode.window.showInformationMessage(e.message);
-					return;
-				case 'warning':
-					vscode.window.showWarningMessage(e.message);
-					return;
-				case 'change':
-					(() => {
-						const edit = new vscode.WorkspaceEdit();
-						edit.replace(
-							document.uri,
-							new vscode.Range(0, 0, document.lineCount, 0),
-							e.document);
-						return vscode.workspace.applyEdit(edit);
-					})();
+		webviewPanel.webview.onDidReceiveMessage(async e => {
+			try {
+				switch (e.type) {
+					case 'toggle-editor':
+						vscode.window.showWarningMessage(e.message);
+						vscode.commands.executeCommand('workbench.action.toggleEditorType');
+						return;
+					case 'reload':
+						vscode.window.showWarningMessage(e.message);
+						vscode.commands.executeCommand('workbench.action.webview.reloadWebviewAction');
+						return;
+					case 'error':
+						vscode.window.showErrorMessage(e.message);
+						return;
+					case 'info':
+						vscode.window.showInformationMessage(e.message);
+						return;
+					case 'warning':
+						vscode.window.showWarningMessage(e.message);
+						return;
+					case 'change':
+						await this.save(document, e.document);
+						return;
+					case 'request':
+						if (!e?.method) return;
+						webviewPanel.webview.postMessage({
+							type: 'response',
+							id: e.id,
+							response: await this.request(e.method, ...e.args)
+						});
+						return;
+				}
+			} catch (e) {
+				vscode.window.showErrorMessage(e.message);
 			}
 		});
 
 		updateWebview();
+	}
+
+	private request(method: string, ...args: any[]): Promise<any> {
+		method = method[0].toUpperCase() + method.substring(1);
+		if (!(`request${method}` in this)) throw new Error(`Request method "${method}" unsupported`);
+		return this[`request${method}`](...args);
+	}
+
+	private async requestImage(type: string, id?: string): Promise<string> {
+		try {
+			if (!id) throw new Error("No ID");
+			if (!type) throw new Error("No Type provided");
+			switch (type) {
+				case 'element': {
+					const element = this._coreContent.elements.find(element => element.id == id);
+					if (element) {
+						if (element.isAspect) {
+							return `https://www.frangiclave.net/static/images/icons40/aspects/${element.id}.png`;
+						}
+						return `https://www.frangiclave.net/static/images/elementArt/${element.id}.png`;
+					}
+					break;
+				}
+				case 'legacy': {
+					const legacy = this._coreContent.legacies.find(legacy => legacy.id == id);
+					if (legacy) {
+						return `https://www.frangiclave.net/static/images/icons100/legacies/${legacy.id}.png`;
+					}
+					break;
+				}
+				case 'ending': {
+					const ending = this._coreContent.endings.find(ending => ending.id == id);
+					if (ending) {
+						return `https://www.frangiclave.net/static/images/endingArt/${ending.id}.png`;
+					}
+					break;
+				}
+				case 'verb': {
+					const verb = this._coreContent.verbs.find(verb => verb.id == id);
+					if (verb) {
+						return `https://www.frangiclave.net/static/images/icons100/verbs/${verb.id}.png`;
+					}
+					break;
+				}
+			}
+			throw new Error("unsupported type");
+		} catch {
+			return 'https://www.frangiclave.net/static/images/icons40/aspects/_x.png';
+		}
+	}
+
+	private async requestIDs(type: string): Promise<string[]> {
+		try {
+			if (!type) throw new Error("No Type provided");
+			switch (type) {
+				case 'element':
+					return this._coreContent.elements.map(element => element.id);
+				case 'recipe':
+					return this._coreContent.recipes.map(recipe => recipe.id);
+				case 'deck':
+					return this._coreContent.decks.map(deck => deck.id);
+				case 'legacy':
+					return this._coreContent.legacies.map(legacy => legacy.id);
+				case 'ending':
+					return this._coreContent.endings.map(ending => ending.id);
+				case 'verb':
+					return this._coreContent.verbs.map(verb => verb.id);
+			}
+			throw new Error("unsupported type");
+		} catch {
+			return [];
+		}
+	}
+
+	protected save(document: vscode.TextDocument, text: string): Thenable<boolean> {
+		const edit = new vscode.WorkspaceEdit();
+		edit.replace(
+			document.uri,
+			new vscode.Range(0, 0, document.lineCount, 0),
+			text);
+		return vscode.workspace.applyEdit(edit);
 	}
 
 	/**

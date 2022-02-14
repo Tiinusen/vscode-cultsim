@@ -76,13 +76,18 @@ export class Content {
     }
 
     public clone(): Content {
-        return new Content().merge(this);
+        const content = new Content();
+        this._elements.forEach(element => content.add(new CElement(element.toJSON())));
+        this._recipes.forEach(recipe => content.add(new Recipe(recipe.toJSON())));
+        this._decks.forEach(deck => content.add(new Deck(deck.toJSON())));
+        this._legacies.forEach(legacy => content.add(new Legacy(legacy.toJSON())));
+        this._endings.forEach(ending => content.add(new Ending(ending.toJSON())));
+        this._verbs.forEach(verb => content.add(new Verb(verb.toJSON())));
+        return content;
     }
 
     /**
-     * Together the darknesss will be ours
-     * 
-     * [Returns itself to allow chaining merges, (mutates this object)]
+     * Does a merge and returns a new content without modifying source
      * 
      * @param from data that will overwrite source
      * @returns itself
@@ -91,13 +96,18 @@ export class Content {
         if (from == null) {
             return this;
         }
-        from._elements.forEach(element => this._elements.find(item => element.id = item.id)?.fromJSON(element) || this._elements.push(element));
-        from._recipes.forEach(recipe => this._recipes.find(item => recipe.id == item.id)?.fromJSON(recipe) || this._recipes.push(recipe));
-        from._decks.forEach(deck => this._decks.find(item => deck.id == item.id)?.fromJSON(deck) || this._decks.push(deck));
-        from._legacies.forEach(legacy => this._legacies.find(item => legacy.id == item.id)?.fromJSON(legacy) || this._legacies.push(legacy));
-        from._endings.forEach(ending => this._endings.find(item => ending.id == item.id)?.fromJSON(ending) || this._endings.push(ending));
-        from._verbs.forEach(verb => this._verbs.find(item => verb.id == item.id)?.fromJSON(verb) || this._verbs.push(verb));
-        return this;
+        const content = this.clone();
+        try {
+            from._elements.forEach(element => content._elements.find(item => element.id = item.id)?.fromJSON(element) || content.add(element));
+            from._recipes.forEach(recipe => content._recipes.find(item => recipe.id == item.id)?.fromJSON(recipe) || content.add(recipe));
+            from._decks.forEach(deck => content._decks.find(item => deck.id == item.id)?.fromJSON(deck) || content.add(deck));
+            from._legacies.forEach(legacy => content._legacies.find(item => legacy.id == item.id)?.fromJSON(legacy) || content.add(legacy));
+            from._endings.forEach(ending => content._endings.find(item => ending.id == item.id)?.fromJSON(ending) || content.add(ending));
+            from._verbs.forEach(verb => content._verbs.find(item => verb.id == item.id)?.fromJSON(verb) || content.add(verb));
+        } catch (e) {
+            console.error(e);
+        }
+        return content;
     }
 
     public has(entity: Entity<any>): boolean {
@@ -184,19 +194,20 @@ export class Content {
     }
 
     static async fromFolder(path: Uri): Promise<Content> {
-        const content = new Content();
+        let content = new Content();
         const filesAndFolders = await workspace.fs.readDirectory(path);
         for (const [name, typ] of filesAndFolders) {
             const ipath = Uri.joinPath(path, name);
             switch (typ) {
                 case FileType.Directory:
-                    content.merge(await this.fromFolder(ipath));
+                    content = content.merge(await this.fromFolder(ipath));
                     continue;
                 case FileType.File:
                     if (!ipath.fsPath.endsWith(".json")) {
                         continue;
                     }
-                    content.merge(await this.fromFile(ipath));
+                    content = content.merge(await this.fromFile(ipath));
+                    continue;
             }
         }
         return content;
@@ -271,30 +282,30 @@ export class Content {
             case ContentType.Mixed:
                 throw new Error("Content has more than one type of content, so there is no valid file format");
             case ContentType.Synopsis:
-                return this._synopsis.toJSON();
+                return this?._synopsis.toJSON() || {};
             case ContentType.Elements:
                 return {
-                    "elements": this._elements.map(element => element.toJSON())
+                    "elements": this?._elements?.map(element => element.toJSON()) || []
                 };
             case ContentType.Recipes:
                 return {
-                    "recipes": this._recipes.map(recipe => recipe.toJSON())
+                    "recipes": this?._recipes?.map(recipe => recipe.toJSON()) || []
                 };
             case ContentType.Decks:
                 return {
-                    "decks": this._decks.map(deck => deck.toJSON())
+                    "decks": this?._decks?.map(deck => deck.toJSON()) || []
                 };
             case ContentType.Legacies:
                 return {
-                    "legacies": this._legacies.map(legacie => legacie.toJSON())
+                    "legacies": this?._legacies?.map(legacie => legacie.toJSON()) || []
                 };
             case ContentType.Endings:
                 return {
-                    "endings": this._endings.map(ending => ending.toJSON())
+                    "endings": this?._endings?.map(ending => ending.toJSON()) || []
                 };
             case ContentType.Verbs:
                 return {
-                    "verbs": this._verbs.map(verb => verb.toJSON())
+                    "verbs": this?._verbs?.map(verb => verb.toJSON()) || []
                 };
             default:
                 throw new Error("Unknown Content Type: " + this.type);

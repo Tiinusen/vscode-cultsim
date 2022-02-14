@@ -196,7 +196,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
             aspects: this.aspects,
             lifetime: this.lifetime,
             resaturate: this.resaturate,
-            slots: this.slots.map(slot => slot.toJSON()),
+            // slots: this?.slots?.map(slot => slot?.toJSON() || slot), // TODO: Broken
             unique: this.unique,
             uniquenessgroup: this.uniquenessgroup,
         };

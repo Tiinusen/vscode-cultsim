@@ -1,5 +1,6 @@
 
 import { Content } from "../../model/content";
+import { newNonce } from "../../util/helpers";
 import { BOARD_SIZE_HEIGHT, BOARD_SIZE_WIDTH } from "./board";
 import { BoardState } from "./state";
 import { IWidgetState } from "./widget/widget";
@@ -7,6 +8,8 @@ import { IWidgetState } from "./widget/widget";
 export class VSCode {
     private static _vscode = null;
     private static _initialized = false;
+    private static _requests = new Map<string, (resolve: any) => void>();
+
     public static state: BoardState;
 
     public static onStateChange: (state: BoardState) => void;
@@ -32,6 +35,9 @@ export class VSCode {
                     this.saveState();
                     this.triggerStateChange();
                     return;
+                case 'response':
+                    if (!message?.id || !this._requests.has(message.id)) return;
+                    this._requests.get(message.id)(message?.response);
             }
         });
 
@@ -155,6 +161,29 @@ export class VSCode {
             }
         }
         this._vscode.postMessage(message);
+    }
+
+    public static request<T>(method: string, ...args: any[]): Promise<T> {
+        const id = newNonce();
+        return new Promise<T>((resolve, reject) => {
+            let timeout = setTimeout(() => {
+                timeout = null;
+                this._requests.delete(id);
+                console.error(method, args, "timed out");
+                reject("request timed out");
+            }, 5000);
+            this._requests.set(id, (response: T) => {
+                if (!timeout) return console.error("response arrived after timeout");
+                clearTimeout(timeout);
+                this._requests.delete(id);
+                resolve(response);
+            });
+            this.emit("request", {
+                id: id,
+                method: method,
+                args: args
+            });
+        });
     }
 
     public static getWidgetState(key: string): IWidgetState {

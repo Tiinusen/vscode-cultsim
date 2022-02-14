@@ -1,3 +1,4 @@
+import { Content } from "../model/content";
 
 export function set(obj, path, value) {
     const pathArray = Array.isArray(path) ? path : path.match(/([^[.\]])+/g);
@@ -34,12 +35,12 @@ export function has(obj, path) {
 }
 
 export function newNonce(length = 32) {
-	let text = '';
-	const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-	for (let i = 0; i < length; i++) {
-		text += possible.charAt(Math.floor(Math.random() * possible.length));
-	}
-	return text;
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    for (let i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
 }
 
 export function setDebounce(callback: (...args: any[]) => void, ms?: number): any {

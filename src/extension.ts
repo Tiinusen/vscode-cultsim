@@ -12,8 +12,6 @@ import { Content } from './model/content';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
-	console.log(await Content.fromCore());
-
 	// Commands
 	new NewProjectCommand(context);
 	new ShowDocumentationCommand(context);
@@ -23,7 +21,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	// Views
 	new ExplorerVerbsView(context);
 
-	new BoardEditor(context);
+	BoardEditor.register(context, await Content.fromCore());
 }
 
 

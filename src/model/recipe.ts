@@ -256,7 +256,7 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
             hintonly: this.hintonly,
             signalimportantloop: this.signalimportantloop,
             internaldeck: this.internaldeck,
-            slots: this.slots.map(slot => slot.toJSON()),
+            // slots: this?.slots?.map(slot => slot?.toJSON() || slot), // TODO: Broken
             startdescription: this.startdescription,
             description: this.description,
             requirements: this.requirements,

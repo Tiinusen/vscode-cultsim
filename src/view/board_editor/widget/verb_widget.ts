@@ -18,9 +18,10 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
     private slotTemplateElement?: Element;
     constructor(board: Board, data: Verb) {
         super(board, data, html, "verb-widget");
-        this.onRedraw = (element) => {
+        this.onRedraw = async (element) => {
             const icon: HTMLElement = element.querySelector('.icon');
-            icon.setAttribute('src', 'https://www.frangiclave.net/static/images/icons100/verbs/' + (this.data?.id ? this.data.id : "work") + '.png');
+            const imageURL: string = await VSCode.request('image', 'verb', this.data?.id);
+            icon.setAttribute('src', imageURL);
 
             // Dragging
             let isDragging = false;

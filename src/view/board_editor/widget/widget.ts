@@ -115,10 +115,10 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
         }
     }
 
-    public redraw() {
+    public async redraw() {
         this.dragging.enable();
         if (this._element && this.onRedraw) {
-            this.onRedraw(this._element);
+            await this.onRedraw(this._element);
         }
     }
 
@@ -161,7 +161,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
         this.setZIndexOffset(Widget.xIndexCounter * ((this.state as IWidgetState)?.open ? 1000000 : 1000));
     }
 
-    protected init(force = false) {
+    protected async init(force = false) {
         this._state = VSCode.getWidgetState(this._className + "|" + ((this.data as any)?.id));
         this.xy = [
             this._state?.x ? this._state.x : BOARD_SIZE_WIDTH / 2,
@@ -172,7 +172,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
             throw new Error("Element not found");
         }
         this._element.setAttribute('class', "board-widget " + this._className);
-        this.redraw();
+        await this.redraw();
         this.setOpacity(100);
         this._initialized = true;
         this.on('mousedown', () => this.bringToFront());
