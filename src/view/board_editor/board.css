@@ -67,7 +67,10 @@ body {
 	border-radius: 12px;
 	padding: 5px;
 	padding-top: 3px;
+}
 
+.board-overlay[image-picker] .pick-id-image {
+	background-color: #4f5515;
 }
 
 .board-overlay .pick-id-image .icon {

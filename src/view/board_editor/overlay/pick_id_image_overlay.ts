@@ -39,6 +39,7 @@ export class PickIDImageOverlay extends BoardOverlay {
         this._icon.onclick = () => this.onIconClick();
 
         if (this.isRemovedOnHide) {
+            this.wrapper.setAttribute('image-picker', '');
             this._idInput.setAttribute('placeholder', 'Which image do you wish to clone?');
             this._icon.onclick = () => this.onCloseClick();
             this._closeButton.onclick = () => this.onMergeClick();
@@ -55,6 +56,7 @@ export class PickIDImageOverlay extends BoardOverlay {
             [this._copyImage] = await new PickIDImageOverlay(this.board, this.wrapper).pick(this._type, { id: this._idInput.value });
             this.setImage(this._copyImage);
             this.onCloseClick = this.onMergeClick;
+            this._idInput.focus();
         } catch (e) {
             if (e == "closed") return;
             VSCode.emitError(e);
@@ -74,7 +76,10 @@ export class PickIDImageOverlay extends BoardOverlay {
     }
 
     private onIDChange() {
-        const id = this._idInput.value.toLowerCase().trim() || "";
+        this._idInput.value = this._idInput.value
+            .toLowerCase()
+            .replace(/[^0-9a-zA-Z.]/gm, "");
+        const id = this._idInput.value;
         this._idInput.setAttribute('title', '');
         this._idInput.removeAttribute('error');
         if (id.length == 0 || id == this._id) {
@@ -87,22 +92,29 @@ export class PickIDImageOverlay extends BoardOverlay {
         } else {
             this._addButton.removeAttribute('hide');
         }
-        this.setImage(id);
+        this.setImage(this?._copyImage || id);
     }
 
     private onIDKeyDown(ev: KeyboardEvent) {
-        if (ev.code == "Enter") {
-            ev.preventDefault();
-            if (!this._addButton.hasAttribute('hide')) {
-                this.onAddClick();
-            } else if (!this._mergeButton.hasAttribute('hide')) {
-                this.onMergeClick();
-            } else if (!this._closeButton.hasAttribute('hide')) {
-                this.onMergeClick();
-            } else {
-                VSCode.emitWarning(this._idInput.getAttribute('title'));
+        switch (ev.code) {
+            case "Enter": {
+                ev.preventDefault();
+                if (!this._addButton.hasAttribute('hide')) {
+                    this.onAddClick();
+                } else if (!this._mergeButton.hasAttribute('hide')) {
+                    this.onMergeClick();
+                } else if (!this._closeButton.hasAttribute('hide')) {
+                    this.onMergeClick();
+                } else {
+                    VSCode.emitWarning(this._idInput.getAttribute('title'));
+                }
+                return;
             }
-            return;
+            case "Space": {
+                setTimeout(() => {
+                    this._idInput.value = this._idInput.value.replace(" ", ".");
+                });
+            }
         }
         this._addButton.setAttribute('hide', '');
         this._mergeButton.setAttribute('hide', '');

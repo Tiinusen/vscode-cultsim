@@ -63,8 +63,12 @@ export class BottomHUD extends L.Control {
             const widget = await (async () => {
                 switch (this.board.content.type) {
                     case ContentType.Verbs: {
-                        const [id, copyImage] = await this.board.pickIDImageOverlay.pick('verbs');
+                        const [id, imageToCloneID] = await this.board.pickIDImageOverlay.pick('verbs');
                         if (!id) return null;
+                        if (imageToCloneID) {
+                            await VSCode.request('clone', 'verbs', imageToCloneID, id);
+                            VSCode.emitInfo(`Image has successfully been added to your workspace`);
+                        }
                         return new VerbWidget(this.board, this.board.content.add(new Verb({ id: id, slot: { id: id } } as any))).bringToFront();
                     }
                 }
