@@ -1,14 +1,23 @@
 import * as vscode from 'vscode';
-import path = require('path');
+import * as https from 'https';
 import { Renderer } from '../util/renderer';
 import { Uri } from 'vscode';
 import { Content, ContentType } from '../model/content';
-import { VSCode } from './board_editor/vscode';
+import { Transform } from 'stream';
 
 export class BoardEditor implements vscode.CustomTextEditorProvider {
 	static UI_PATH = null;
 
-	public static register(context: vscode.ExtensionContext, coreContent?: Content) {
+	public static async register(context: vscode.ExtensionContext) {
+		let coreContent: Content = null;
+		try {
+			coreContent = await Content.fromCore();
+			if (!coreContent) {
+				vscode.window.showWarningMessage("Cultist Simulator streaming assets path not configurated");
+			}
+		} catch (e) {
+			vscode.window.showErrorMessage("Failed to load Cultist Simulator streaming assets");
+		}
 		const provider = new BoardEditor(context, coreContent);
 		const providerRegistration = vscode.window.registerCustomEditorProvider(BoardEditor.viewType, provider);
 		context.subscriptions.push(providerRegistration);
@@ -16,11 +25,9 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 
 	private static readonly viewType = 'cultsim.editor.board';
 
-	private _context: vscode.ExtensionContext;
 	private _coreContent: Content;
 
 	constructor(private readonly context: vscode.ExtensionContext, coreContent?: Content) {
-		this._context = context;
 		this._coreContent = coreContent;
 	}
 
@@ -83,12 +90,20 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 						await this.save(document, e.document);
 						return;
 					case 'request':
-						if (!e?.method) return;
-						webviewPanel.webview.postMessage({
-							type: 'response',
-							id: e.id,
-							response: await this.request(webviewPanel.webview, e.method, ...e.args)
-						});
+						try {
+							if (!e?.method) return;
+							webviewPanel.webview.postMessage({
+								type: 'response',
+								id: e.id,
+								response: await this.request(webviewPanel.webview, e.method, ...e.args)
+							});
+						} catch (e) {
+							webviewPanel.webview.postMessage({
+								type: 'response',
+								id: e.id,
+								error: e
+							});
+						}
 						return;
 				}
 			} catch (e) {
@@ -105,12 +120,50 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 		return this[`request${method}`](webview, ...args);
 	}
 
+	private async requestClone(webview: vscode.Webview, type: string, sourceID: string, destinationID: string) {
+		const imageURL = await this.requestImage(webview, type, sourceID);
+		if (imageURL.includes('vscode-resource')) {
+			await vscode.workspace.fs.copy(
+				Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, 'images', type, `${sourceID}.png`),
+				Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, 'images', type, `${destinationID}.png`),
+				{overwrite: true}
+			);
+			return;
+		}
+		await new Promise<void>((resolve, reject) => {
+			const timeout = setTimeout(reject, 10000, "timed out");
+			https.get(imageURL, (response) => {
+				const transform = new Transform();
+
+				response.on('error', (e) => {
+					reject(e);
+				});
+
+				response.on('data', (chunk) => {
+					transform.push(chunk);
+				});
+
+				response.on('end', async () => {
+					try {
+						clearTimeout(timeout);
+						const data = transform.read();
+						await vscode.workspace.fs.writeFile(Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, 'images', type, `${destinationID}.png`), data);
+						resolve();
+					} catch (e) {
+						console.error(e);
+						reject(e);
+					}
+				});
+			}).end();
+		});
+	}
+
 	private async requestImage(webview: vscode.Webview, type: string, id?: string): Promise<string> {
 		try {
 			if (!id) throw new Error("No ID");
 			if (!type) throw new Error("No Type provided");
 			switch (type) {
-				case 'element': {
+				case 'elements': {
 					const filesElements = await vscode.workspace.findFiles(`images/elements/${id}.png`);
 					if (filesElements.length > 0) {
 						return webview.asWebviewUri(filesElements[0]).toString();
@@ -128,7 +181,7 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 					}
 					break;
 				}
-				case 'legacy': {
+				case 'legacies': {
 					const files = await vscode.workspace.findFiles(`images/legacies/${id}.png`);
 					if (files.length > 0) {
 						return webview.asWebviewUri(files[0]).toString();
@@ -139,7 +192,7 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 					}
 					break;
 				}
-				case 'ending': {
+				case 'endings': {
 					const files = await vscode.workspace.findFiles(`images/endings/${id}.png`);
 					if (files.length > 0) {
 						return webview.asWebviewUri(files[0]).toString();
@@ -150,7 +203,7 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 					}
 					break;
 				}
-				case 'verb': {
+				case 'verbs': {
 					const files = await vscode.workspace.findFiles(`images/verbs/${id}.png`);
 					if (files.length > 0) {
 						return webview.asWebviewUri(files[0]).toString();
@@ -172,17 +225,17 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 		try {
 			if (!type) throw new Error("No Type provided");
 			switch (type) {
-				case 'element':
+				case 'elements':
 					return this._coreContent.elements.map(element => element.id);
-				case 'recipe':
+				case 'recipes':
 					return this._coreContent.recipes.map(recipe => recipe.id);
-				case 'deck':
+				case 'decks':
 					return this._coreContent.decks.map(deck => deck.id);
-				case 'legacy':
+				case 'legacies':
 					return this._coreContent.legacies.map(legacy => legacy.id);
-				case 'ending':
+				case 'endings':
 					return this._coreContent.endings.map(ending => ending.id);
-				case 'verb':
+				case 'verbs':
 					return this._coreContent.verbs.map(verb => verb.id);
 			}
 			throw new Error("unsupported type");

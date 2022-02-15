@@ -8,7 +8,7 @@ import { IWidgetState } from "./widget/widget";
 export class VSCode {
     private static _vscode = null;
     private static _initialized = false;
-    private static _requests = new Map<string, (resolve: any) => void>();
+    private static _requests = new Map<string, (response: any) => void>();
 
     public static state: BoardState;
 
@@ -25,19 +25,25 @@ export class VSCode {
 
         // Listeners
         window.addEventListener('message', event => {
-            const message = event.data;
-            switch (message.type) {
-                case 'change':
-                    if (this.state.document == message.document) {
+            try {
+                const message = event.data;
+                switch (message.type) {
+                    case 'change':
+                        if (this.state.document == message.document) {
+                            return;
+                        }
+                        this.state.document = message.document;
+                        this.saveState();
+                        this.triggerStateChange();
                         return;
-                    }
-                    this.state.document = message.document;
-                    this.saveState();
-                    this.triggerStateChange();
-                    return;
-                case 'response':
-                    if (!message?.id || !this._requests.has(message.id)) return;
-                    this._requests.get(message.id)(message?.response);
+                    case 'response':
+                        if (!message?.id || !this._requests.has(message.id)) return;
+                        if (message?.error) throw new Error(message.error);
+                        this._requests.get(message.id)(message?.response);
+                }
+            } catch (e) {
+                console.error(e);
+                VSCode.emitError(e);
             }
         });
 
@@ -125,6 +131,7 @@ export class VSCode {
     }
 
     public static emitError(e: Error | string) {
+        if (!e) return;
         let message = e;
         if (typeof e === 'object') {
             message = e.message;
@@ -135,11 +142,13 @@ export class VSCode {
     }
 
     public static emitInfo(message: string) {
+        if (!message) return;
         this.emit('info', {
             message: message
         });
     }
     public static emitWarning(message: string) {
+        if (!message) return;
         this.emit('warning', {
             message: message
         });

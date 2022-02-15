@@ -131,7 +131,7 @@ export class Board {
     public async redraw(init = false) {
         try {
             if (init) {
-                new PickIDImageOverlay(this);
+                this._pickIDImageOverlay = new PickIDImageOverlay(this);
             }
 
             if (this.content == null) {

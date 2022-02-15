@@ -16,16 +16,19 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
     private slot?: SlotWidget<VerbWidget>;
     private slotsElement?: Element;
     private slotTemplateElement?: Element;
+    private icon: HTMLImageElement;
 
     constructor(board: Board, data: Verb) {
         super(board, data, html, "verb-widget");
     }
 
-    async onUpdate() {
-        const icon: HTMLElement = this.element.querySelector('.icon');
-        const imageURL: string = await VSCode.request('image', 'verb', this.data?.id);
-        icon.setAttribute('src', imageURL);
+    private setImage(imageURL: string) {
+        this.icon.setAttribute('src', imageURL + "?" + (Math.random() * 100));
+    }
 
+    async onUpdate() {
+        this.icon = this.element.querySelector('.icon');
+        this.setImage(await VSCode.request('image', 'verbs', this.data?.id));
 
         // Remove slot template
         if (!this.slotsElement) {
@@ -58,8 +61,20 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
     onOpen() {
         const icon: HTMLElement = this.element.querySelector('.icon');
         icon.setAttribute('title', this.data.id + "\n\nClick to edit ID or image");
-        icon.onclick = this.notWhenDragged((e) => {
-            VSCode.emitInfo("Edit ID and Picture");
+        icon.onclick = this.notWhenDragged(async (e) => {
+            try {
+                const [id, imageToCloneID] = await this.board.pickIDImageOverlay.pick('verbs', this.data);
+                if (imageToCloneID) {
+                    await VSCode.request('clone', 'verbs', imageToCloneID, id);
+                    VSCode.emitInfo(`Image has successfully been added to your workspace`);
+                }
+                this.data.id = id;
+                this.save();
+                this.onUpdate();
+            } catch (e) {
+                if (e == "closed") return;
+                VSCode.emitError(e);
+            }
         });
     }
 

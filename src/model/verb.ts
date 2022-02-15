@@ -19,6 +19,7 @@ export class Verb extends Entity<IVerbSerialized> implements IVerbSerialized {
     }
     public set id(value: string) {
         this.set('id', value);
+        this.slot.id = value;
     }
 
     // label

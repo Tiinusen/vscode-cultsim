@@ -161,10 +161,11 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
     }
 
     public bringToFront() {
-        if (Widget.focused as any === this) return;
+        if (Widget.focused as any === this) return this;
         Widget.xIndexCounter++;
         Widget.focused = this as any;
         this.setZIndexOffset(Widget.xIndexCounter * ((this.state as IWidgetState)?.open ? 1000000 : 1000));
+        return this;
     }
 
     protected bindInput(input: HTMLInputElement) {

@@ -43,13 +43,13 @@ export function newNonce(length = 32) {
     return text;
 }
 
-export function setDebounce(callback: (...args: any[]) => void, ms?: number): any {
+export function setDebounce<T>(callback: T, ms?: number): T {
     let timeout = null;
     return function (...args: any[]) {
         if (timeout) {
             clearTimeout(timeout);
             timeout = null;
         }
-        timeout = setTimeout(callback, ms, ...args);
-    };
+        timeout = setTimeout(callback as any, ms, ...args);
+    } as any;
 }

@@ -2,17 +2,17 @@
  * General
  */
 
+html, body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
 body {
 	justify-content: center;
 	align-items: center;
 	margin: 1em 2em;
 	font-family: Lato, Verdana, Arial, sans-serif;
-}
-
-html, body {
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
 	margin: 0px;
 	padding: 0px;
 }
@@ -31,18 +31,78 @@ html, body {
 }
 
 /*
- * Pick ID Image Overlay
+ * Board Overlay
  */
-.pick-id-image-overlay {
-	display: block;
+.board-overlay {
 	position: absolute;
-	background-color: red;
-	width: 100% !important;
-	height: 100% !important;
+	display: block;
+	background-color: rgba(0,0,0,0.5);
+	width: 100%;
+	height: 100%;
+	z-index: calc(1000*1000*1000);
 }
 
 
-.pick-id-image-overlay[hide] {
+.board-overlay[hide] {
+	display: none;
+}
+
+.board-overlay>div {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 10px;
+}
+
+/*
+ * Pick ID Image Overlay
+ */
+
+.board-overlay .pick-id-image {
+	width: 400px;
+	height: 50px;
+	background-color: #111122;
+	border: thick solid black;
+	border-radius: 12px;
+	padding: 5px;
+	padding-top: 3px;
+
+}
+
+.board-overlay .pick-id-image .icon {
+	border: thick solid black;
+	border-radius: 12px;
+	position: absolute;
+	top: -15px;
+	left: -85px;
+	width: 100px;
+	height: 100px;
+	min-height: none;
+	max-height: none;
+	cursor: pointer;
+}
+
+.board-overlay .pick-id-image input {
+	display: inline-block;
+	background-color: transparent;
+	border: none;
+}
+
+.board-overlay .pick-id-image input[name="id"] {
+	width:73%;
+	clear: none;
+}
+
+.board-overlay .pick-id-image input[error] {
+	border: thin solid red !important;
+}
+
+.board-overlay .pick-id-image button {
+	margin-top:3px;
+}
+
+.board-overlay .pick-id-image button[hide] {
 	display: none;
 }
 
@@ -119,7 +179,7 @@ html, body {
 	padding: 5px;
 }
 
-.board-widget button, .hud button {
+.board-widget button, .hud button, .board-overlay button {
 	background-color: #84866b;
 	width: auto;
 	border-radius: 15px;

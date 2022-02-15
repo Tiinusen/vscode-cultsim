@@ -187,6 +187,7 @@ export class Content {
             return this._coreContent;
         }
         const streamingAssetsPath: string = workspace.getConfiguration('cultsim').get('streamingAssetsPath');
+        if (!streamingAssetsPath) return null;
         const streamingAssetsURI = Uri.joinPath(Uri.file(streamingAssetsPath), "content", "core");
 
         this._coreContent = this.fromFolder(streamingAssetsURI);

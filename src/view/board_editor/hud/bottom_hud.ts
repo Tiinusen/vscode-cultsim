@@ -58,21 +58,25 @@ export class BottomHUD extends L.Control {
         Arrange.Grid(this.board.widgets, this.board.map.getBounds());
     }
 
-    onAddClick() {
+    async onAddClick() {
         try {
-            const widget = (() => {
+            const widget = await (async () => {
                 switch (this.board.content.type) {
-                    case ContentType.Verbs:
-                        return new VerbWidget(this.board, this.board.content.add(new Verb()));
+                    case ContentType.Verbs: {
+                        const [id, copyImage] = await this.board.pickIDImageOverlay.pick('verbs');
+                        if (!id) return null;
+                        return new VerbWidget(this.board, this.board.content.add(new Verb({ id: id, slot: { id: id } } as any))).bringToFront();
+                    }
                 }
-                return null;
+                throw new Error("Add not supported yet for this content type");
             })();
-            if (!widget) throw new Error("Add not supported yet for this content type");
+            if (!widget) return;
             this.board.widgets.forEach(widget => widget.close());
             this.board.addWidget(widget);
             widget.xy = this.board.map.getBounds().getCenter().xy;
             widget.save();
         } catch (e) {
+            if (e == "closed") return;
             console.error(e);
             VSCode.emitError(e);
         }

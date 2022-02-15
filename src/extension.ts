@@ -21,7 +21,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	// Views
 	new ExplorerVerbsView(context);
 
-	BoardEditor.register(context, await Content.fromCore());
+	await BoardEditor.register(context);
 }
 
 
