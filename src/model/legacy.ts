@@ -120,34 +120,34 @@ export class Legacy extends Entity<ILegacySerialized> implements ILegacySerializ
 
     public toJSON(): ILegacySerialized | any {
         return {
-            id: this.id,
-            label: this.label,
-            image: this.image,
-            startingVerbId: this.startingVerbId,
-            description: this.description,
-            startdescription: this.startdescription,
-            statusbarelements: this.statusbarelements,
-            effects: this.effects,
-            excludesOnEnding: this.excludesOnEnding,
-            newstart: this.newstart,
-            fromEnding: this.fromEnding,
-            availableWithoutEndingMatch: this.availableWithoutEndingMatch
+            id: this.get('id'),
+            label: this.get('label'),
+            image: this.get('image'),
+            startingVerbId: this.get('startingVerbId'),
+            description: this.get('description'),
+            startdescription: this.get('startdescription'),
+            statusbarelements: this.get('statusbarelements'),
+            effects: this.get('effects'),
+            excludesOnEnding: this.get('excludesOnEnding'),
+            newstart: this.get('newstart'),
+            fromEnding: this.get('fromEnding'),
+            availableWithoutEndingMatch: this.get('availableWithoutEndingMatch')
         };
     }
 
     public fromJSON(obj: ILegacySerialized): Legacy {
-        this.id = obj?.id;
-        this.label = obj?.label;
-        this.image = obj?.image;
-        this.startingVerbId = obj?.startingVerbId;
-        this.description = obj?.description;
-        this.startdescription = obj?.startdescription;
-        this.statusbarelements = obj?.statusbarelements;
-        this.effects = obj?.effects;
-        this.excludesOnEnding = obj?.excludesOnEnding;
-        this.newstart = obj?.newstart;
-        this.fromEnding = obj?.fromEnding;
-        this.availableWithoutEndingMatch = obj?.availableWithoutEndingMatch;
+        this.id = obj?.id || this.get('id');
+        this.label = obj?.label || this.get('label');
+        this.image = obj?.image || this.get('image');
+        this.startingVerbId = obj?.startingVerbId || this.get('startingVerbId');
+        this.description = obj?.description || this.get('description');
+        this.startdescription = obj?.startdescription || this.get('startdescription');
+        this.statusbarelements = obj?.statusbarelements || this.get('statusbarelements');
+        this.effects = obj?.effects || this.get('effects');
+        this.excludesOnEnding = obj?.excludesOnEnding || this.get('excludesOnEnding');
+        this.newstart = obj?.newstart || this.get('newstart');
+        this.fromEnding = obj?.fromEnding || this.get('fromEnding');
+        this.availableWithoutEndingMatch = obj?.availableWithoutEndingMatch || this.get('availableWithoutEndingMatch');
         return this;
     }
 }

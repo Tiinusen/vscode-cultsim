@@ -248,62 +248,62 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
 
     public toJSON(): IRecipeSerialized | any {
         return {
-            id: this.id,
-            label: this.label,
-            maxexecutions: this.maxexecutions,
-            warmup: this.warmup,
-            craftable: this.craftable,
-            hintonly: this.hintonly,
-            signalimportantloop: this.signalimportantloop,
-            internaldeck: this.internaldeck,
+            id: this.get('id'),
+            label: this.get('label'),
+            maxexecutions: this.get('maxexecutions'),
+            warmup: this.get('warmup'),
+            craftable: this.get('craftable'),
+            hintonly: this.get('hintonly'),
+            signalimportantloop: this.get('signalimportantloop'),
+            internaldeck: this.get('internaldeck'),
             // slots: this?.slots?.map(slot => slot?.toJSON() || slot), // TODO: Broken
-            startdescription: this.startdescription,
-            description: this.description,
-            requirements: this.requirements,
-            tablereqs: this.tablereqs,
-            extantreqs: this.extantreqs,
-            effects: this.effects,
-            purge: this.purge,
-            aspects: this.aspects,
-            deckeffects: this.deckeffects,
-            actionId: this.actionId,
-            ending: this.ending,
-            signalEndingFlavour: this.signalEndingFlavour,
-            burnimage: this.burnimage,
-            portaleffect: this.portaleffect,
-            mutations: this.mutations,
-            alt: this.alt,
-            linked: this.linked,
+            startdescription: this.get('startdescription'),
+            description: this.get('description'),
+            requirements: this.get('requirements'),
+            tablereqs: this.get('tablereqs'),
+            extantreqs: this.get('extantreqs'),
+            effects: this.get('effects'),
+            purge: this.get('purge'),
+            aspects: this.get('aspects'),
+            deckeffects: this.get('deckeffects'),
+            actionId: this.get('actionId'),
+            ending: this.get('ending'),
+            signalEndingFlavour: this.get('signalEndingFlavour'),
+            burnimage: this.get('burnimage'),
+            portaleffect: this.get('portaleffect'),
+            mutations: this.get('mutations'),
+            alt: this.get('alt'),
+            linked: this.get('linked'),
         };
     }
 
     public fromJSON(obj: IRecipeSerialized): Recipe {
-        this.id = obj?.id;
-        this.label = obj?.label;
-        this.maxexecutions = obj?.maxexecutions;
-        this.warmup = obj?.warmup;
-        this.craftable = obj?.craftable;
-        this.hintonly = obj?.hintonly;
-        this.signalimportantloop = obj?.signalimportantloop;
-        this.internaldeck = obj?.internaldeck;
-        this.slots = obj?.slots;
-        this.startdescription = obj?.startdescription;
-        this.description = obj?.description;
-        this.requirements = obj?.requirements;
-        this.tablereqs = obj?.tablereqs;
-        this.extantreqs = obj?.extantreqs;
-        this.effects = obj?.effects;
-        this.purge = obj?.purge;
-        this.aspects = obj?.aspects;
-        this.deckeffects = obj?.deckeffects;
-        this.actionId = obj?.actionId;
-        this.ending = obj?.ending;
-        this.signalEndingFlavour = obj?.signalEndingFlavour;
-        this.burnimage = obj?.burnimage;
-        this.portaleffect = obj?.portaleffect;
-        this.mutations = obj?.mutations;
-        this.alt = obj?.alt;
-        this.linked = obj?.linked;
+        this.id = obj?.id || this.get('id');
+        this.label = obj?.label || this.get('label');
+        this.maxexecutions = obj?.maxexecutions || this.get('maxexecutions');
+        this.warmup = obj?.warmup || this.get('warmup');
+        this.craftable = obj?.craftable || this.get('craftable');
+        this.hintonly = obj?.hintonly || this.get('hintonly');
+        this.signalimportantloop = obj?.signalimportantloop || this.get('signalimportantloop');
+        this.internaldeck = obj?.internaldeck || this.get('internaldeck');
+        this.slots = obj?.slots || this.get('slots');
+        this.startdescription = obj?.startdescription || this.get('startdescription');
+        this.description = obj?.description || this.get('description');
+        this.requirements = obj?.requirements || this.get('requirements');
+        this.tablereqs = obj?.tablereqs || this.get('tablereqs');
+        this.extantreqs = obj?.extantreqs || this.get('extantreqs');
+        this.effects = obj?.effects || this.get('effects');
+        this.purge = obj?.purge || this.get('purge');
+        this.aspects = obj?.aspects || this.get('aspects');
+        this.deckeffects = obj?.deckeffects || this.get('deckeffects');
+        this.actionId = obj?.actionId || this.get('actionId');
+        this.ending = obj?.ending || this.get('ending');
+        this.signalEndingFlavour = obj?.signalEndingFlavour || this.get('signalEndingFlavour');
+        this.burnimage = obj?.burnimage || this.get('burnimage');
+        this.portaleffect = obj?.portaleffect || this.get('portaleffect');
+        this.mutations = obj?.mutations || this.get('mutations');
+        this.alt = obj?.alt || this.get('alt');
+        this.linked = obj?.linked || this.get('linked');
         return this;
     }
 }

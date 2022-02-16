@@ -57,10 +57,10 @@ export class Verb extends Entity<IVerbSerialized> implements IVerbSerialized {
     }
 
     public fromJSON(obj: IVerbSerialized): Verb {
-        this.id = obj?.id || this.id;
-        this.label = obj?.label || this.label;
-        this.description = obj?.description || this.description;
-        this.slot = obj?.slot ? this.slot.fromJSON(obj.slot) : this.slot;
+        this.id = obj?.id || this.get('id');
+        this.label = obj?.label || this.get('label');
+        this.description = obj?.description || this.get('description');
+        this.slot = obj?.slot ? this.slot.fromJSON(obj.slot) : this.get('slot');
         return this;
     }
 }

@@ -167,59 +167,60 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
     public toJSON(): IElementSerialized | any {
         if (this.isAspect) {
             return {
-                id: this.id,
-                label: this.label,
-                description: this.description,
-                isAspect: this.isAspect,
-                icon: this.icon,
-                induces: this.induces,
-                decayTo: this.decayTo,
-                verbicon: this.verbicon,
+                id: this?.id || this.get('id'),
+                label: this?.label || this.get('label'),
+                description: this?.description || this.get('description'),
+                isAspect: this?.isAspect || this.get('isAspect'),
+                icon: this?.icon || this.get('icon'),
+                induces: this?.induces || this.get('induces'),
+                decayTo: this?.decayTo || this.get('decayTo'),
+                verbicon: this?.verbicon || this.get('verbicon'),
 
                 // Aspect Properties
-                isHidden: this.isHidden,
-                noArtNeeded: this.noArtNeeded,
-                xtriggers: this.xtriggers,
+                isHidden: this?.isHidden || this.get('isHidden'),
+                noArtNeeded: this?.noArtNeeded || this.get('noArtNeeded'),
+                xtriggers: this?.xtriggers || this.get('xtriggers'),
             };
         }
         return {
-            id: this.id,
-            label: this.label,
-            description: this.description,
-            isAspect: this.isAspect,
-            icon: this.icon,
-            induces: this.induces,
-            decayTo: this.decayTo,
-            verbicon: this.verbicon,
+            id: this?.id || this.get('id'),
+            label: this?.label || this.get('label'),
+            description: this?.description || this.get('description'),
+            isAspect: this?.isAspect || this.get('isAspect'),
+            icon: this?.icon || this.get('icon'),
+            induces: this?.induces || this.get('induces'),
+            decayTo: this?.decayTo || this.get('decayTo'),
+            verbicon: this?.verbicon || this.get('verbicon'),
 
-            // Card Properties
-            aspects: this.aspects,
-            lifetime: this.lifetime,
-            resaturate: this.resaturate,
             // slots: this?.slots?.map(slot => slot?.toJSON() || slot), // TODO: Broken
-            unique: this.unique,
-            uniquenessgroup: this.uniquenessgroup,
+            
+            // Card Properties
+            aspects: this?.aspects || this.get('aspects'),
+            lifetime: this?.lifetime || this.get('lifetime'),
+            resaturate: this?.resaturate || this.get('resaturate'),
+            unique: this?.unique || this.get('unique'),
+            uniquenessgroup: this?.uniquenessgroup || this.get('uniquenessgroup'),
         };
     }
 
     public fromJSON(obj: IElementSerialized): CElement {
-        this.id = obj?.id;
-        this.label = obj?.label;
-        this.description = obj?.description;
-        this.isAspect = obj?.isAspect;
-        this.icon = obj?.icon;
-        this.induces = obj?.induces;
-        this.decayTo = obj?.decayTo;
-        this.verbicon = obj?.verbicon;
+        this.id = obj?.id || this.get('id');
+        this.label = obj?.label || this.get('label');
+        this.description = obj?.description || this.get('description');
+        this.isAspect = obj?.isAspect || this.get('isAspect');
+        this.icon = obj?.icon || this.get('icon');
+        this.induces = obj?.induces || this.get('induces');
+        this.decayTo = obj?.decayTo || this.get('decayTo');
+        this.verbicon = obj?.verbicon || this.get('verbicon');
 
-        this.isHidden = obj?.isHidden;
-        this.noArtNeeded = obj?.noArtNeeded;
-        this.xtriggers = obj?.xtriggers;
+        this.isHidden = obj?.isHidden || this.get('isHidden');
+        this.noArtNeeded = obj?.noArtNeeded || this.get('noArtNeeded');
+        this.xtriggers = obj?.xtriggers || this.get('xtriggers');
 
-        this.aspects = obj?.aspects;
-        this.lifetime = obj?.lifetime;
-        this.resaturate = obj?.resaturate;
-        this.slots = obj?.slots;
+        this.aspects = obj?.aspects || this.get('aspects');
+        this.lifetime = obj?.lifetime || this.get('lifetime');
+        this.resaturate = obj?.resaturate || this.get('resaturate');
+        this.slots = obj?.slots || this.get('slots');
         return this;
     }
 }

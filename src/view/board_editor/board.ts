@@ -12,6 +12,7 @@ import { Entity } from "../../model/entity";
 import { BottomHUD } from "./hud/bottom_hud";
 import { Arrange } from "../../util/layout";
 import { PickIDImageOverlay } from "./overlay/pick_id_image_overlay";
+import { setDebounce } from "../../util/helpers";
 
 export const BOARD_SIZE_WIDTH = 1920;
 export const BOARD_SIZE_HEIGHT = 1104;
@@ -147,7 +148,7 @@ export class Board {
             }
 
             // Update/Remove
-            this._widgets = this.widgets.filter((widget: Widget<Entity<any>, IWidgetState>) => {
+            this._widgets = this.widgets.filter((widget: any) => {
                 if (widget instanceof SelectContentTypeWidget) {
                     if (this.content.type == ContentType.Unspecified) {
                         return true;
@@ -166,7 +167,7 @@ export class Board {
                         }
                     }
                 }
-                this.map.removeLayer(widget);
+                this.removeWidget(widget);
                 return false;
             });
 
@@ -204,6 +205,18 @@ export class Board {
             }
         } catch (e) {
             VSCode.emitError(e);
+        }
+    }
+
+    public removeWidget(widget: Widget<Entity<any>, IWidgetState>, deleteFromContent = false) {
+        this._widgets = this.widgets.filter((swidget: Widget<Entity<any>, IWidgetState>) => {
+            if (swidget !== widget) return true;
+            this.map.removeLayer(widget);
+            return false;
+        });
+        if (deleteFromContent) {
+            this.content.remove(widget.data);
+            this.save();
         }
     }
 

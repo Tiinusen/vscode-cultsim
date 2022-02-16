@@ -26,7 +26,7 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
         this.icon.setAttribute('src', imageURL + "?" + (Math.random() * 100));
     }
 
-    async onUpdate() {
+    protected async onUpdate() {
         this.icon = this.element.querySelector('.icon');
         this.setImage(await VSCode.request('image', 'verbs', this.data?.id));
 
@@ -54,11 +54,11 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
         this.slot.onUpdate();
     }
 
-    onClickClose() {
+    protected onClickClose() {
         this.close();
     }
 
-    onOpen() {
+    protected onOpen() {
         const icon: HTMLElement = this.element.querySelector('.icon');
         icon.setAttribute('title', this.data.id + "\n\nClick to edit ID or image");
         icon.onclick = this.notWhenDragged(async (e) => {
@@ -78,13 +78,17 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
         });
     }
 
-    onClose() {
+    protected onClose() {
         const icon: HTMLElement = this.element.querySelector('.icon');
         icon.setAttribute('title', this.data.id + "\n\nClick to open verb");
         icon.onclick = null;
         this.removeEventListener('click');
-        this.once('click', () => {
-            this.open();
-        });
+        this.once('click', () => this.onClick());
+    }
+
+    protected onClick() {
+        if (!this.board.hud.inDeleteMode) return this.open();
+        this.board.removeWidget(this, true);
+        this.board.hud.inDeleteMode = false;
     }
 }

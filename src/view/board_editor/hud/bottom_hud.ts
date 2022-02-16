@@ -1,21 +1,34 @@
 import * as L from 'leaflet';
 import { ContentType } from '../../../model/content';
 import { Verb } from '../../../model/verb';
+import { setDebounce } from '../../../util/helpers';
 import { Arrange } from '../../../util/layout';
 import { Board } from '../board';
 import { VSCode } from '../vscode';
 import { VerbWidget } from '../widget/verb_widget';
-import { IWidgetState, Widget } from '../widget/widget';
 import html from './bottom_hud.html';
 
 export class BottomHUD extends L.Control {
     private _board: Board;
     private _element: HTMLElement;
+    private _inDeleteMode = false;
     constructor(board: Board) {
         super({
             position: 'bottomright'
         });
         this._board = board;
+    }
+
+    public get inDeleteMode(): boolean {
+        return this._inDeleteMode;
+    }
+    public set inDeleteMode(value: boolean) {
+        this._inDeleteMode = value;
+        if (this._inDeleteMode) {
+            this.hide();
+        } else {
+            this.show();
+        }
     }
 
     private get board(): Board {
@@ -38,7 +51,7 @@ export class BottomHUD extends L.Control {
         }
     }
 
-    onAdd(map: L.Map): HTMLElement {
+    public onAdd(map: L.Map): HTMLElement {
         this._element = document.createElement('div');
         this._element.innerHTML = html;
         this._element = this._element.firstElementChild as HTMLElement;
@@ -46,19 +59,21 @@ export class BottomHUD extends L.Control {
         return this._element;
     }
 
-    init() {
+    protected init() {
         const sortButton = this.element.querySelector('button[action="Sort"]') as HTMLButtonElement;
         const addButton = this.element.querySelector('button[action="Add"]') as HTMLButtonElement;
+        const deleteButton = this.element.querySelector('button[action="Delete"]') as HTMLButtonElement;
         sortButton.onclick = () => this.onSortClick();
         addButton.onclick = () => this.onAddClick();
+        deleteButton.onclick = () => this.onDeleteClick();
     }
 
-    onSortClick() {
+    protected onSortClick() {
         this.board.widgets.forEach(widget => widget.close());
         Arrange.Grid(this.board.widgets, this.board.map.getBounds());
     }
 
-    async onAddClick() {
+    protected async onAddClick() {
         try {
             const widget = await (async () => {
                 switch (this.board.content.type) {
@@ -84,5 +99,18 @@ export class BottomHUD extends L.Control {
             console.error(e);
             VSCode.emitError(e);
         }
+    }
+
+    private onDeleteClick() {
+        setTimeout(() => {
+            this.board.map.once('click', (e: { originalEvent: MouseEvent }) => {
+                if (e.originalEvent.target === this.board.map as any) return;
+                if (!this.board.hud.inDeleteMode) return;
+                e.originalEvent.preventDefault();
+                this.board.hud.inDeleteMode = false;
+            }, 100);
+            this.inDeleteMode = true;
+        }, 100);
+        this.board.widgets.forEach(widget => widget.close());
     }
 }

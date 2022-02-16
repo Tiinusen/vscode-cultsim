@@ -70,24 +70,24 @@ export class Deck extends Entity<IDeckSerialized> implements IDeckSerialized {
 
     public toJSON(): IDeckSerialized {
         return {
-            id: this.id,
-            label: this.label,
-            description: this.description,
-            resetonexhaustion: this.resetonexhaustion,
-            spec: this.spec,
-            defaultcard: this.defaultcard,
-            drawmessages: this.drawmessages,
+            id: this.get('id'),
+            label: this.get('label'),
+            description: this.get('description'),
+            resetonexhaustion: this.get('resetonexhaustion'),
+            spec: this.get('spec'),
+            defaultcard: this.get('defaultcard'),
+            drawmessages: this.get('drawmessages'),
         };
     }
 
     public fromJSON(obj: IDeckSerialized): Deck {
-        this.id = obj?.id;
-        this.label = obj?.label;
-        this.description = obj?.description;
-        this.resetonexhaustion = obj?.resetonexhaustion;
-        this.spec = obj?.spec;
-        this.defaultcard = obj?.defaultcard;
-        this.drawmessages = obj?.drawmessages;
+        this.id = obj?.id || this.get('id');
+        this.label = obj?.label || this.get('label');
+        this.description = obj?.description || this.get('description');
+        this.resetonexhaustion = obj?.resetonexhaustion || this.get('resetonexhaustion');
+        this.spec = obj?.spec || this.get('spec');
+        this.defaultcard = obj?.defaultcard || this.get('defaultcard');
+        this.drawmessages = obj?.drawmessages || this.get('drawmessages');
         return this;
     }
 }

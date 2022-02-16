@@ -75,24 +75,24 @@ export class Ending extends Entity<IEndingSerialized> implements IEndingSerializ
 
     public toJSON(): IEndingSerialized | any {
         return {
-            id: this.id,
-            label: this.label,
-            description: this.description,
-            image: this.image,
-            flavour: this.flavour,
-            anim: this.anim,
-            achievementid: this.achievementid,
+            id: this.get('id'),
+            label: this.get('label'),
+            description: this.get('description'),
+            image: this.get('image'),
+            flavour: this.get('flavour'),
+            anim: this.get('anim'),
+            achievementid: this.get('achievementid'),
         };
     }
 
-    public fromJSON(obj: IEndingSerialized) : Ending {
-        this.id = obj?.id;
-        this.label = obj?.label;
-        this.description = obj?.description;
-        this.image = obj?.image;
-        this.flavour = obj?.flavour;
-        this.anim = obj?.anim;
-        this.achievementid = obj?.achievementid;
+    public fromJSON(obj: IEndingSerialized): Ending {
+        this.id = obj?.id || this.get('id');
+        this.label = obj?.label || this.get('label');
+        this.description = obj?.description || this.get('description');
+        this.image = obj?.image || this.get('image');
+        this.flavour = obj?.flavour || this.get('flavour');
+        this.anim = obj?.anim || this.get('anim');
+        this.achievementid = obj?.achievementid || this.get('achievementid');
         return this;
     }
 }

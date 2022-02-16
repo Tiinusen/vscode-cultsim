@@ -137,8 +137,8 @@ body {
 }
 
 .board-widget .icon {
-	border: 2px solid black;
-	border-radius: 12px;
+	background-color: black;
+	border: 6px groove black;
 	position: absolute;
 	top: -52px;
 	left: -52px;
@@ -146,8 +146,8 @@ body {
 }
 
 .board-widget[open] .icon {
-	top: -20px;
-	left: -20px;
+	top: -30px;
+	left: -30px;
 }
 
 .board-widget .header {

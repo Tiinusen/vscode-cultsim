@@ -27,9 +27,9 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
     private static focused: Widget<any, IWidgetState>;
 
     // Events
-    onUpdate?(): any;
-    onOpen?(): any;
-    onClose?(): any;
+    protected onUpdate?(): any;
+    protected onOpen?(): any;
+    protected onClose?(): any;
 
     constructor(board: Board, data: EntityState, html?: string, className?: string) {
         super(L.latLng(0, 0));

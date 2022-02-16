@@ -94,14 +94,14 @@ export class Slot extends Entity<ISlotSerialized> implements ISlotSerialized {
     }
 
     public fromJSON(obj: ISlotSerialized): Slot {
-        this.id = obj?.id || this.id;
-        this.label = obj?.label || this.label;
-        this.description = obj?.description || this.description;
-        this.required = obj?.required || this.required;
-        this.forbidden = obj?.forbidden || this.forbidden;
-        this.consumes = obj?.consumes || this.consumes;
-        this.actionId = obj?.actionId || this.actionId;
-        this.greedy = obj?.greedy || this.greedy;
+        this.id = obj?.id || this.get('id');
+        this.label = obj?.label || this.get('label');
+        this.description = obj?.description || this.get('description');
+        this.required = obj?.required || this.get('required');
+        this.forbidden = obj?.forbidden || this.get('forbidden');
+        this.consumes = obj?.consumes || this.get('consumes');
+        this.actionId = obj?.actionId || this.get('actionId');
+        this.greedy = obj?.greedy || this.get('greedy');
         return this;
     }
 }
