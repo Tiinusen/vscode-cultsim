@@ -98,7 +98,7 @@ export class Content {
         }
         const content = this.clone();
         try {
-            from._elements.forEach(element => content._elements.find(item => element.id = item.id)?.fromJSON(element) || content.add(element));
+            from._elements.forEach(element => content._elements.find(item => element.id == item.id)?.fromJSON(element) || content.add(element));
             from._recipes.forEach(recipe => content._recipes.find(item => recipe.id == item.id)?.fromJSON(recipe) || content.add(recipe));
             from._decks.forEach(deck => content._decks.find(item => deck.id == item.id)?.fromJSON(deck) || content.add(deck));
             from._legacies.forEach(legacy => content._legacies.find(item => legacy.id == item.id)?.fromJSON(legacy) || content.add(legacy));
