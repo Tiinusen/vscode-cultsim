@@ -89,11 +89,11 @@
 		"views": {
 			"cultsim-explorer": [
 				{
-					"id": "cultsim.explorer.verbs",
-					"name": "Verbs",
+					"id": "cultsim.explorer",
+					"name": "",
 					"when": "activeCustomEditorId == cultsim.editor.board",
 					"icon": "./media/icons/yin-yang.light.svg",
-					"contextualTitle": "Will I ever be seen?"
+					"contextualTitle": "Cultist Simulator Explorers"
 				}
 			]
 		}

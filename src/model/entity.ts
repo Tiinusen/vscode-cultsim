@@ -4,25 +4,36 @@ import { SerializationHelper } from "../util/serialization";
  * I see an abstract entity in the sky, I wish I knew what it was
  * [A base]
  */
-export abstract class Entity<T> {
+export abstract class Entity<T>{
     private _data: T = {} as T;
     constructor(data?: T) {
         if (!data) data = {} as T;
         SerializationHelper.toInstance<Entity<T>, T>(this, data);
     }
 
-    protected has(key: string): boolean {
+    public has(key: string): boolean {
         return key in this._data;
     }
 
-    protected get<T>(key: string): T {
+    public get(key: string): any | undefined {
         if (!this.has(key)) return void 0;
         return this._data[key];
     }
 
-    protected set<T>(key: string, value: T): T {
-        return this._data[key] = value;
+    public set(key: string, value: any): this {
+        this._data[key] = value;
+        return this;
     }
+
+    *[Symbol.iterator](): IterableIterator<[string, any]> {
+        for (const key in this._data as any) {
+            yield [key, this._data[key]];
+        }
+    }
+
+    [Symbol.toStringTag] = "Entity";
+
+
 
     protected merge(propertyName: string, from: T): Entity<T> {
         if (!this.has(`${propertyName}`)) {

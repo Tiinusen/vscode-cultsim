@@ -40,7 +40,7 @@ export class Verb extends Entity<IVerbSerialized> implements IVerbSerialized {
 
     // slot
     public get slot(): Slot {
-        return this.get('slot') || this.set('slot', new Slot());
+        return this.get('slot') || this.set('slot', new Slot()).slot;
     }
     public set slot(value: Slot) {
         this.set('slot', value);

@@ -8,16 +8,7 @@ import { Transform } from 'stream';
 export class BoardEditor implements vscode.CustomTextEditorProvider {
 	static UI_PATH = null;
 
-	public static async register(context: vscode.ExtensionContext) {
-		let coreContent: Content = null;
-		try {
-			coreContent = await Content.fromCore();
-			if (!coreContent) {
-				vscode.window.showWarningMessage("Cultist Simulator streaming assets path not configurated");
-			}
-		} catch (e) {
-			vscode.window.showErrorMessage("Failed to load Cultist Simulator streaming assets");
-		}
+	public static async register(context: vscode.ExtensionContext, coreContent: Content) {
 		const provider = new BoardEditor(context, coreContent);
 		const providerRegistration = vscode.window.registerCustomEditorProvider(BoardEditor.viewType, provider);
 		context.subscriptions.push(providerRegistration);
