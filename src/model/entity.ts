@@ -34,8 +34,8 @@ export abstract class Entity<T>{
     [Symbol.toStringTag] = "Entity";
 
 
-    public clone(): T {
-        return JSON.parse(JSON.stringify(this));
+    public clone(): Entity<T> {
+        return new (<any>this.constructor)(JSON.parse(JSON.stringify(this)));
     }
 
     public merge(propertyName: string, from: T): Entity<T> {

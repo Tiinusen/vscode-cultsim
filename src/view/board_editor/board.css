@@ -104,7 +104,7 @@ body {
  * Pick Element Overlay
  */
 
- .board-overlay .pick-element {
+.board-overlay .pick-element {
 	width: 400px;
 	height: 50px;
 	background-color: #111122;
@@ -141,6 +141,7 @@ body {
 	width: 55%;
 	clear: none;
 }
+
 .board-overlay .pick-element input[name="level"] {
 	width: 20%;
 	clear: none;
@@ -457,26 +458,22 @@ body {
 
 .board-widget .slot td {
 	vertical-align: top;
-	width:50%;
+	width: 50%;
 }
 
-.board-widget .slot td img {
+*[dictionary] img {
 	height: 16px;
 	width: 16px;
 	margin-bottom: 0px;
 }
 
-.board-widget .slot td i.fa-plus {
+*[dictionary] i.fa-plus {
 	position: relative;
-	top: -4px;
+	top: -1px;
 	padding: 3px;
 }
 
-/* .board-widget .slot td[name="required"], .board-widget .slot td[name="forbidden"] {
-		
-} */
-
-.board-widget .slot td label {
+*[dictionary]>*[list]>div label {
 	font-size: 10px;
 	padding-left: 5px;
 	text-overflow: ellipsis;
@@ -487,20 +484,20 @@ body {
 	cursor: inherit;
 }
 
-.board-widget .slot td>div {
+*[dictionary]>*[list]>div {
 	padding-bottom: 0px;
 	margin-bottom: 0px;
-	height:20px;
-	padding-top:1px;
+	height: 20px;
+	padding-top: 1px;
 }
 
-.board-widget .slot td>div:hover {
+*[dictionary]>*[list]>*:hover {
 	background-color: #610101;
 	cursor: not-allowed;
 }
 
 
-.board-widget .slot td>div[add]:hover {
+*[dictionary]>*[add]:hover {
 	background-color: #016101;
 	cursor: pointer;
 }

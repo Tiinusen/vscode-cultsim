@@ -147,7 +147,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
             (this.state as IWidgetState).xyBeforeOpen = this.xy;
         }
         (this.state as IWidgetState).open = true;
-        this.element.setAttribute('open', '');
+        this.element.toggleAttribute('open', true);
         this.bringToFront();
         this.save(true);
         if (this.onOpen) this.onOpen();
@@ -222,7 +222,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
 
         // Dragging
         this.on('dragstart', () => this._isDragging = true);
-        this.on('dragend', setDebounce(() => this._isDragging = false, 10));
+        this.on('dragend', setDebounce(() => this._isDragging = false, 100));
         this.on('dragend', (e) => {
             this.save(true);
         });

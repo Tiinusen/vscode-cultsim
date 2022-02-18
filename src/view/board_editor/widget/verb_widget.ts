@@ -6,14 +6,14 @@ import { IWidgetState, Widget } from "./widget";
 import html from "./verb_widget.html";
 import { VSCode } from "../vscode";
 import { get, has, set, setDebounce } from "../../../util/helpers";
-import { SlotWidget } from "./slot_widget";
+import { SlotComponent } from "./component/slot_component";
 
 export interface IVerbWidgetState extends IWidgetState {
     slotOpen: boolean
 }
 
 export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
-    private slot?: SlotWidget<VerbWidget>;
+    private slot?: SlotComponent<VerbWidget>;
     private slotsElement?: Element;
     private slotTemplateElement?: Element;
     private icon: HTMLImageElement;
@@ -53,15 +53,16 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
         const closeButton: HTMLElement = this.element.querySelector('.header i[close]');
         closeButton.onclick = this.notWhenDragged((e) => this.onClickClose());
 
-        // Inputs
-        this.element.querySelectorAll('input[name],textarea[name]').forEach((input: HTMLInputElement) => this.bindInput(input));
-
         // Slot
         if (!this.slot) {
             const slotElement = this.slotTemplateElement.cloneNode(true) as HTMLElement;
             this.slotsElement.appendChild(slotElement);
-            this.slot = new SlotWidget<VerbWidget>(this.board, this.data.slot, this, slotElement);
+            this.slot = new SlotComponent<VerbWidget>(this.board, this.data.slot, this, slotElement);
         }
+
+        // Inputs
+        this.element.querySelectorAll('input[name],textarea[name]').forEach((input: HTMLInputElement) => this.bindInput(input));
+
         this.slot.data = this.data.slot;
         if (this.parentData) this.slot.parentData = this.parentData.slot;
         await this.slot.onUpdate();
