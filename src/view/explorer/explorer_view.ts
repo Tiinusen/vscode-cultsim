@@ -175,6 +175,7 @@ class PropertyTreeItem extends vscode.TreeItem implements TreeItem {
 				this.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
 			}
 		}
+		this.tooltip = this.description;
 	}
 	hasChildren(): boolean {
 		return this?.collapsibleState != vscode.TreeItemCollapsibleState.None || false;
