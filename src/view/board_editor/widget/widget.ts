@@ -12,11 +12,13 @@ export interface IWidgetState {
     y: number
     xyBeforeOpen: [number, number]
     open: boolean
+    openSlot: number
 }
 
 export abstract class Widget<EntityState, WidgetState> extends L.Marker {
     private _board: Board
     private _data: EntityState
+    private _parentData: EntityState
     private _state: WidgetState | IWidgetState
     private _icon: L.DivIcon
     private _className: string
@@ -45,6 +47,13 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
         this.setIcon(this._icon);
         this.on('add', (e) => this.init());
         this.xy = [BOARD_SIZE_WIDTH / 2, BOARD_SIZE_HEIGHT / 2];
+    }
+
+    protected get parentData(): EntityState {
+        return this._parentData;
+    }
+    protected set parentData(value: EntityState) {
+        this._parentData = value;
     }
 
     public get size(): [number, number] {
@@ -177,6 +186,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
             return;
         }
         input.value = this.data[fieldName];
+        input.placeholder = this?.parentData?.[fieldName] || "";
         input.onkeyup = () => {
             if (this.data[fieldName] == input.value) {
                 return;

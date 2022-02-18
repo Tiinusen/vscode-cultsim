@@ -1,24 +1,21 @@
-import * as L from 'leaflet';
 import { setDebounce } from '../../../util/helpers';
 import { Board } from '../board';
 import { VSCode } from '../vscode';
 import { BoardOverlay } from './board_overlay';
-import html from './pick_id_image_overlay.html';
+import html from './pick_element_overlay.html';
 
-export class PickIDImageOverlay extends BoardOverlay {
+export class PickElementOverlay extends BoardOverlay {
 
     private _type: string;
-    private _copyImage: string;
-    private _id: string;
     private _ids: string[];
     private _icon: HTMLImageElement;
     private _addButton: HTMLButtonElement;
-    private _mergeButton: HTMLButtonElement;
     private _closeButton: HTMLButtonElement;
     private _idInput: HTMLInputElement;
+    private _levelInput: HTMLInputElement;
     private _idsDataList: HTMLDataListElement;
 
-    private onPick?(id: string): void
+    private onPick?(id: string, level: number): void
 
     constructor(board: Board, attachTo?: HTMLElement) {
         super(html, board, attachTo);
@@ -26,85 +23,55 @@ export class PickIDImageOverlay extends BoardOverlay {
 
     protected async onInit() {
         this._addButton = this.element.querySelector('button[action="add"]');
-        this._mergeButton = this.element.querySelector('button[action="merge"]');
         this._closeButton = this.element.querySelector('button[action="close"]');
         this._idInput = this.element.querySelector('input[name="id"]');
+        this._levelInput = this.element.querySelector('input[name="level"]');
         this._idsDataList = this.element.querySelector('datalist[id="ids"]');
         this._icon = this.element.querySelector('img.icon');
-        this._idInput.onkeydown = ev => this.onIDKeyDown(ev);
-        this._idInput.onkeyup = setDebounce(this.onIDChange.bind(this), 100);
+        this._idInput.onkeydown = ev => this.onKeyDown(ev);
+        this._idInput.onkeyup = setDebounce(this.onChange.bind(this), 100);
+        this._levelInput.onkeydown = ev => this.onKeyDown(ev);
+        this._levelInput.onkeyup = setDebounce(this.onChange.bind(this), 100);
         this._closeButton.onclick = () => this.onCloseClick();
-        this._mergeButton.onclick = () => this.onMergeClick();
         this._addButton.onclick = () => this.onAddClick();
         this._icon.onclick = () => this.onIconClick();
 
-        if (this.isRemovedOnHide) {
-            this.wrapper.setAttribute('image-picker', '');
-            this._idInput.setAttribute('placeholder', 'Which image do you wish to clone?');
-            this._icon.onclick = () => this.onCloseClick();
-            this._closeButton.onclick = () => this.onMergeClick();
-            this._addButton.innerText = "Copy";
-            this._mergeButton.innerText = "Copy";
-            this._closeButton.innerText = "Copy";
-        }
-
-        this.onIDChange();
+        this.onChange();
     }
 
     private async onIconClick() {
-        try {
-            [this._copyImage] = await new PickIDImageOverlay(this.board, this.wrapper).pick(this._type, { id: this._idInput.value });
-            this.setImage(this._copyImage);
-            this.onCloseClick = this.onMergeClick;
-            this._idInput.focus();
-        } catch (e) {
-            if (e == "closed") return;
-            VSCode.emitError(e);
-        }
+        this?.onClickOutside();
     }
 
     private onAddClick() {
-        this?.onPick(this._idInput.value);
-    }
-
-    private onMergeClick() {
-        this?.onPick(this._idInput.value);
+        this?.onPick(this._idInput.value, parseInt(this._levelInput.value) || 1);
     }
 
     private onCloseClick() {
         this?.onClickOutside();
     }
 
-    private onIDChange() {
+    private onChange() {
         this._idInput.value = this._idInput.value
             .toLowerCase()
             .replace(/[^0-9a-zA-Z.]/gm, "");
         const id = this._idInput.value;
         this._idInput.setAttribute('title', '');
         this._idInput.removeAttribute('error');
-        if (id.length == 0 || id == this._id) {
+        if (id.length == 0) {
             this._closeButton.removeAttribute('hide');
-        } else if (!this.isRemovedOnHide && (this.board.content[this._type].some(entity => entity.id == id))) {
-            this._idInput.setAttribute('error', '');
-            this._idInput.setAttribute('title', 'Already exists within document');
-        } else if (this._ids.some(sid => sid == id)) {
-            this._mergeButton.removeAttribute('hide');
         } else {
             this._addButton.removeAttribute('hide');
         }
-        this.setImage(this?._copyImage || id);
+        this.setImage(id);
     }
 
-    private onIDKeyDown(ev: KeyboardEvent) {
+    private onKeyDown(ev: KeyboardEvent) {
         switch (ev.code) {
             case "Enter": {
                 ev.preventDefault();
                 if (!this._addButton.hasAttribute('hide')) {
                     this.onAddClick();
-                } else if (!this._mergeButton.hasAttribute('hide')) {
-                    this.onMergeClick();
-                } else if (!this._closeButton.hasAttribute('hide')) {
-                    this.onMergeClick();
                 } else {
                     VSCode.emitWarning(this._idInput.getAttribute('title'));
                 }
@@ -116,10 +83,9 @@ export class PickIDImageOverlay extends BoardOverlay {
                 });
             }
         }
-        this._addButton.setAttribute('hide', '');
-        this._mergeButton.setAttribute('hide', '');
-        this._closeButton.setAttribute('hide', '');
-        this._idInput.setAttribute('title', '');
+        this._addButton.toggleAttribute('hide', true);
+        this._closeButton.toggleAttribute('hide', true);
+        this._idInput.toggleAttribute('title', true);
         this._idInput.removeAttribute('error');
     }
 
@@ -127,10 +93,10 @@ export class PickIDImageOverlay extends BoardOverlay {
     /**
      * Opens dialog and resolves once user has performed expected action or closed dialog
      */
-    public async pick(type: string, entity?: { id: string }): Promise<[id: string, imageToClone: string]> {
+    public async pick(type: string): Promise<[id: string, level: number]> {
         this._type = type;
-        this._id = entity?.id || "";
-        this._idInput.value = this._id;
+        this._idInput.value = "";
+        this._levelInput.value = "";
         this._ids = await VSCode.request('IDs', this._type);
         this._idsDataList.innerHTML = "";
         for (const id of this._ids) {
@@ -139,18 +105,15 @@ export class PickIDImageOverlay extends BoardOverlay {
             this._idsDataList.appendChild(option);
         }
         return new Promise((resolve, reject) => {
-            this.onPick = (id: string) => {
+            this.onPick = (id: string, level: number) => {
                 this.hide();
-                const imageID = this?._copyImage || "";
-                this._copyImage = void 0;
-                resolve([id, imageID]);
+                resolve([id, level]);
             };
             this.onClickOutside = () => {
                 this.hide();
-                const imageID = this?._copyImage || "";
                 reject("closed");
             };
-            this.setImage(this._id);
+            this.setImage(this._idInput.value);
             this.show();
             this._idInput.focus({ preventScroll: true });
         });

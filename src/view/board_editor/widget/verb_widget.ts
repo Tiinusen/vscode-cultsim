@@ -17,18 +17,30 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
     private slotsElement?: Element;
     private slotTemplateElement?: Element;
     private icon: HTMLImageElement;
+    private lastIconFetch?: number;
 
     constructor(board: Board, data: Verb) {
         super(board, data, html, "verb-widget");
     }
 
     private setImage(imageURL: string) {
+        this.icon.onerror = () => this.icon.src = 'https://www.frangiclave.net/static/images/icons40/aspects/_x.png';
         this.icon.setAttribute('src', imageURL + "?" + (Math.random() * 100));
     }
 
     protected async onUpdate() {
+        // Fetch data
+        if (this.data?.id && !this.parentData) {
+            const dataParent: Verb = await VSCode.request('entity', 'verbs', this.data.id);
+            if (dataParent) this.parentData = new Verb(dataParent);
+        }
+
+        // Icon
         this.icon = this.element.querySelector('.icon');
-        this.setImage(await VSCode.request('image', 'verbs', this.data?.id));
+        if (!this.lastIconFetch || (this.lastIconFetch + 5 * 1000) < new Date().getTime()) {
+            this.lastIconFetch = new Date().getTime();
+            this.setImage(await VSCode.request('image', 'verbs', this.data?.id));
+        }
 
         // Remove slot template
         if (!this.slotsElement) {
@@ -51,7 +63,20 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
             this.slot = new SlotWidget<VerbWidget>(this.board, this.data.slot, this, slotElement);
         }
         this.slot.data = this.data.slot;
-        this.slot.onUpdate();
+        if (this.parentData) this.slot.parentData = this.parentData.slot;
+        await this.slot.onUpdate();
+        this.slot.onOpen = null;
+        if (this.state.openSlot == 1) {
+            this.slot.open();
+        }
+        this.slot.onOpen = () => {
+            this.state.openSlot = 1;
+            this.save(true);
+        };
+        this.slot.onClose = () => {
+            this.state.openSlot = 0;
+            this.save(true);
+        };
     }
 
     protected onClickClose() {
@@ -69,8 +94,9 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
                     VSCode.emitInfo(`Image has successfully been added to your workspace`);
                 }
                 this.data.id = id;
+                this.parentData = null;
                 this.save();
-                this.onUpdate();
+                await this.onUpdate();
             } catch (e) {
                 if (e == "closed") return;
                 VSCode.emitError(e);

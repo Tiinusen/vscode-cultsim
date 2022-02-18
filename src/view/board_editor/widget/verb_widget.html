@@ -1,30 +1,97 @@
 <div class="box">
 
 </div>
+<!-- icon -->
 <img class="icon" />
 <div class="frame">
     <div class="header">
-        <input name="label" placeholder="Label" title="Label" />
+        <!-- label -->
+        <input name="label" placeholder="Label"
+            title="The name of the verb displayed to the player when clicking on the token while no recipe is running." />
+        <!-- close button (widget) -->
         <i class="fa-solid fa-xmark" title="Click to close" close></i>
     </div>
     <div class="content">
         <table>
             <tr>
                 <td>
-                    <textarea name="description"></textarea>
+                    <!-- description -->
+                    <textarea name="description"
+                        title="Text displayed in-game when clicking on the token while no recipe is running."></textarea>
                 </td>
                 <td class="slots">
+                    <!-- slot -->
                     <div class="slot">
-                        <input name="label" placeholder="Label" title="Slot Label" />
+                        <input name="label" placeholder="Label" title="The text displayed above the slot." />
                         <div class="panel">
-                            hej
+                            <!-- consumes -->
+                            <input type="checkbox" name="consumes"
+                                title="After the recipe concludes, any element in this slot will be destroyed. Shows the little candle at the bottom of the slot." />
+                            <label
+                                title="After the recipe concludes, any element in this slot will be destroyed. Shows the little candle at the bottom of the slot.">
+                                Consumes
+                            </label>
+                            <!-- greedy -->
+                            <input type="checkbox" name="greedy"
+                                title="Specific to recipe slots. When this is true, the slot will pull a qualifying card off the table into the slot automatically, rather than letting the player choose whether to insert a card, or which card to insert." />
+                            <label name="greedy"
+                                title="Specific to recipe slots. When this is true, the slot will pull a qualifying card off the table into the slot automatically, rather than letting the player choose whether to insert a card, or which card to insert.">
+                                Greedy
+                            </label>
+                            <!-- close button (slot) -->
+                            <i class="fa-solid fa-xmark" title="Click to close" close></i>
+
+                            <!-- description -->
+                            <textarea name="description"
+                                title="Text displayed in the top right when the slot is clicked on"></textarea>
+                            <!-- actionId -->
+                            <div name="actionId"
+                                title="The verb ID where the slot will appear when the element is inserted."></div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th
+                                            title="A list of required elements/aspects. Any card that meets any one of the properties in Required can be put in the slot, unlike the requirements property for recipes. Only uses positive values.">
+                                            Required
+                                        </th>
+                                        <th
+                                            title="A list of forbidden elements/aspects. Any card that meets any one of the properties in Forbidden cannot be put in the slot, even if it qualifies for the Required list.">
+                                            Forbidden
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td name="required">
+                                            <!-- required -->
+                                            <div template>
+                                                <img src="https://www.frangiclave.net/static/images/icons40/aspects/_x.png">
+                                                <label>Label</label>
+                                            </div>
+                                            <div title="Click to add required element" add>
+                                                <i title="Click to add required element" class="fa-solid fa-plus"></i>
+                                                <label title="Click to add required element">Add</label>
+                                            </div>
+                                        </td>
+                                        <td name="forbidden">
+                                            <!-- forbidden -->
+                                            <div template>
+                                                <img src="https://www.frangiclave.net/static/images/icons40/aspects/_x.png">
+                                                <label>Label</label>
+                                            </div>
+                                            <div title="Click to add forbidden element" add>
+                                                <i title="Click to add forbidden element" class="fa-solid fa-plus"></i>
+                                                <label title="Click to add forbidden element">Add</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </td>
             </tr>
         </table>
     </div>
-    <div class="footer">
-
-    </div>
+    <div class="footer"></div>
 </div>

@@ -9,6 +9,7 @@ export class VSCode {
     private static _vscode = null;
     private static _initialized = false;
     private static _requests = new Map<string, (response: any) => void>();
+    private static _lastSave?: number;
 
     public static state: BoardState;
 
@@ -29,9 +30,9 @@ export class VSCode {
                 const message = event.data;
                 switch (message.type) {
                     case 'change':
-                        if (this.state.document == message.document) {
-                            return;
-                        }
+                        if (this?._lastSave && this?._lastSave + 1000 > new Date().getTime()) return;
+                        if (this.state.document == message.document) return;
+
                         this.state.document = message.document;
                         this.saveState();
                         this.triggerStateChange();
@@ -86,6 +87,7 @@ export class VSCode {
 
     private static _saveDebouncer = null;
     public static save(content: Content, force = false) {
+        this._lastSave = new Date().getTime();
         const document = JSON.stringify(content, null, "\t");
         if (document == this.state.document) {
             return;

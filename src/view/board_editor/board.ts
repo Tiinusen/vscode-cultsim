@@ -13,6 +13,7 @@ import { BottomHUD } from "./hud/bottom_hud";
 import { Arrange } from "../../util/layout";
 import { PickIDImageOverlay } from "./overlay/pick_id_image_overlay";
 import { setDebounce } from "../../util/helpers";
+import { PickElementOverlay } from "./overlay/pick_element_overlay";
 
 export const BOARD_SIZE_WIDTH = 1920;
 export const BOARD_SIZE_HEIGHT = 1104;
@@ -21,6 +22,7 @@ export class Board {
     private _map: L.Map;
     private _bottomHUD: BottomHUD = null;
     private _pickIDImageOverlay: PickIDImageOverlay = null;
+    private _pickElementOverlay: PickElementOverlay = null;
     private _widgets: Array<any> = [];
     private _bounds = L.latLngBounds(xy(0, 0), xy(BOARD_SIZE_WIDTH, BOARD_SIZE_HEIGHT));
     private _content?: Content;
@@ -31,6 +33,10 @@ export class Board {
 
     public get pickIDImageOverlay(): PickIDImageOverlay {
         return this._pickIDImageOverlay;
+    }
+
+    public get pickElementOverlay(): PickElementOverlay {
+        return this._pickElementOverlay;
     }
 
     public get map(): L.Map {
@@ -133,6 +139,7 @@ export class Board {
         try {
             if (init) {
                 this._pickIDImageOverlay = new PickIDImageOverlay(this);
+                this._pickElementOverlay = new PickElementOverlay(this);
             }
 
             if (this.content == null) {

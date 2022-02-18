@@ -4,6 +4,7 @@ import { Renderer } from '../util/renderer';
 import { Uri } from 'vscode';
 import { Content, ContentType } from '../model/content';
 import { Transform } from 'stream';
+import { Entity } from '../model/entity';
 
 export class BoardEditor implements vscode.CustomTextEditorProvider {
 	static UI_PATH = null;
@@ -105,10 +106,11 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 		updateWebview();
 	}
 
-	private request(webview: vscode.Webview, method: string, ...args: any[]): Promise<any> {
+	private async request(webview: vscode.Webview, method: string, ...args: any[]): Promise<any> {
 		method = method[0].toUpperCase() + method.substring(1);
 		if (!(`request${method}` in this)) throw new Error(`Request method "${method}" unsupported`);
-		return this[`request${method}`](webview, ...args);
+		const response = await this[`request${method}`](webview, ...args);
+		return response || null;
 	}
 
 	private async requestClone(webview: vscode.Webview, type: string, sourceID: string, destinationID: string) {
@@ -117,7 +119,7 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 			await vscode.workspace.fs.copy(
 				Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, 'images', type, `${sourceID}.png`),
 				Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, 'images', type, `${destinationID}.png`),
-				{overwrite: true}
+				{ overwrite: true }
 			);
 			return;
 		}
@@ -232,6 +234,30 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 			throw new Error("unsupported type");
 		} catch {
 			return [];
+		}
+	}
+
+	private async requestEntity(webview: vscode.Webview, type: string, id: string): Promise<Entity<any>> {
+		try {
+			if (!type) throw new Error("No Type provided");
+			if (!id) throw new Error("No ID provided");
+			switch (type) {
+				case 'elements':
+					return this._coreContent.elements.find(element => element.id == id);
+				case 'recipes':
+					return this._coreContent.recipes.find(recipe => recipe.id == id);
+				case 'decks':
+					return this._coreContent.decks.find(deck => deck.id == id);
+				case 'legacies':
+					return this._coreContent.legacies.find(legacy => legacy.id == id);
+				case 'endings':
+					return this._coreContent.endings.find(ending => ending.id == id);
+				case 'verbs':
+					return this._coreContent.verbs.find(verb => verb.id == id);
+			}
+			throw new Error("unsupported type");
+		} catch {
+			return void 0;
 		}
 	}
 

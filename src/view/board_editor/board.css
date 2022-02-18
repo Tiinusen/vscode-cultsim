@@ -26,8 +26,8 @@ body {
 /*
  * HUD
  */
-.hud[hide] {
-	display: none;
+*[hide] {
+	display: none !important;
 }
 
 /*
@@ -36,15 +36,10 @@ body {
 .board-overlay {
 	position: absolute;
 	display: block;
-	background-color: rgba(0,0,0,0.5);
+	background-color: rgba(0, 0, 0, 0.5);
 	width: 100%;
 	height: 100%;
 	z-index: calc(1000*1000*1000);
-}
-
-
-.board-overlay[hide] {
-	display: none;
 }
 
 .board-overlay>div {
@@ -93,7 +88,7 @@ body {
 }
 
 .board-overlay .pick-id-image input[name="id"] {
-	width:73%;
+	width: 73%;
 	clear: none;
 }
 
@@ -102,11 +97,61 @@ body {
 }
 
 .board-overlay .pick-id-image button {
-	margin-top:3px;
+	margin-top: 3px;
 }
 
-.board-overlay .pick-id-image button[hide] {
-	display: none;
+/*
+ * Pick Element Overlay
+ */
+
+ .board-overlay .pick-element {
+	width: 400px;
+	height: 50px;
+	background-color: #111122;
+	border: thick solid black;
+	border-radius: 12px;
+	padding: 5px;
+	padding-top: 3px;
+}
+
+.board-overlay[image-picker] .pick-element {
+	background-color: #4f5515;
+}
+
+.board-overlay .pick-element .icon {
+	border: thick solid black;
+	border-radius: 12px;
+	position: absolute;
+	top: -15px;
+	left: -85px;
+	width: 100px;
+	height: 100px;
+	min-height: none;
+	max-height: none;
+	cursor: pointer;
+}
+
+.board-overlay .pick-element input {
+	display: inline-block;
+	background-color: transparent;
+	border: none;
+}
+
+.board-overlay .pick-element input[name="id"] {
+	width: 55%;
+	clear: none;
+}
+.board-overlay .pick-element input[name="level"] {
+	width: 20%;
+	clear: none;
+}
+
+.board-overlay .pick-element input[error] {
+	border: thin solid red !important;
+}
+
+.board-overlay .pick-element button {
+	margin-top: 3px;
 }
 
 /*
@@ -361,11 +406,101 @@ body {
 
 .board-widget .slot[open] .panel {
 	position: relative;
-	top: -100px;
+	top: -150px;
 	left: -75px;
-	width: 200px;
-	height: 200px;
+	width: 300px;
+	height: auto;
 	border: 3px solid #002147;
 	background-color: #111122;
 	padding: 10px;
+	cursor: default;
+}
+
+.board-widget .slot input[type="checkbox"] {
+	transform: scale(2);
+	padding: 10px;
+	margin-right: 10px;
+	margin-left: 10px;
+	cursor: pointer;
+	margin-bottom: 20px;
+}
+
+.board-widget .slot i[close] {
+	position: relative;
+	float: right;
+	font-size: 35px;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.board-widget .slot i[close]:hover {
+	color: #fffd92
+}
+
+.board-widget .slot label {
+	position: relative;
+	font-size: 16px;
+	top: -1px;
+	margin-right: 10px;
+	font-weight: bold;
+}
+
+.board-widget .slot table {
+	width: 100%;
+}
+
+.board-widget .slot th {
+	font-size: 16px;
+	font-weight: bold;
+	cursor: help;
+}
+
+.board-widget .slot td {
+	vertical-align: top;
+	width:50%;
+}
+
+.board-widget .slot td img {
+	height: 16px;
+	width: 16px;
+	margin-bottom: 0px;
+}
+
+.board-widget .slot td i.fa-plus {
+	position: relative;
+	top: -4px;
+	padding: 3px;
+}
+
+/* .board-widget .slot td[name="required"], .board-widget .slot td[name="forbidden"] {
+		
+} */
+
+.board-widget .slot td label {
+	font-size: 10px;
+	padding-left: 5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
+	width: 100px;
+	cursor: inherit;
+}
+
+.board-widget .slot td>div {
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	height:20px;
+	padding-top:1px;
+}
+
+.board-widget .slot td>div:hover {
+	background-color: #610101;
+	cursor: not-allowed;
+}
+
+
+.board-widget .slot td>div[add]:hover {
+	background-color: #016101;
+	cursor: pointer;
 }

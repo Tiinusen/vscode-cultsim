@@ -42,7 +42,7 @@ export class Slot extends Entity<ISlotSerialized> implements ISlotSerialized {
 
     // required
     public get required(): Map<string, number> {
-        return this.get('required') || new Map<string, number>();
+        return this.get('required');
     }
     public set required(value: Map<string, number>) {
         this.set('required', value);
@@ -50,7 +50,7 @@ export class Slot extends Entity<ISlotSerialized> implements ISlotSerialized {
 
     // forbidden
     public get forbidden(): Map<string, number> {
-        return this.get('forbidden') || new Map<string, number>();
+        return this.get('forbidden');
     }
     public set forbidden(value: Map<string, number>) {
         this.set('forbidden', value);
