@@ -26,7 +26,7 @@ export class PickElementOverlay extends BoardOverlay {
         this._closeButton = this.element.querySelector('button[action="close"]');
         this._idInput = this.element.querySelector('input[name="id"]');
         this._levelInput = this.element.querySelector('input[name="level"]');
-        this._idsDataList = this.element.querySelector('datalist[id="ids"]');
+        this._idsDataList = document.querySelector('datalist[id="ids"]');
         this._icon = this.element.querySelector('img.icon');
         this._idInput.onkeydown = ev => this.onKeyDown(ev);
         this._idInput.onkeyup = setDebounce(this.onChange.bind(this), 100);

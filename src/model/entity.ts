@@ -34,11 +34,40 @@ export abstract class Entity<T>{
     [Symbol.toStringTag] = "Entity";
 
 
+    public clone(): T {
+        return JSON.parse(JSON.stringify(this));
+    }
 
-    protected merge(propertyName: string, from: T): Entity<T> {
-        if (!this.has(`${propertyName}`)) {
-            if (`${propertyName}` in from) {
+    public merge(propertyName: string, from: T): Entity<T> {
+        if (!from) return this;
+        if ('_data' in from) from = (from as any)._data;
+        if (this._data[`${propertyName}`]) {
+            if (from[`${propertyName}`]) {
                 this._data[`${propertyName}`] = from[`${propertyName}`];
+            } else {
+                const map = this._data[`${propertyName}`] as Map<string, number>;
+                if (from[`${propertyName}$remove`]) {
+                    for (const key of from[`${propertyName}$remove`]) {
+                        if (!map[key]) throw new Error(`Dictionary does not have "${propertyName}" item "${key}", content merge failed`);
+                        delete map[key];
+                    }
+                }
+                if (from[`${propertyName}$add`]) {
+                    for (const key in from[`${propertyName}$add`]) {
+                        if (map[key]) throw new Error(`Dictionary already contains "${propertyName}" item "${key}", content merge failed`);
+                        map[key] = from[`${propertyName}$add`][key];
+                    }
+                }
+            }
+        } else {
+            if (from[`${propertyName}`]) {
+                this._data[`${propertyName}`] = from[`${propertyName}`];
+                if (`${propertyName}$add` in this._data) {
+                    delete this._data[`${propertyName}$add`];
+                }
+                if (`${propertyName}$remove` in this._data) {
+                    delete this._data[`${propertyName}$remove`];
+                }
             } else {
                 if (`${propertyName}$add` in from) {
                     this._data[`${propertyName}$add`] = from[`${propertyName}$add`];
@@ -47,27 +76,7 @@ export abstract class Entity<T>{
                     this._data[`${propertyName}$remove`] = from[`${propertyName}$remove`];
                 }
             }
-            return this;
-        } else {
-            if (`${propertyName}` in from) {
-                this._data[`${propertyName}`] = from[`${propertyName}`];
-            } else {
-                const map = this[`${propertyName}`] as Map<string, number>;
-                if (`${propertyName}$add` in from) {
-                    for (const key in from[`${propertyName}$add`]) {
-                        if (map.has(key)) throw new Error(`Dictionary already contains "${propertyName}" item "${key}", content merge failed`);
-                        map.set(key, from[`${propertyName}$add`][key]);
-                    }
-                }
-                if (`${propertyName}$remove` in from) {
-                    for (const key of from[`${propertyName}$remove`]) {
-                        if (!map.has(key)) throw new Error(`Dictionary does not have "${propertyName}" item "${key}", content merge failed`);
-                        map.delete(key);
-                    }
-                }
-            }
         }
-
         return this;
     }
 }

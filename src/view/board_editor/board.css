@@ -396,7 +396,7 @@ body {
 .board-widget .slot input[name="label"] {
 	position: relative;
 	top: -34px;
-	font-size: 12px;
+	font-size: 10px;
 	text-align: center;
 }
 

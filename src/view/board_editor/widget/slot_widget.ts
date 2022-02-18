@@ -40,14 +40,25 @@ export class SlotWidget<T> {
         this._requiredAdd.onclick = this.notWhenDragged(this.onRequiredAdd);
         this._forbiddenAdd = this._forbiddenTD.querySelector('div[add]');
         this._forbiddenAdd.onclick = this.notWhenDragged(this.onForbiddenAdd);
-        this.onUpdate = setDebounce(this.onUpdate.bind(this), 50);
+        this.onUpdate = setDebounce(this.onUpdate.bind(this), 5);
     }
 
     private async onRequiredAdd() {
         try {
             const [id, level] = await this.board.pickElementOverlay.pick("elements");
-            if (!this.data.required) this.data.required = new Map();
-            this.data.required[id] = level || 0;
+
+            if (this._parentData?.required && !this.data?.required) {
+                if (this.data?.required$remove && this.data.required$remove.indexOf(id) !== -1) {
+                    this.data.required$remove = this.data.required$remove.filter((sid) => sid != id);
+                    if (this.data.required$remove.length == 0) this.data.required$remove = void 0;
+                } else {
+                    if (!this.data?.required$add) this.data.required$add = new Map();
+                    this.data.required$add[id] = level || 0;
+                }
+            } else {
+                if (!this.data?.required) this.data.required = new Map();
+                this.data.required[id] = level || 0;
+            }
             this.board.save();
             this.onUpdate();
         } catch (e) {
@@ -59,14 +70,45 @@ export class SlotWidget<T> {
     private async onForbiddenAdd() {
         try {
             const [id, level] = await this.board.pickElementOverlay.pick("elements");
-            if (!this.data.forbidden) this.data.forbidden = new Map();
-            this.data.forbidden[id] = level || 0;
+
+            if (this._parentData?.forbidden && !this.data?.forbidden) {
+                if (this.data?.forbidden$remove && this.data.forbidden$remove.indexOf(id) !== -1) {
+                    this.data.forbidden$remove = this.data.forbidden$remove.filter((sid) => sid != id);
+                    if (this.data.forbidden$remove.length == 0) this.data.forbidden$remove = void 0;
+                } else {
+                    if (!this.data?.forbidden$add) this.data.forbidden$add = new Map();
+                    this.data.forbidden$add[id] = level || 0;
+                }
+            } else {
+                if (!this.data?.forbidden) this.data.forbidden = new Map();
+                this.data.forbidden[id] = level || 0;
+            }
             this.board.save();
             this.onUpdate();
         } catch (e) {
             if (e == "closed") return;
             VSCode.emitError(e);
         }
+    }
+
+    protected onRemoveElement(propertyName: string, id: string) {
+        if (!this._data[propertyName] && this._parentData[propertyName]) {
+            if (this._data.get(`${propertyName}$add`) && id in this._data.get(`${propertyName}$add`)) {
+                delete this._data.get(`${propertyName}$add`)[id];
+                if (Object.keys(this._data.get(`${propertyName}$add`) || {}).length == 0) {
+                    this._data.set(`${propertyName}$add`, void 0);
+                }
+            } else {
+                if (!this._data.get(`${propertyName}$remove`)) {
+                    this._data.set(`${propertyName}$remove`, new Array<string>());
+                }
+                this._data.get(`${propertyName}$remove`).push(id);
+            }
+        } else {
+            delete this._data.get(propertyName)[id];
+        }
+        this.onUpdate();
+        this.board.save();
     }
 
     protected notWhenDragged(fn: (e?: MouseEvent) => void): (e?: MouseEvent) => void {
@@ -150,43 +192,49 @@ export class SlotWidget<T> {
             this.toggle();
         };
 
+        // Merged
+        const merged = new Slot();
+        try {
+            merged.merge("required", this._parentData?.clone()).merge("required", this._data?.clone());
+            merged.merge("forbidden", this._parentData?.clone()).merge("forbidden", this._data?.clone());
+        } catch (e) {
+            console.error(e);
+            VSCode.emitError(e);
+        }
+
         // Required
         this._requiredTD.querySelectorAll('div').forEach(element => element.remove());
-        for (const key in this.data?.required || {}) {
-            const level: number = this.data.required[key];
+        for (const key in merged?.required || {}) {
+            const level: number = merged.required[key];
             const element: HTMLElement = this._requiredTemplate.cloneNode(true) as any;
             element.toggleAttribute('item', true);
             const imageURL = await VSCode.request('image', 'elements', key);
             const img = element.querySelector('img');
             img.onerror = () => img.src = 'https://www.frangiclave.net/static/images/icons40/aspects/_x.png';
             img.setAttribute('src', imageURL + "?" + (Math.random() * 100));
-            element.querySelector('label').innerText = `${key} (${level})`;
+            const label = element.querySelector('label');
+            label.innerText = `${key} (${level})`;
+            label.title = label.innerText + "\n\nClick to remove";
             this._requiredTD.append(element);
-            this._requiredTD.onclick = () => {
-                delete this.data.required[key];
-                this.onUpdate();
-                this.board.save();
-            };
+            element.onclick = () => this.onRemoveElement("required", key);
         }
         this._requiredTD.append(this._requiredAdd);
 
         // Forbidden
         this._forbiddenTD.querySelectorAll('div').forEach(element => element.remove());
-        for (const key in this.data?.forbidden || {}) {
-            const level: number = this.data.forbidden[key];
+        for (const key in merged?.forbidden || {}) {
+            const level: number = merged.forbidden[key];
             const element: HTMLElement = this._requiredTemplate.cloneNode(true) as any;
             element.toggleAttribute('item', true);
             const imageURL = await VSCode.request('image', 'elements', key);
             const img = element.querySelector('img');
             img.onerror = () => img.src = 'https://www.frangiclave.net/static/images/icons40/aspects/_x.png';
             img.setAttribute('src', imageURL + "?" + (Math.random() * 100));
-            element.querySelector('label').innerText = `${key} (${level})`;
+            const label = element.querySelector('label');
+            label.innerText = `${key} (${level})`;
+            label.title = label.innerText + "\n\nClick to remove";
             this._forbiddenTD.append(element);
-            this._forbiddenTD.onclick = () => {
-                delete this.data.forbidden[key];
-                this.onUpdate();
-                this.board.save();
-            };
+            element.onclick = () => this.onRemoveElement("forbidden", key);
         }
         this._forbiddenTD.append(this._forbiddenAdd);
     }

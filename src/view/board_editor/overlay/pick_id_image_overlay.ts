@@ -29,7 +29,7 @@ export class PickIDImageOverlay extends BoardOverlay {
         this._mergeButton = this.element.querySelector('button[action="merge"]');
         this._closeButton = this.element.querySelector('button[action="close"]');
         this._idInput = this.element.querySelector('input[name="id"]');
-        this._idsDataList = this.element.querySelector('datalist[id="ids"]');
+        this._idsDataList = document.querySelector('datalist[id="ids"]');
         this._icon = this.element.querySelector('img.icon');
         this._idInput.onkeydown = ev => this.onIDKeyDown(ev);
         this._idInput.onkeyup = setDebounce(this.onIDChange.bind(this), 100);
