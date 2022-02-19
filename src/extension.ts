@@ -9,6 +9,7 @@ import { ShowReferenceCommand } from './command/show_reference_command';
 import { ToggleEditorCommand } from './command/toggle_editor_command';
 import { Content } from './model/content';
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
