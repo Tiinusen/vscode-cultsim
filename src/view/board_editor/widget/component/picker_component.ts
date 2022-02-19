@@ -29,7 +29,13 @@ export class PickerComponent {
         this._item.toggleAttribute('template', false);
         this._item.toggleAttribute('item', true);
         this._item.toggleAttribute('hide', true);
-        this._item.onclick = () => this.onRemove();
+        if (this.required) {
+            this._item.onclick = () => this.onSelect();
+            this._item.setAttribute('title', 'Click to replace');
+        } else {
+            this._item.onclick = () => this.onRemove();
+            this._item.setAttribute('title', 'Click to remove');
+        }
 
         this._image = this._item.querySelector('img');
         this._label = this._item.querySelector('label');
@@ -38,6 +44,10 @@ export class PickerComponent {
         this.element.onclick = (e) => {
             e.stopPropagation();
         };
+    }
+
+    private get required(): boolean {
+        return this.element.hasAttribute('required');
     }
 
     private get propertyName(): string {

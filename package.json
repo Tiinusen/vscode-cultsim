@@ -14,6 +14,7 @@
 		"onCommand:cultsim.new.project",
 		"onCommand:cultsim.show.documentation",
 		"onCommand:cultsim.show.reference",
+		"onCommand:cultsim.start.cultist",
 		"onLanguage:json"
 	],
 	"main": "./dist/extension.js",
@@ -42,6 +43,11 @@
 			{
 				"command": "cultsim.show.reference",
 				"title": "Show Reference",
+				"category": "Cultist Simulator"
+			},
+			{
+				"command": "cultsim.start.cultist",
+				"title": "Start",
 				"category": "Cultist Simulator"
 			},
 			{

@@ -194,8 +194,8 @@ export class Legacy extends Entity<ILegacySerialized> implements ILegacySerializ
         return {
             id: this.get('id'),
             label: this.get('label'),
-            image: this.get('image'),
-            startingVerbId: this.get('startingVerbId'),
+            image: this.get('image') || this.get('id'),
+            startingVerbId: this.get('startingVerbId') || "work",
             description: this.get('description'),
             startdescription: this.get('startdescription'),
             statusbarelements: !this.get('statusbarelements') ? void 0 : this.get('statusbarelements'),
@@ -219,7 +219,7 @@ export class Legacy extends Entity<ILegacySerialized> implements ILegacySerializ
         this.id = obj?.id || this.get('id');
         this.label = obj?.label || this.get('label');
         this.image = obj?.image || this.get('image');
-        this.startingVerbId = obj?.startingVerbId || this.get('startingVerbId');
+        this.startingVerbId = obj?.startingVerbId || this.get('startingVerbId') || "work";
         this.description = obj?.description || this.get('description');
         this.startdescription = obj?.startdescription || this.get('startdescription');
         this.statusbarelements = obj?.statusbarelements || this.get('statusbarelements');

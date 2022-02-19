@@ -8,6 +8,7 @@ import { ShowDocumentationCommand } from './command/show_documentation_command';
 import { ShowReferenceCommand } from './command/show_reference_command';
 import { ToggleEditorCommand } from './command/toggle_editor_command';
 import { Content } from './model/content';
+import { StartCultistCommand } from './command/start_cultist_command';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // this method is called when your extension is activated
@@ -28,6 +29,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	new ShowDocumentationCommand(context);
 	new ShowReferenceCommand(context);
 	new ToggleEditorCommand(context);
+	new StartCultistCommand(context);
 
 	// Views
 	new ExplorerView(context, await Content.fromCore(),);

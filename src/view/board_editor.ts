@@ -217,19 +217,20 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 	private async requestIDs(webview: vscode.Webview, type: string): Promise<string[]> {
 		try {
 			if (!type) throw new Error("No Type provided");
+			const content = await this.getWorkspaceContent();
 			switch (type) {
 				case 'elements':
-					return this._coreContent.elements.map(element => element.id);
+					return content.elements.map(element => element.id);
 				case 'recipes':
-					return this._coreContent.recipes.map(recipe => recipe.id);
+					return content.recipes.map(recipe => recipe.id);
 				case 'decks':
-					return this._coreContent.decks.map(deck => deck.id);
+					return content.decks.map(deck => deck.id);
 				case 'legacies':
-					return this._coreContent.legacies.map(legacy => legacy.id);
+					return content.legacies.map(legacy => legacy.id);
 				case 'endings':
-					return this._coreContent.endings.map(ending => ending.id);
+					return content.endings.map(ending => ending.id);
 				case 'verbs':
-					return this._coreContent.verbs.map(verb => verb.id);
+					return content.verbs.map(verb => verb.id);
 			}
 			throw new Error("unsupported type");
 		} catch {
@@ -237,28 +238,38 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 		}
 	}
 
-	private async requestEntity(webview: vscode.Webview, type: string, id: string): Promise<Entity<any>> {
+	private async requestEntity(webview: vscode.Webview, type: string, id: string, includeWorkspace = false): Promise<Entity<any>> {
 		try {
 			if (!type) throw new Error("No Type provided");
 			if (!id) throw new Error("No ID provided");
+			let content = this._coreContent;
+			if (includeWorkspace) content = await this.getWorkspaceContent();
 			switch (type) {
 				case 'elements':
-					return this._coreContent.elements.find(element => element.id == id);
+					return content.elements.find(element => element.id == id);
 				case 'recipes':
-					return this._coreContent.recipes.find(recipe => recipe.id == id);
+					return content.recipes.find(recipe => recipe.id == id);
 				case 'decks':
-					return this._coreContent.decks.find(deck => deck.id == id);
+					return content.decks.find(deck => deck.id == id);
 				case 'legacies':
-					return this._coreContent.legacies.find(legacy => legacy.id == id);
+					return content.legacies.find(legacy => legacy.id == id);
 				case 'endings':
-					return this._coreContent.endings.find(ending => ending.id == id);
+					return content.endings.find(ending => ending.id == id);
 				case 'verbs':
-					return this._coreContent.verbs.find(verb => verb.id == id);
+					return content.verbs.find(verb => verb.id == id);
 			}
 			throw new Error("unsupported type");
 		} catch {
 			return void 0;
 		}
+	}
+
+	private async getWorkspaceContent(mergedWithCore = true): Promise<Content> {
+		const files = await vscode.workspace.findFiles(`content/*.json`);
+		let content = new Content();
+		if (!this._coreContent && mergedWithCore) content = this._coreContent.clone();
+		content = content.merge(await Content.fromFiles(...files));
+		return content;
 	}
 
 	protected save(document: vscode.TextDocument, text: string): Thenable<boolean> {

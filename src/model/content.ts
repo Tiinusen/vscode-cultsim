@@ -214,6 +214,17 @@ export class Content {
         return content;
     }
 
+    static async fromFiles(...paths: Uri[]): Promise<Content> {
+        let content = new Content();
+        for (const path of paths) {
+            if (!path.fsPath.endsWith(".json")) {
+                continue;
+            }
+            content = content.merge(await this.fromFile(path));
+        }
+        return content;
+    }
+
     static async fromFile(path: Uri): Promise<Content> {
         const jsonString = (await workspace.fs.readFile(path)).toString();
         if (jsonString.trim().length == 0) {

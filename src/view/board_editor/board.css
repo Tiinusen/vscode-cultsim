@@ -505,7 +505,7 @@ body {
 }
 
 .ending-widget .content textarea {
-	padding-left:60px;
+	padding-left: 60px;
 }
 
 .ending-widget .content>table td {
@@ -570,8 +570,10 @@ body {
 
 .board-widget .slot input[name="label"] {
 	position: relative;
-	top: -34px;
-	font-size: 10px;
+	top: -22px;
+	left: -8px;
+	font-size: 12px;
+	width: 70px;
 	text-align: center;
 }
 
