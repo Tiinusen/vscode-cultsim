@@ -210,7 +210,7 @@ export class Legacy extends Entity<ILegacySerialized> implements ILegacySerializ
             excludesOnEnding$prepend: this.get('excludesOnEnding') ? void 0 : this.get('excludesOnEnding$prepend'),
             excludesOnEnding$remove: this.get('excludesOnEnding') ? void 0 : this.get('excludesOnEnding$remove'),
             newstart: this.get('newstart'),
-            fromEnding: this.get('fromEnding') ? void 0 : this.get('fromEnding'),
+            fromEnding: !this.get('fromEnding') ? void 0 : this.get('fromEnding'),
             availableWithoutEndingMatch: this.get('availableWithoutEndingMatch')
         };
     }

@@ -186,7 +186,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
             return;
         }
         if (!this._inputs.has(propertyName)) {
-            this._inputs.set(propertyName, new InputComponent(this.board, propertyName, input));
+            this._inputs.set(propertyName, new InputComponent(this.board, input));
         }
         this._inputs.get(propertyName).onUpdate(this.data as any, this.parentData as any);
     }

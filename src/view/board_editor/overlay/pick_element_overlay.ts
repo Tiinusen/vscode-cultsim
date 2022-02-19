@@ -123,6 +123,7 @@ export class PickElementOverlay extends BoardOverlay {
     private async setImage(id?: string): Promise<any> {
         const imageURL: string = await VSCode.request('image', this._type, id);
         this._icon.onerror = () => this._icon.src = 'https://www.frangiclave.net/static/images/icons40/aspects/_x.png';
-        this._icon.setAttribute('src', imageURL + "?" + (Math.random() * 100));
+        if (imageURL.indexOf('frangiclave') === -1) imageURL + "?" + (Math.random() * 100);
+        this._icon.setAttribute('src', imageURL);
     }
 }

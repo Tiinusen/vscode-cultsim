@@ -181,7 +181,7 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 					}
 					const legacy = this._coreContent.legacies.find(legacy => legacy.id == id);
 					if (legacy) {
-						return `https://www.frangiclave.net/static/images/icons100/legacies/${legacy.id}.png`;
+						return `https://www.frangiclave.net/static/images/icons100/legacies/${legacy?.image || legacy?.id}.png`;
 					}
 					break;
 				}
@@ -192,7 +192,7 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 					}
 					const ending = this._coreContent.endings.find(ending => ending.id == id);
 					if (ending) {
-						return `https://www.frangiclave.net/static/images/endingArt/${ending.id}.png`;
+						return `https://www.frangiclave.net/static/images/endingArt/${ending?.image || ending?.id}.png`;
 					}
 					break;
 				}

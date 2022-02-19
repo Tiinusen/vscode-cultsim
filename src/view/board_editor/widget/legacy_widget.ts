@@ -7,6 +7,7 @@ import html from "./legacy_widget.html";
 import { VSCode } from "../vscode";
 import { DictionaryComponent } from "./component/dictionary_component";
 import { ListComponent } from "./component/list_component";
+import { PickerComponent } from "./component/picker_component";
 
 export interface ILegacyWidgetState extends IWidgetState {
     slotOpen: boolean
@@ -18,6 +19,8 @@ export class LegacyWidget extends Widget<Legacy, ILegacyWidgetState> {
     private statusbarelements: ListComponent;
     private effects: DictionaryComponent;
     private excludesOnEnding: ListComponent;
+    private fromEnding: PickerComponent;
+    private startingVerbId: PickerComponent;
 
     constructor(board: Board, data: Legacy) {
         super(board, data, html, "legacy-widget");
@@ -39,11 +42,22 @@ export class LegacyWidget extends Widget<Legacy, ILegacyWidgetState> {
             this.board.save();
             this.onUpdate();
         };
+        this.fromEnding = new PickerComponent(this.board, "fromEnding", "endings", this.element.querySelector('div[name="fromEnding"]'));
+        this.fromEnding.onChange = () => {
+            this.board.save();
+            this.onUpdate();
+        };
+        this.startingVerbId = new PickerComponent(this.board, "startingVerbId", "verbs", this.element.querySelector('div[name="startingVerbId"]'));
+        this.startingVerbId.onChange = () => {
+            this.board.save();
+            this.onUpdate();
+        };
     }
 
     private setImage(imageURL: string) {
         this.icon.onerror = () => this.icon.src = 'https://www.frangiclave.net/static/images/icons40/aspects/_x.png';
-        this.icon.setAttribute('src', imageURL + "?" + (Math.random() * 100));
+        if (imageURL.indexOf('frangiclave') === -1) imageURL + "?" + (Math.random() * 100);
+        this.icon.setAttribute('src', imageURL);
     }
 
     protected async onUpdate() {
@@ -71,6 +85,8 @@ export class LegacyWidget extends Widget<Legacy, ILegacyWidgetState> {
             await this.statusbarelements?.onUpdate(this.data, this?.parentData);
             await this.effects?.onUpdate(this.data, this?.parentData);
             await this.excludesOnEnding?.onUpdate(this.data, this?.parentData);
+            await this.fromEnding?.onUpdate(this.data, this?.parentData);
+            await this.startingVerbId?.onUpdate(this.data, this?.parentData);
         } catch (e) {
             console.error(e);
             VSCode.emitError(e);

@@ -369,7 +369,7 @@ body {
  * Legacy Widget
  */
 
- .legacy-widget[open] {
+.legacy-widget[open] {
 	width: 550px !important;
 	height: 500px !important;
 	position: relative;
@@ -408,20 +408,20 @@ body {
 }
 
 .legacy-widget .content {
-	height: 500px;
+	height: 600px;
 	background-color: #202041;
 	padding-top: 25px;
 	padding-left: 10px;
 	padding-right: 10px;
 }
 
-.legacy-widget .content > table td {
+.legacy-widget .content>table td {
 	vertical-align: top;
-	padding-left:5px;
+	padding-left: 5px;
 }
 
 .legacy-widget .content h1:not([no-margin]) {
-	margin-top:20px;
+	margin-top: 20px;
 }
 
 /* .legacy-widget .content > table td > h1  {
@@ -436,7 +436,7 @@ body {
 	height: 160px;
 	width: 270px;
 	border-radius: 12px;
-	margin-bottom:10px;
+	margin-bottom: 10px;
 }
 
 .legacy-widget input[type="checkbox"] {
@@ -447,7 +447,7 @@ body {
 	cursor: pointer;
 	margin-bottom: 20px;
 	position: relative;
-	top:2px;
+	top: 2px;
 }
 
 /*
@@ -632,6 +632,50 @@ body {
 
 
 *[list]>*[add]:hover {
+	background-color: #016101;
+	cursor: pointer;
+}
+
+/*
+ * Picker Component
+ */
+
+*[picker] img {
+	height: 16px;
+	width: 16px;
+	margin-bottom: 0px;
+}
+
+*[picker] i.fa-plus {
+	position: relative;
+	top: -1px;
+	padding: 3px;
+}
+
+*[picker] *[item] {
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	height: 20px;
+	padding-top: 1px;
+}
+
+*[picker] *[item] label {
+	font-size: 10px;
+	padding-left: 5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
+	width: 100px;
+	cursor: inherit;
+}
+
+*[picker] *[item]:hover {
+	background-color: #610101;
+	cursor: not-allowed;
+}
+
+*[picker] *[select]:hover {
 	background-color: #016101;
 	cursor: pointer;
 }

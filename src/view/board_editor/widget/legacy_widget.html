@@ -19,10 +19,8 @@
                     <!-- startdescription -->
                     <textarea name="startdescription"
                         title="Text displayed in the pop-up bubble at the bottom-center screen after starting the game."></textarea>
-                </td>
-                <td>
+                    <!-- newstart -->
                     <div>
-                        <!-- newstart -->
                         <input type="checkbox" name="newstart"
                             title="When true, the legacy icon is added to the area where the DLC legacies are and lets you start a new game by clicking on the legacy icon." />
                         <label
@@ -30,8 +28,8 @@
                             New Start
                         </label>
                     </div>
+                    <!-- availableWithoutEndingMatch -->
                     <div>
-                        <!-- availableWithoutEndingMatch -->
                         <input type="checkbox" name="availableWithoutEndingMatch"
                             title="This value is true for usual legacies. Setting it to false requires the predefined ending to be achieved for the legacy to appear. This is set to false for Apostle legacies." />
                         <label
@@ -39,12 +37,45 @@
                             Available Without Ending Match
                         </label>
                     </div>
-                    <div name="statusbarelements">
+                </td>
+                <td>
+                    <!-- fromEnding -->
+                    <div name="fromEnding">
                         <h1 no-margin
+                            title="Defining an ending here will make this legacy guaranteed to appear after that ending; unless that ending has more than three associated Legacies, in which case three associated Legacies will be chosen at random from these. Only one Ending can be defined; when one Legacy is desired to be available from more than one Ending, look-alike Legacies are often defined. An example of this is how there are two versions of each Apostle Legacy, one for it's associated standard victory, and one for it's associated victory with risen.">
+                            From Ending</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to select a legacy" select>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Select</label>
+                        </div>
+                    </div>
+                    <!-- startingVerbId -->
+                    <div name="startingVerbId">
+                        <h1 title="Legacies all start with only a single verb on the board, as defined here.">
+                            Starting Verb</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to select a starting verb" select>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Select</label>
+                        </div>
+                    </div>
+                    <!-- statusbarelements -->
+                    <div name="statusbarelements">
+                        <h1
                             title="A list of up to four Elements. These elements quantities and icons will be displayed at the bottom of the screen for the playthrough. The default layout, which is used by all legacies outside the Exile DLC includes Reason, Passion, Health, and Funds, while Exile Legacies use Obscurity, Comfort, Wounds, and Stolen Lifespan. When using statusbarelements, the icons for these elements must be copied into the statusbaricons folder in your mod's images folder.">
                             Status Bar Elements</h1>
                         <div items>
-                            <!-- statusbarelements -->
                             <div template>
                                 <img>
                                 <label>Label</label>
@@ -55,10 +86,10 @@
                             <label>Add</label>
                         </div>
                     </div>
+                    <!-- effects -->
                     <div name="effects">
                         <h1 title="A dictionary of the cards that the legacy starts with.">Starting Cards</h1>
                         <div items>
-                            <!-- effects -->
                             <div template>
                                 <img>
                                 <label>Label</label>
@@ -69,12 +100,12 @@
                             <label>Add</label>
                         </div>
                     </div>
+                    <!-- excludesOnEnding -->
                     <div name="excludesOnEnding">
                         <h1
                             title="A list of the ids of the legacies that cannot be among the next proposed ones after this one.">
                             Exclude after Legacies</h1>
                         <div items>
-                            <!-- excludesOnEnding -->
                             <div template>
                                 <img src="https://www.frangiclave.net/static/images/icons40/aspects/_x.png">
                                 <label>Label</label>

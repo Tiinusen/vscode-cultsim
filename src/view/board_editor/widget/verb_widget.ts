@@ -25,7 +25,8 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
 
     private setImage(imageURL: string) {
         this.icon.onerror = () => this.icon.src = 'https://www.frangiclave.net/static/images/icons40/aspects/_x.png';
-        this.icon.setAttribute('src', imageURL + "?" + (Math.random() * 100));
+        if (imageURL.indexOf('frangiclave') === -1) imageURL + "?" + (Math.random() * 100);
+        this.icon.setAttribute('src', imageURL);
     }
 
     protected async onUpdate() {

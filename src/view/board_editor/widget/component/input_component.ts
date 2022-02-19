@@ -11,8 +11,7 @@ export class InputComponent {
 
     public onChange?: () => void;
 
-    constructor(board: Board, propertyName: string, element: HTMLInputElement) {
-        this._propertyName = propertyName;
+    constructor(board: Board, element: HTMLInputElement) {
         this._board = board;
         this._element = element;
         this._propertyName = this.element.getAttribute('name');
@@ -24,17 +23,17 @@ export class InputComponent {
         const type = this.element.getAttribute('type');
         if (type == "checkbox") {
             this.element.onchange = () => {
-                this.data[propertyName] = this.element.checked;
+                this.data[this._propertyName] = this.element.checked;
                 this.board.save();
             };
             return;
         }
 
         this.element.onkeyup = () => {
-            if (this.data[propertyName] == this.element.value) {
+            if (this.data[this._propertyName] == this.element.value) {
                 return;
             }
-            this.data[propertyName] = this.element.value;
+            this.data[this._propertyName] = this.element.value;
             this.board.save();
         };
     }

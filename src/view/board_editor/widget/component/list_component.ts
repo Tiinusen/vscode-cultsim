@@ -49,10 +49,11 @@ export class ListComponent {
         for (const key of list) {
             if (!this._items.has(key)) {
                 const element: HTMLElement = this._template.cloneNode(true) as any;
-                const imageURL = await VSCode.request('image', this._contentType, key);
+                const imageURL: string = await VSCode.request('image', this._contentType, key);
                 const img = element.querySelector('img');
                 img.onerror = () => img.src = 'https://www.frangiclave.net/static/images/icons40/aspects/_x.png';
-                img.setAttribute('src', imageURL + "?" + (Math.random() * 100));
+                if (imageURL.indexOf('frangiclave') === -1) imageURL + "?" + (Math.random() * 100);
+                img.setAttribute('src', imageURL);
                 this._list.append(element);
                 this._items.set(key, element);
             }
