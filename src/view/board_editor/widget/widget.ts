@@ -6,6 +6,7 @@ import { Board, BOARD_SIZE_HEIGHT, BOARD_SIZE_WIDTH } from "../board";
 import * as L from 'leaflet';
 import { VSCode } from "../vscode";
 import { newNonce, setDebounce } from "../../../util/helpers";
+import { InputComponent } from "./component/input_component";
 
 export interface IWidgetState {
     x: number
@@ -178,32 +179,16 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
         return this;
     }
 
+    private _inputs = new Map<string, InputComponent>();
     protected bindInput(input: HTMLInputElement) {
-        input.onclick = (e) => {
-            e.stopPropagation();
-        };
-        const fieldName = input.getAttribute('name');
-        if (!(fieldName in this.data)) {
+        const propertyName = input.getAttribute('name');
+        if (!(propertyName in this.data)) {
             return;
         }
-        const type = input.getAttribute('type');
-        if (type == "checkbox") {
-            input.onchange = () => {
-                this.data[fieldName] = input.checked;
-                this.board.save();
-            };
-            input.checked = this?.data?.[fieldName] || this?.parentData?.[fieldName] || false;
-            return;
+        if (!this._inputs.has(propertyName)) {
+            this._inputs.set(propertyName, new InputComponent(this.board, propertyName, input));
         }
-        input.value = this.data[fieldName];
-        input.placeholder = this?.parentData?.[fieldName] || "";
-        input.onkeyup = () => {
-            if (this.data[fieldName] == input.value) {
-                return;
-            }
-            this.data[fieldName] = input.value;
-            this.board.save();
-        };
+        this._inputs.get(propertyName).onUpdate(this.data as any, this.parentData as any);
     }
 
     protected notWhenDragged(fn: (e?: MouseEvent) => void): (e?: MouseEvent) => void {
@@ -225,7 +210,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
             throw new Error("Element not found");
         }
         this._element.setAttribute('class', "board-widget " + this._className);
-        if(this.onInit) await this.onInit();
+        if (this.onInit) await this.onInit();
         await this.redraw();
         this.setOpacity(100);
         this._initialized = true;

@@ -12,7 +12,6 @@ import { Entity } from "../../model/entity";
 import { BottomHUD } from "./hud/bottom_hud";
 import { Arrange } from "../../util/layout";
 import { PickIDImageOverlay } from "./overlay/pick_id_image_overlay";
-import { setDebounce } from "../../util/helpers";
 import { PickElementOverlay } from "./overlay/pick_element_overlay";
 import { Legacy } from "../../model/legacy";
 import { LegacyWidget } from "./widget/legacy_widget";

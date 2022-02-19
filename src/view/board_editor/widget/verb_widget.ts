@@ -49,16 +49,16 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
             this.slotsElement.removeChild(this.slotTemplateElement);
         }
 
-        // Buttons
-        const closeButton: HTMLElement = this.element.querySelector('.header i[close]');
-        closeButton.onclick = this.notWhenDragged((e) => this.onClickClose());
-
         // Slot
         if (!this.slot) {
             const slotElement = this.slotTemplateElement.cloneNode(true) as HTMLElement;
             this.slotsElement.appendChild(slotElement);
             this.slot = new SlotComponent<VerbWidget>(this.board, this.data.slot, this, slotElement);
         }
+
+        // Buttons
+        const closeButton: HTMLElement = this.element.querySelector('.header i[close]');
+        closeButton.onclick = this.notWhenDragged((e) => this.onClickClose());
 
         // Inputs
         this.element.querySelectorAll('input[name],textarea[name]').forEach((input: HTMLInputElement) => this.bindInput(input));
