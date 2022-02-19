@@ -267,7 +267,7 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 	private async getWorkspaceContent(mergedWithCore = true): Promise<Content> {
 		const files = await vscode.workspace.findFiles(`content/*.json`);
 		let content = new Content();
-		if (!this._coreContent && mergedWithCore) content = this._coreContent.clone();
+		if (this._coreContent && mergedWithCore) content = this._coreContent.clone();
 		content = content.merge(await Content.fromFiles(...files));
 		return content;
 	}
