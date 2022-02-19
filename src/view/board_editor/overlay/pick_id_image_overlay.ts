@@ -17,6 +17,7 @@ export class PickIDImageOverlay extends BoardOverlay {
     private _closeButton: HTMLButtonElement;
     private _idInput: HTMLInputElement;
     private _idsDataList: HTMLDataListElement;
+    private _noImagePick: boolean;
 
     private onPick?(id: string): void
 
@@ -53,7 +54,7 @@ export class PickIDImageOverlay extends BoardOverlay {
 
     private async onIconClick() {
         try {
-            [this._copyImage] = await new PickIDImageOverlay(this.board, this.wrapper).pick(this._type, { id: this._idInput.value });
+            [this._copyImage] = await new PickIDImageOverlay(this.board, this.wrapper).pick(this._type, false, { id: this._idInput.value });
             this.setImage(this._copyImage);
             this.onCloseClick = this.onMergeClick;
             this._idInput.focus();
@@ -127,8 +128,9 @@ export class PickIDImageOverlay extends BoardOverlay {
     /**
      * Opens dialog and resolves once user has performed expected action or closed dialog
      */
-    public async pick(type: string, entity?: { id: string }): Promise<[id: string, imageToClone: string]> {
+    public async pick(type: string, noImagePick = false, entity?: { id: string }): Promise<[id: string, imageToClone: string]> {
         this._type = type;
+        this._noImagePick = noImagePick;
         this._id = entity?.id || "";
         this._idInput.value = this._id;
         this._ids = await VSCode.request('IDs', this._type);

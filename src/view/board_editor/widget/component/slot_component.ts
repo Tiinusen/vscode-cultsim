@@ -116,16 +116,12 @@ export class SlotComponent<T> {
             this.toggle();
         };
 
-        // Merged
-        const merged = new Slot();
         try {
             // Required
             await this._required.onUpdate(this._data, this?._parentData);
 
             // Forbidden
             await this._forbidden.onUpdate(this._data, this?._parentData);
-            // merged.merge("required", this._parentData?.clone()).merge("required", this._data?.clone());
-            // merged.merge("forbidden", this._parentData?.clone()).merge("forbidden", this._data?.clone());
         } catch (e) {
             console.error(e);
             VSCode.emitError(e);

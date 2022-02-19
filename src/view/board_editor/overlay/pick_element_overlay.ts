@@ -93,10 +93,11 @@ export class PickElementOverlay extends BoardOverlay {
     /**
      * Opens dialog and resolves once user has performed expected action or closed dialog
      */
-    public async pick(type: string): Promise<[id: string, level: number]> {
+    public async pick(type: string, noLevel = false): Promise<[id: string, level: number]> {
         this._type = type;
         this._idInput.value = "";
         this._levelInput.value = "";
+        this._levelInput.toggleAttribute('hide', noLevel);
         this._ids = await VSCode.request('IDs', this._type);
         this._idsDataList.innerHTML = "";
         for (const id of this._ids) {

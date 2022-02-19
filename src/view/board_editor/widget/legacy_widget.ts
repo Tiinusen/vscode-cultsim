@@ -1,26 +1,44 @@
 
 
-import { Verb } from "../../../model/verb";
+import { Legacy } from "../../../model/legacy";
 import { Board } from "../board";
 import { IWidgetState, Widget } from "./widget";
-import html from "./verb_widget.html";
+import html from "./legacy_widget.html";
 import { VSCode } from "../vscode";
-import { get, has, set, setDebounce } from "../../../util/helpers";
-import { SlotComponent } from "./component/slot_component";
+import { DictionaryComponent } from "./component/dictionary_component";
+import { ListComponent } from "./component/list_component";
 
-export interface IVerbWidgetState extends IWidgetState {
+export interface ILegacyWidgetState extends IWidgetState {
     slotOpen: boolean
 }
 
-export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
-    private slot?: SlotComponent<VerbWidget>;
-    private slotsElement?: Element;
-    private slotTemplateElement?: Element;
+export class LegacyWidget extends Widget<Legacy, ILegacyWidgetState> {
     private icon: HTMLImageElement;
     private lastIconFetch?: number;
+    private statusbarelements: ListComponent;
+    private effects: DictionaryComponent;
+    private excludesOnEnding: ListComponent;
 
-    constructor(board: Board, data: Verb) {
-        super(board, data, html, "verb-widget");
+    constructor(board: Board, data: Legacy) {
+        super(board, data, html, "legacy-widget");
+    }
+
+    protected onInit() {
+        this.statusbarelements = new ListComponent(this.board, "statusbarelements", "elements", this.element.querySelector('div[name="statusbarelements"]'));
+        this.statusbarelements.onChange = () => {
+            this.board.save();
+            this.onUpdate();
+        };
+        this.effects = new DictionaryComponent(this.board, "effects", "elements", this.element.querySelector('div[name="effects"]'));
+        this.effects.onChange = () => {
+            this.board.save();
+            this.onUpdate();
+        };
+        this.excludesOnEnding = new ListComponent(this.board, "excludesOnEnding", "legacies", this.element.querySelector('div[name="excludesOnEnding"]'));
+        this.excludesOnEnding.onChange = () => {
+            this.board.save();
+            this.onUpdate();
+        };
     }
 
     private setImage(imageURL: string) {
@@ -31,53 +49,32 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
     protected async onUpdate() {
         // Fetch data
         if (this.data?.id && !this.parentData) {
-            const dataParent: Verb = await VSCode.request('entity', 'verbs', this.data.id);
-            if (dataParent) this.parentData = new Verb(dataParent);
+            const dataParent: Legacy = await VSCode.request('entity', 'legacies', this.data.id);
+            if (dataParent) this.parentData = new Legacy(dataParent);
         }
 
         // Icon
         this.icon = this.element.querySelector('.icon');
         if (!this.lastIconFetch || (this.lastIconFetch + 5 * 1000) < new Date().getTime()) {
             this.lastIconFetch = new Date().getTime();
-            this.setImage(await VSCode.request('image', 'verbs', this.data?.id));
-        }
-
-        // Remove slot template
-        if (!this.slotsElement) {
-            this.slotsElement = this.element.querySelector('.slots');
-            this.slotTemplateElement = this.slotsElement.querySelector('.slot');
-            this.slotsElement.removeChild(this.slotTemplateElement);
+            this.setImage(await VSCode.request('image', 'legacies', this.data?.image || this.parentData?.image || this.data?.id));
         }
 
         // Buttons
         const closeButton: HTMLElement = this.element.querySelector('.header i[close]');
         closeButton.onclick = this.notWhenDragged((e) => this.onClickClose());
 
-        // Slot
-        if (!this.slot) {
-            const slotElement = this.slotTemplateElement.cloneNode(true) as HTMLElement;
-            this.slotsElement.appendChild(slotElement);
-            this.slot = new SlotComponent<VerbWidget>(this.board, this.data.slot, this, slotElement);
-        }
-
         // Inputs
         this.element.querySelectorAll('input[name],textarea[name]').forEach((input: HTMLInputElement) => this.bindInput(input));
 
-        this.slot.data = this.data.slot;
-        if (this.parentData) this.slot.parentData = this.parentData.slot;
-        await this.slot.onUpdate();
-        this.slot.onOpen = null;
-        if (this.state.openSlot == 1) {
-            this.slot.open();
+        try {
+            await this.statusbarelements?.onUpdate(this.data, this?.parentData);
+            await this.effects?.onUpdate(this.data, this?.parentData);
+            await this.excludesOnEnding?.onUpdate(this.data, this?.parentData);
+        } catch (e) {
+            console.error(e);
+            VSCode.emitError(e);
         }
-        this.slot.onOpen = () => {
-            this.state.openSlot = 1;
-            this.save(true);
-        };
-        this.slot.onClose = () => {
-            this.state.openSlot = 0;
-            this.save(true);
-        };
     }
 
     protected onClickClose() {
@@ -89,9 +86,9 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
         icon.setAttribute('title', this.data.id + "\n\nClick to edit ID or image");
         icon.onclick = this.notWhenDragged(async (e) => {
             try {
-                const [id, imageToCloneID] = await this.board.pickIDImageOverlay.pick('verbs', false, this.data);
+                const [id, imageToCloneID] = await this.board.pickIDImageOverlay.pick('legacies', false, this.data);
                 if (imageToCloneID) {
-                    await VSCode.request('clone', 'verbs', imageToCloneID, id);
+                    await VSCode.request('clone', 'legacies', imageToCloneID, id);
                     VSCode.emitInfo(`Image has successfully been added to your workspace`);
                 }
                 this.data.id = id;
@@ -107,7 +104,7 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
 
     protected onClose() {
         const icon: HTMLElement = this.element.querySelector('.icon');
-        icon.setAttribute('title', this.data.id + "\n\nClick to open verb");
+        icon.setAttribute('title', this.data.id + "\n\nClick to open legacy");
         icon.onclick = null;
         this.removeEventListener('click');
         this.once('click', () => this.onClick());

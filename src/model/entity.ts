@@ -42,20 +42,47 @@ export abstract class Entity<T>{
         if (!from) return this;
         if ('_data' in from) from = (from as any)._data;
         if (this._data[`${propertyName}`]) {
-            if (from[`${propertyName}`]) {
-                this._data[`${propertyName}`] = from[`${propertyName}`];
-            } else {
-                const map = this._data[`${propertyName}`] as Map<string, number>;
-                if (from[`${propertyName}$remove`]) {
-                    for (const key of from[`${propertyName}$remove`]) {
-                        if (!map[key]) throw new Error(`Dictionary does not have "${propertyName}" item "${key}", content merge failed`);
-                        delete map[key];
+            if (Array.isArray(this._data[`${propertyName}`])) {
+                if (from[`${propertyName}`]) {
+                    this._data[`${propertyName}`] = from[`${propertyName}`];
+                } else {
+                    let list = this._data[`${propertyName}`] as Array<string>;
+                    if (from[`${propertyName}$remove`]) {
+                        for (const key of from[`${propertyName}$remove`]) {
+                            if (!list.some(item => item == key)) throw new Error(`List does not have "${propertyName}" item "${key}", content merge failed`);
+                            list = list.filter(item => item != key);
+                        }
                     }
+                    if (from[`${propertyName}$append`]) {
+                        for (const key of from[`${propertyName}$append`]) {
+                            if (list.some(item => item == key)) throw new Error(`List already contains "${propertyName}" item "${key}", content merge failed`);
+                            list.push(key);
+                        }
+                    }
+                    if (from[`${propertyName}$prepend`]) {
+                        for (const key of from[`${propertyName}$prepend`]) {
+                            if (list.some(item => item == key)) throw new Error(`List already contains "${propertyName}" item "${key}", content merge failed`);
+                            list.unshift(key);
+                        }
+                    }
+                    this._data[`${propertyName}`] = list;
                 }
-                if (from[`${propertyName}$add`]) {
-                    for (const key in from[`${propertyName}$add`]) {
-                        if (map[key]) throw new Error(`Dictionary already contains "${propertyName}" item "${key}", content merge failed`);
-                        map[key] = from[`${propertyName}$add`][key];
+            } else {
+                if (from[`${propertyName}`]) {
+                    this._data[`${propertyName}`] = from[`${propertyName}`];
+                } else {
+                    const map = this._data[`${propertyName}`] as Map<string, number>;
+                    if (from[`${propertyName}$remove`]) {
+                        for (const key of from[`${propertyName}$remove`]) {
+                            if (!map[key]) throw new Error(`Dictionary does not have "${propertyName}" item "${key}", content merge failed`);
+                            delete map[key];
+                        }
+                    }
+                    if (from[`${propertyName}$add`]) {
+                        for (const key in from[`${propertyName}$add`]) {
+                            if (map[key]) throw new Error(`Dictionary already contains "${propertyName}" item "${key}", content merge failed`);
+                            map[key] = from[`${propertyName}$add`][key];
+                        }
                     }
                 }
             }

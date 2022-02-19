@@ -14,6 +14,8 @@ import { Arrange } from "../../util/layout";
 import { PickIDImageOverlay } from "./overlay/pick_id_image_overlay";
 import { setDebounce } from "../../util/helpers";
 import { PickElementOverlay } from "./overlay/pick_element_overlay";
+import { Legacy } from "../../model/legacy";
+import { LegacyWidget } from "./widget/legacy_widget";
 
 export const BOARD_SIZE_WIDTH = 1920;
 export const BOARD_SIZE_HEIGHT = 1104;
@@ -173,6 +175,14 @@ export class Board {
                             return true;
                         }
                     }
+                } else if (widget instanceof LegacyWidget) {
+                    if (this.content.type == ContentType.Legacies) {
+                        const data = this.content.legacies.find(legacy => legacy.id == widget.data.id);
+                        if (data) {
+                            widget.data = data;
+                            return true;
+                        }
+                    }
                 }
                 this.removeWidget(widget);
                 return false;
@@ -208,6 +218,12 @@ export class Board {
                 case ContentType.Recipes:
                 case ContentType.Decks:
                 case ContentType.Legacies:
+                    return this.content.legacies.forEach((legacy: Legacy) => {
+                        if (this.widgets.some((widget: LegacyWidget) => widget instanceof LegacyWidget && widget.data.id == legacy.id)) {
+                            return;
+                        }
+                        this.addWidget(new LegacyWidget(this, legacy));
+                    });
                 case ContentType.Endings:
             }
         } catch (e) {

@@ -29,6 +29,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
     private static focused: Widget<any, IWidgetState>;
 
     // Events
+    protected onInit?(): any;
     protected onUpdate?(): any;
     protected onOpen?(): any;
     protected onClose?(): any;
@@ -185,6 +186,15 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
         if (!(fieldName in this.data)) {
             return;
         }
+        const type = input.getAttribute('type');
+        if (type == "checkbox") {
+            input.onchange = () => {
+                this.data[fieldName] = input.checked;
+                this.board.save();
+            };
+            input.checked = this?.data?.[fieldName] || this?.parentData?.[fieldName] || false;
+            return;
+        }
         input.value = this.data[fieldName];
         input.placeholder = this?.parentData?.[fieldName] || "";
         input.onkeyup = () => {
@@ -215,9 +225,11 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
             throw new Error("Element not found");
         }
         this._element.setAttribute('class', "board-widget " + this._className);
+        if(this.onInit) await this.onInit();
         await this.redraw();
         this.setOpacity(100);
         this._initialized = true;
+
         this.on('mousedown', () => this.bringToFront());
 
         // Dragging
