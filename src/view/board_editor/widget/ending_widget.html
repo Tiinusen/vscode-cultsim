@@ -1,0 +1,49 @@
+<div class="box">
+
+</div>
+<!-- icon -->
+<img class="icon" />
+<div class="frame">
+    <div class="header">
+        <!-- label -->
+        <input name="label" placeholder="Label" title="The name of the Ending as the player sees it" />
+        <!-- close button (widget) -->
+        <i class="fa-solid fa-xmark" title="Click to close" close></i>
+    </div>
+    <div class="content">
+        <table>
+            <tr>
+                <td>
+                    <!-- description -->
+                    <textarea name="description" title="The text shown to the player on the ending screen"></textarea>
+                </td>
+                <td>
+                    <!-- flavour -->
+                    <h1 no-margin title="This decides which music plays after getting the ending.">
+                        Ending Music
+                    </h1>
+                    <select name="flavour" title="This decides which music plays after getting the ending.">
+                        <option value="Grand">Grand</option>
+                        <option value="Melancholy">Melancholy</option>
+                        <option value="Vile">Vile</option>
+                    </select>
+                    <!-- anim -->
+                    <h1 title="Decides the colour of the lights, and the cosmetics of the ending.">
+                        Ending Animation
+                    </h1>
+                    <select name="anim" title="Decides the colour of the lights, and the cosmetics of the ending.">
+                        <option value="DramaticLight">Dramatic Light</option>
+                        <option value="DramaticLightCool">Dramatic Light Cool</option>
+                        <option value="DramaticLightEvil">Dramatic Light Evil</option>
+                    </select>
+                    <!-- achievementid -->
+                    <h1 title="Used to trigger a steam/gog achievement.">
+                        Achievement
+                    </h1>
+                    <input title="Used to trigger a steam/gog achievement." name="achievementid" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="footer"></div>
+</div>

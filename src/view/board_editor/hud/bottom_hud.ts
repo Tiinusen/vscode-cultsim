@@ -1,11 +1,13 @@
 import * as L from 'leaflet';
 import { ContentType } from '../../../model/content';
+import { Ending } from '../../../model/ending';
 import { Legacy } from '../../../model/legacy';
 import { Verb } from '../../../model/verb';
 import { setDebounce } from '../../../util/helpers';
 import { Arrange } from '../../../util/layout';
 import { Board } from '../board';
 import { VSCode } from '../vscode';
+import { EndingWidget } from '../widget/ending_widget';
 import { LegacyWidget } from '../widget/legacy_widget';
 import { VerbWidget } from '../widget/verb_widget';
 import html from './bottom_hud.html';
@@ -96,6 +98,15 @@ export class BottomHUD extends L.Control {
                             VSCode.emitInfo(`Image has successfully been added to your workspace`);
                         }
                         return new LegacyWidget(this.board, this.board.content.add(new Legacy({ id: id, slot: { id: id } } as any))).bringToFront();
+                    }
+                    case ContentType.Endings: {
+                        const [id, imageToCloneID] = await this.board.pickIDImageOverlay.pick('endings');
+                        if (!id) return null;
+                        if (imageToCloneID) {
+                            await VSCode.request('clone', 'endings', imageToCloneID, id);
+                            VSCode.emitInfo(`Image has successfully been added to your workspace`);
+                        }
+                        return new EndingWidget(this.board, this.board.content.add(new Ending({ id: id, slot: { id: id } } as any))).bringToFront();
                     }
                 }
                 throw new Error("Add not supported yet for this content type");

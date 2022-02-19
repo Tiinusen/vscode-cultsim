@@ -15,6 +15,8 @@ import { PickIDImageOverlay } from "./overlay/pick_id_image_overlay";
 import { PickElementOverlay } from "./overlay/pick_element_overlay";
 import { Legacy } from "../../model/legacy";
 import { LegacyWidget } from "./widget/legacy_widget";
+import { Ending } from "../../model/ending";
+import { EndingWidget } from "./widget/ending_widget";
 
 export const BOARD_SIZE_WIDTH = 1920;
 export const BOARD_SIZE_HEIGHT = 1104;
@@ -182,6 +184,14 @@ export class Board {
                             return true;
                         }
                     }
+                } else if (widget instanceof EndingWidget) {
+                    if (this.content.type == ContentType.Endings) {
+                        const data = this.content.endings.find(ending => ending.id == widget.data.id);
+                        if (data) {
+                            widget.data = data;
+                            return true;
+                        }
+                    }
                 }
                 this.removeWidget(widget);
                 return false;
@@ -224,6 +234,12 @@ export class Board {
                         this.addWidget(new LegacyWidget(this, legacy));
                     });
                 case ContentType.Endings:
+                    return this.content.endings.forEach((ending: Ending) => {
+                        if (this.widgets.some((widget: EndingWidget) => widget instanceof EndingWidget && widget.data.id == ending.id)) {
+                            return;
+                        }
+                        this.addWidget(new EndingWidget(this, ending));
+                    });
             }
         } catch (e) {
             VSCode.emitError(e);

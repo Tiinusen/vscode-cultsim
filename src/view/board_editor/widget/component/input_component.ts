@@ -21,7 +21,13 @@ export class InputComponent {
         };
 
         const type = this.element.getAttribute('type');
-        if (type == "checkbox") {
+        if (this.element instanceof HTMLSelectElement) {
+            this.element.onchange = () => {
+                this.data[this._propertyName] = this.element.value;
+                this.board.save();
+            };
+            return;
+        } else if (type == "checkbox") {
             this.element.onchange = () => {
                 this.data[this._propertyName] = this.element.checked;
                 this.board.save();
@@ -63,7 +69,11 @@ export class InputComponent {
         this._parentData = parentData;
 
         const type = this.element.getAttribute('type');
-        if (type == "checkbox") {
+        // element.querySelectorAll(`option[value="${}"]`)
+        if (this.element instanceof HTMLSelectElement) {
+            this.element.value = this?.data?.[this.propertyName] || this?.parentData?.[this.propertyName] || this.element.value;
+            return;
+        } else if (type == "checkbox") {
             this.element.checked = this?.data?.[this.propertyName] || this?.parentData?.[this.propertyName] || false;
             return;
         }

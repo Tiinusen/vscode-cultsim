@@ -178,6 +178,9 @@ body {
 
 .board-widget input {
 	border-bottom: thin solid #FFFFFF;
+}
+
+.board-widget .header input {
 	bottom: auto;
 	margin-top: 10px;
 }
@@ -373,7 +376,7 @@ body {
 	width: 550px !important;
 	height: 500px !important;
 	position: relative;
-	top: -150px;
+	top: -300px;
 	left: -275px;
 }
 
@@ -424,10 +427,6 @@ body {
 	margin-top: 20px;
 }
 
-/* .legacy-widget .content > table td > h1  {
-	margin-top:0px;
-} */
-
 .legacy-widget textarea {
 	resize: none;
 	background-color: #0f0f27;
@@ -440,6 +439,96 @@ body {
 }
 
 .legacy-widget input[type="checkbox"] {
+	transform: scale(2);
+	padding: 10px;
+	margin-right: 10px;
+	margin-left: 10px;
+	cursor: pointer;
+	margin-bottom: 20px;
+	position: relative;
+	top: 2px;
+}
+
+/*
+ * Legacy Widget
+ */
+
+.ending-widget[open] {
+	width: 550px !important;
+	height: 300px !important;
+	position: relative;
+	top: -150px;
+	left: -275px;
+}
+
+.ending-widget .icon {
+	width: 200px !important;
+	height: 300px !important;
+}
+
+.ending-widget[open] .icon {
+	width: 100px !important;
+	height: 150px !important;
+}
+
+.ending-widget .box {
+	position: relative;
+	top: -68px;
+	left: -68px;
+	width: 140px;
+	height: 140px;
+	/* border: 39px solid #09626a; */
+}
+
+.ending-widget[open] .box {
+	display: none;
+}
+
+.ending-widget:not([open]) .frame {
+	display: none;
+}
+
+.ending-widget[large] {
+	width: 625px !important;
+}
+
+.ending-widget .header {
+	height: 50px;
+}
+
+.ending-widget .content {
+	height: 300px;
+	background-color: #202041;
+	padding-top: 25px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.ending-widget .content textarea {
+	padding-left:60px;
+}
+
+.ending-widget .content>table td {
+	vertical-align: top;
+	padding-left: 5px;
+}
+
+.ending-widget .content h1:not([no-margin]) {
+	margin-top: 20px;
+}
+
+.ending-widget textarea {
+	resize: none;
+	background-color: #0f0f27;
+	font-size: 16px;
+	padding: 10px;
+	height: 160px;
+	width: 270px;
+	border-radius: 12px;
+	margin-bottom: 10px;
+}
+
+.ending-widget input[type="checkbox"] {
 	transform: scale(2);
 	padding: 10px;
 	margin-right: 10px;
@@ -678,4 +767,9 @@ body {
 *[picker] *[select]:hover {
 	background-color: #016101;
 	cursor: pointer;
+}
+
+.board-widget select {
+	width: 100%;
+	font-size: 16px;
 }

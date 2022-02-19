@@ -165,51 +165,51 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 					if (filesAspects.length > 0) {
 						return webview.asWebviewUri(filesAspects[0]).toString();
 					}
-					const element = this._coreContent.elements.find(element => element.id == id);
+					const element = this._coreContent?.elements.find(element => element.id == id);
 					if (element) {
 						if (element.isAspect) {
 							return `https://www.frangiclave.net/static/images/icons40/aspects/${element.id}.png`;
 						}
 						return `https://www.frangiclave.net/static/images/elementArt/${element.id}.png`;
 					}
-					break;
+					return `https://www.frangiclave.net/static/images/elementArt/${id}.png`;
 				}
 				case 'legacies': {
 					const files = await vscode.workspace.findFiles(`images/legacies/${id}.png`);
 					if (files.length > 0) {
 						return webview.asWebviewUri(files[0]).toString();
 					}
-					const legacy = this._coreContent.legacies.find(legacy => legacy.id == id);
+					const legacy = this._coreContent?.legacies.find(legacy => legacy.id == id);
 					if (legacy) {
 						return `https://www.frangiclave.net/static/images/icons100/legacies/${legacy?.image || legacy?.id}.png`;
 					}
-					break;
+					return `https://www.frangiclave.net/static/images/icons100/legacies/${id}.png`;
 				}
 				case 'endings': {
 					const files = await vscode.workspace.findFiles(`images/endings/${id}.png`);
 					if (files.length > 0) {
 						return webview.asWebviewUri(files[0]).toString();
 					}
-					const ending = this._coreContent.endings.find(ending => ending.id == id);
+					const ending = this._coreContent?.endings.find(ending => ending.id == id);
 					if (ending) {
 						return `https://www.frangiclave.net/static/images/endingArt/${ending?.image || ending?.id}.png`;
 					}
-					break;
+					return `https://www.frangiclave.net/static/images/endingArt/${id}.png`;
 				}
 				case 'verbs': {
 					const files = await vscode.workspace.findFiles(`images/verbs/${id}.png`);
 					if (files.length > 0) {
 						return webview.asWebviewUri(files[0]).toString();
 					}
-					const verb = this._coreContent.verbs.find(verb => verb.id == id);
+					const verb = this._coreContent?.verbs.find(verb => verb.id == id);
 					if (verb) {
 						return `https://www.frangiclave.net/static/images/icons100/verbs/${verb.id}.png`;
 					}
-					break;
+					return `https://www.frangiclave.net/static/images/icons100/verbs/${id}.png`;
 				}
 			}
 			throw new Error("unsupported type");
-		} catch {
+		} catch (e) {
 			return 'https://www.frangiclave.net/static/images/icons40/aspects/_x.png';
 		}
 	}

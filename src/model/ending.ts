@@ -18,7 +18,7 @@ interface IEndingSerialized {
 export class Ending extends Entity<IEndingSerialized> implements IEndingSerialized {
     // id
     public get id(): string {
-        return this.get('id');
+        return this.get('id') || "";
     }
     public set id(value: string) {
         this.set('id', value);
@@ -26,7 +26,7 @@ export class Ending extends Entity<IEndingSerialized> implements IEndingSerializ
 
     // label
     public get label(): string {
-        return this.get('label');
+        return this.get('label') || "";
     }
     public set label(value: string) {
         this.set('label', value);
@@ -34,7 +34,7 @@ export class Ending extends Entity<IEndingSerialized> implements IEndingSerializ
 
     // description
     public get description(): string {
-        return this.get('description');
+        return this.get('description') || "";
     }
     public set description(value: string) {
         this.set('description', value);
@@ -42,7 +42,7 @@ export class Ending extends Entity<IEndingSerialized> implements IEndingSerializ
 
     // image
     public get image(): string {
-        return this.get('image');
+        return this.get('image') || "";
     }
     public set image(value: string) {
         this.set('image', value);
@@ -50,7 +50,7 @@ export class Ending extends Entity<IEndingSerialized> implements IEndingSerializ
 
     // flavour
     public get flavour(): string {
-        return this.get('flavour');
+        return this.get('flavour') || "";
     }
     public set flavour(value: string) {
         this.set('flavour', value);
@@ -58,7 +58,7 @@ export class Ending extends Entity<IEndingSerialized> implements IEndingSerializ
 
     // anim
     public get anim(): string {
-        return this.get('anim');
+        return this.get('anim') || "";
     }
     public set anim(value: string) {
         this.set('anim', value);
@@ -66,7 +66,7 @@ export class Ending extends Entity<IEndingSerialized> implements IEndingSerializ
 
     // achievementid
     public get achievementid(): string {
-        return this.get('achievementid');
+        return this.get('achievementid') || "";
     }
     public set achievementid(value: string) {
         this.set('achievementid', value);
@@ -79,9 +79,9 @@ export class Ending extends Entity<IEndingSerialized> implements IEndingSerializ
             label: this.get('label'),
             description: this.get('description'),
             image: this.get('image'),
-            flavour: this.get('flavour'),
-            anim: this.get('anim'),
-            achievementid: this.get('achievementid'),
+            flavour: this.get('flavour') || "Grand",
+            anim: this.get('anim')  || "DramaticLight",
+            achievementid: this.get('achievementid') || "XXX",
         };
     }
 
@@ -90,9 +90,9 @@ export class Ending extends Entity<IEndingSerialized> implements IEndingSerializ
         this.label = obj?.label || this.get('label');
         this.description = obj?.description || this.get('description');
         this.image = obj?.image || this.get('image');
-        this.flavour = obj?.flavour || this.get('flavour');
-        this.anim = obj?.anim || this.get('anim');
-        this.achievementid = obj?.achievementid || this.get('achievementid');
+        this.flavour = obj?.flavour || this.get('flavour') || "Grand";
+        this.anim = obj?.anim || this.get('anim') || "DramaticLight";
+        this.achievementid = obj?.achievementid || this.get('achievementid') || "XXX";
         return this;
     }
 }
