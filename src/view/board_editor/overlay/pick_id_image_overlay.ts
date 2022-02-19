@@ -42,7 +42,7 @@ export class PickIDImageOverlay extends BoardOverlay {
         if (this.isRemovedOnHide) {
             this.wrapper.setAttribute('image-picker', '');
             this._idInput.setAttribute('placeholder', 'Which image do you wish to clone?');
-            this._icon.onclick = () => this.onCloseClick();
+            this._icon.onclick = null;
             this._closeButton.onclick = () => this.onMergeClick();
             this._addButton.innerText = "Copy";
             this._mergeButton.innerText = "Copy";

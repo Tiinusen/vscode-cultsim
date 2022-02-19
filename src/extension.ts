@@ -10,6 +10,7 @@ import { ToggleEditorCommand } from './command/toggle_editor_command';
 import { Content } from './model/content';
 import { StartCultistCommand } from './command/start_cultist_command';
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
