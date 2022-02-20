@@ -135,11 +135,21 @@ class EntityTreeItem extends vscode.TreeItem implements TreeItem {
 	}
 	getChildren(): Thenable<TreeItem[]> {
 		const items = new Array<TreeItem>();
-		for (const [propertyName, propertyValue] of this.entity) {
-			const property = new PropertyTreeItem(propertyName, this.entity);
-			if (property.hasChildren() || (property.description?.toString()?.length || 0) > 0) {
-				items.push(property);
-				this.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
+		if ('has' in this.entity) {
+			for (const [propertyName, propertyValue] of this.entity) {
+				const property = new PropertyTreeItem(propertyName, this.entity);
+				if (property.hasChildren() || (property.description?.toString()?.length || 0) > 0) {
+					items.push(property);
+					this.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
+				}
+			}
+		} else {
+			for (const propertyName in this.entity) {
+				const property = new PropertyTreeItem(propertyName, this.entity);
+				if (property.hasChildren() || (property.description?.toString()?.length || 0) > 0) {
+					items.push(property);
+					this.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
+				}
 			}
 		}
 		return Promise.resolve(items);
@@ -187,7 +197,11 @@ class PropertyTreeItem extends vscode.TreeItem implements TreeItem {
 		const items = new Array<TreeItem>();
 		if (Array.isArray(this.value)) {
 			for (const item of this.value) {
-				items.push(new PropertyTreeItem(item));
+				if (typeof item === 'object' && 'id' in item) {
+					items.push(new EntityTreeItem(item));
+				} else {
+					items.push(new PropertyTreeItem(item));
+				}
 			}
 		} else if (Object.keys(this.value).length > 0) {
 			if ('id' in this.value) {
