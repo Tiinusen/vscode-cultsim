@@ -1,70 +1,79 @@
-# Cultsim
+# Cultist Simulator VSCode Extension
 
-Simplifies Cultist Simulator modding by providing an interactive editor with panels
+Simplifies Cultist Simulator modding by providing an interactive editor with panels, also comes with a primitive debugger.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+### Interactive Editor for Content files
+Open your mod content with an interactive editor instead of typing everything in pure JSON
 
-For example if there is an image subfolder under your extension project workspace:
+![Interactive Editor](media/readme/editor.gif)
 
-\!\[feature X\]\(images/feature-x.png\)
+### Easy Project Setup
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+`F1` > `Cultist Simulator: New Project`
+
+Enter some mandatory info and then you are ready to go
+
+![Easy Setup](media/readme/easy-setup.gif)
+
+### Debugger
+Extension supports a primitive debugger that can at the moment start, stop and restart the game, it also supports some error checking.
+
+![Debugger](media/readme/debugger.gif)
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+* Linux / Windows
+* Cultist Simulator (Steam Edition)
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+* `cultsim.streamingAssetsPath`: path to streaming assets ***(see FAQ)***
+* `cultsim.disableCoreContent`: enable/disable usage of core game content (speeds up extension activation)
+* `cultsim.disableInteractiveUI`: enable/disable interactive UI
+
+## Roadmap
+
+* [x] Editor
+* [x] Debugger
+* [x] Commands
+  * [x] New Project
+  * [x] Show Documentation
+  * [x] Show Reference
+  * [x] Show Log
+* [ ] Content
+  * [x] Support for `Synopsis`
+  * [x] Support for `Verb`
+  * [x] Support for `Legacy`
+  * [x] Support for `Ending`
+  * [ ] Support for `Element`
+  * [ ] Support for `Deck`
+  * [ ] Support for `Recipe`
+* [ ] Solving Known Issues
+
+## Contributors
+Not all contributors know that they are, but we know and therefor they shall have our praise.
+
+This VSCode Extension would not see the light of day if it wasn't for the awesome people of the developer and modding
+community providing excellent documentation, tips and tricks and in general keeping the Cultist Simulator
+engine alive with new awesome content. and also thanks to the VSCode community for providing good examples to follow.
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+These known issues are planned to be solved once extension has reached MVP
 
-## Release Notes
+### ID selection lagg
+There is a known delay when picking an ID on windows, this is mostly due to content merging between
+core content and workspace content, if this becomes to annoying and if you are in no need of the core content
+just disabled it via settings.
 
-Users appreciate release notes as you update your extension.
+## FAQ
 
-### 1.0.0
+### Where do I find the streaming assets path?
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+It's located at "`steamapps/common/Cultist Simulator/CS_Data/StreamingAssets`" which differs depending on OS.
+Can easily be located by launching **Steam** and **right-click** on **Cultist Simulator** then go to
+**Local Files** and **left-click** on **Browse**.

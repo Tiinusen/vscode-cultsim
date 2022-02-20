@@ -58,7 +58,8 @@ export class NewProjectCommand {
 			"description": "Mod Description, shown in-game.",
 			"description_long": "Long Mod Description."
 		};
-		workspace.fs.writeFile(Uri.joinPath(workspaceFolder.uri, "synopsis.json"), Buffer.from(JSON.stringify(synopsisContent, null, 4), 'utf8'));
+		const synopsisURI = Uri.joinPath(workspaceFolder.uri, "synopsis.json");
+		workspace.fs.writeFile(synopsisURI, Buffer.from(JSON.stringify(synopsisContent, null, 4), 'utf8'));
 
 		// Project Structure
 		const structure = [
@@ -101,6 +102,10 @@ export class NewProjectCommand {
 		} catch {
 			workspace.fs.writeFile(uri, Buffer.from(JSON.stringify(launchContent, null, 4), 'utf8'));
 		}
+		commands.executeCommand(
+			"vscode.open",
+			synopsisURI
+		);
 	}
 
 }

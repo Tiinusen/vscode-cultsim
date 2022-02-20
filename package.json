@@ -1,12 +1,14 @@
 {
 	"name": "cultsim",
-	"displayName": "CultSim",
-	"description": "Cultist Simulator IDE",
-	"version": "0.0.1",
+	"displayName": "Cultist Simulator IDE",
+	"description": "Cultist Simulator IDE for Modding Core Game",
+	"version": "0.6.0",
 	"engines": {
 		"vscode": "^1.64.0"
 	},
 	"categories": [
+		"Debuggers",
+		"Visualization",
 		"Other"
 	],
 	"activationEvents": [
