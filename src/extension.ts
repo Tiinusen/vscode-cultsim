@@ -11,6 +11,7 @@ import { Content } from './model/content';
 import { StartCultistCommand } from './command/start_cultist_command';
 import { CultsimSession } from './debug/session';
 import { workspace } from 'vscode';
+import { OpenLogCommand } from './command/open_log_command';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // this method is called when your extension is activated
@@ -32,6 +33,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	new ShowReferenceCommand(context);
 	new ToggleEditorCommand(context);
 	new StartCultistCommand(context);
+	new OpenLogCommand(context);
 
 	// Views
 	new ExplorerView(context, coreContent);

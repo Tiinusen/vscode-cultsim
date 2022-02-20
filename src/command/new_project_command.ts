@@ -62,6 +62,7 @@ export class NewProjectCommand {
 
 		// Project Structure
 		const structure = [
+			".vscode",
 			"content",
 			"loc",
 			"images",
@@ -84,6 +85,21 @@ export class NewProjectCommand {
 				continue;
 			} catch { /* Prevent error on file not found */ }
 			await workspace.fs.createDirectory(uri);
+		}
+		const launchContent = {
+			"configurations": [
+				{
+					"type": "cultsim",
+					"request": "launch",
+					"name": "Start Cultist Simulator (Steam)"
+				}
+			]
+		};
+		const uri = Uri.joinPath(workspaceFolder.uri, ".vscode", "launch.json");
+		try {
+			await workspace.fs.stat(uri);
+		} catch {
+			workspace.fs.writeFile(uri, Buffer.from(JSON.stringify(launchContent, null, 4), 'utf8'));
 		}
 	}
 

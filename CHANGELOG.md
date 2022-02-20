@@ -7,7 +7,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 ### Added
 - Graphical Editor for Cultist Simulator core/mod files
-- Debugger support for Cultist Simulator added (a very primitive one, currently also only works on linux)
+- Debugger support for Cultist Simulator added (very primitive one)
 - Editor support for **synapsis**
 - Editor support for **verbs**
 - Editor support for **legacies**

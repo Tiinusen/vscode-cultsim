@@ -23,6 +23,8 @@ import * as vscode from 'vscode';
 import { CancellationToken, DebugAdapterDescriptor, DebugAdapterDescriptorFactory, DebugAdapterInlineImplementation, DebugConfiguration, DebugConfigurationProvider, DebugSession, env, ExtensionContext, ProviderResult, Uri, workspace, WorkspaceFolder } from 'vscode';
 import { delay } from '../util/helpers';
 import { exec } from 'child_process';
+import { platform } from 'process';
+import path = require('path');
 
 
 /**
@@ -104,15 +106,13 @@ export class CultsimSession extends LoggingDebugSession {
     }
 
     private async run() {
-        if (workspace.workspaceFolders.length == 0) throw new Error("no workspace open");
-
+        await this.validate();
+        const workspaceURI = workspace.workspaceFolders[0].uri;
         await delay(1500);
 
-        const workspaceURI = workspace.workspaceFolders[0].uri;
         const logURI = Uri.joinPath(workspaceURI, "..", "..", "Player.log");
-
-        // Clearing log or creating
         await workspace.fs.writeFile(logURI, new Uint8Array());
+
         this.output("Starting Cultist Simulator via Steam", "prio");
         await this.startCultistSimulator();
         await this.waitForCultistSimulatorToStart(logURI);
@@ -120,13 +120,36 @@ export class CultsimSession extends LoggingDebugSession {
         this.startProblemChecker(logURI);
     }
 
+
+    private async validate() {
+        if (workspace.workspaceFolders.length == 0) throw new Error("no workspace open");
+        if (platform != "win32" && platform != "linux") throw new Error("debugger not supported in this platform");
+        const workspaceURI = workspace.workspaceFolders[0].uri;
+        if (path.basename(Uri.joinPath(workspaceURI, "..").fsPath) != "mods" || path.basename(Uri.joinPath(workspaceURI, "..", "..").fsPath) != "Cultist Simulator") throw new Error("mod not located within Cultist Simulator/mods folder");
+
+        const uri = Uri.joinPath(workspaceURI, "synopsis.json");
+        try {
+            await workspace.fs.stat(uri);
+        } catch {
+            throw new Error("missing synopsis.json file");
+        }
+    }
+
     private async startCultistSimulator(): Promise<void> {
         await env.openExternal(Uri.parse("steam://rungameid/718670"));
     }
 
     private stopCultistSimulator(): Promise<void> {
+        const cmd = ((): string => {
+            switch (platform) {
+                case 'linux':
+                    return 'killall CS.x86_64';
+                case 'win32':
+                    return 'taskkill /IM "cultistsimulator.exe" /F';
+            }
+        })();
         return new Promise((resolve, reject) => {
-            exec('killall CS.x86_64', (err, stdout, stderr) => {
+            exec(cmd, (err, stdout, stderr) => {
                 if (err) {
                     reject(err);
                 } else if (stderr) {
@@ -139,8 +162,16 @@ export class CultsimSession extends LoggingDebugSession {
     }
 
     private isCultistSimulatorRunning(): Promise<boolean> {
+        const cmd = ((): string => {
+            switch (platform) {
+                case 'linux':
+                    return 'pgrep CS.x86_64';
+                case 'win32':
+                    return 'tasklist | findstr cultistsimulator.exe';
+            }
+        })();
         return new Promise((resolve, reject) => {
-            exec('pgrep CS.x86_64', (err, stdout, stderr) => {
+            exec(cmd, (err, stdout, stderr) => {
                 resolve(stdout ? true : false);
             });
         });
@@ -157,21 +188,24 @@ export class CultsimSession extends LoggingDebugSession {
         throw new Error("Cultist simulator failed to start");
     }
     private _problemChecker = null;
-    private _regexps = {
-        cantFind: /(Can't\sfind.*)/
-    };
     private startProblemChecker(logURI: Uri) {
         this._problemChecker = setInterval(async () => {
-            if (!(await this.isCultistSimulatorRunning())) {
-                this.output("Cultist Simulator was closed by user");
-                await this.stopAll();
-            }
-            const data = (await workspace.fs.readFile(logURI)).toString();
-            if (this._regexps.cantFind.test(data)) {
-                const match = this._regexps.cantFind.exec(data);
-                this.output("Cultist Simulator was terminated by debugger due to error detected");
-                this.output(match[1], "err");
-                this.stopAll(true);
+            try {
+                if (!(await this.isCultistSimulatorRunning())) {
+                    this.output("Cultist Simulator was closed by user");
+                    await this.stopAll();
+                }
+                const data = (await workspace.fs.readFile(logURI)).toString();
+                if (data.includes("Assets.CS.TabletopUI.TabletopManager.Start")) {
+                    this.output("Cultist Simulator was terminated by debugger due to error detected");
+                    this.stopAll(true);
+                    vscode.commands.executeCommand(
+                        "cultsim.open.log",
+                        logURI
+                    );
+                }
+            } catch (e) {
+                console.error(e);
             }
         }, 1000);
     }

@@ -14,6 +14,7 @@
 		"onCommand:cultsim.new.project",
 		"onCommand:cultsim.show.documentation",
 		"onCommand:cultsim.show.reference",
+		"onCommand:cultsim.open.log",
 		"onCommand:cultsim.start.cultist",
 		"onLanguage:json",
 		"onDebugResolve:cultsim"
@@ -50,6 +51,11 @@
 			{
 				"command": "cultsim.show.reference",
 				"title": "Show Reference",
+				"category": "Cultist Simulator"
+			},
+			{
+				"command": "cultsim.open.log",
+				"title": "Open Log",
 				"category": "Cultist Simulator"
 			},
 			{
