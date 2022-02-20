@@ -188,6 +188,8 @@ export class Content {
         }
         const streamingAssetsPath: string = workspace.getConfiguration('cultsim').get('streamingAssetsPath');
         if (!streamingAssetsPath) return null;
+        const disableCoreContent: boolean = workspace.getConfiguration('cultsim').get('disableCoreContent');
+        if (disableCoreContent) return null;
         const streamingAssetsURI = Uri.joinPath(Uri.file(streamingAssetsPath), "content", "core");
 
         this._coreContent = this.fromFolder(streamingAssetsURI);

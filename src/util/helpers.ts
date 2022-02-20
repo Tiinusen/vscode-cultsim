@@ -53,3 +53,7 @@ export function setDebounce<T>(callback: T, ms?: number): T {
         timeout = setTimeout(callback as any, ms, ...args);
     } as any;
 }
+
+export function delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

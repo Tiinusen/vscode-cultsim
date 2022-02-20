@@ -15,7 +15,8 @@
 		"onCommand:cultsim.show.documentation",
 		"onCommand:cultsim.show.reference",
 		"onCommand:cultsim.start.cultist",
-		"onLanguage:json"
+		"onLanguage:json",
+		"onDebugResolve:cultsim"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -25,6 +26,12 @@
 				"properties": {
 					"cultsim.streamingAssetsPath": {
 						"type": "string"
+					},
+					"cultsim.disableCoreContent": {
+						"type": "boolean"
+					},
+					"cultsim.disableInteractiveUI": {
+						"type": "boolean"
 					}
 				}
 			}
@@ -102,7 +109,36 @@
 					"contextualTitle": "Cultist Simulator Explorers"
 				}
 			]
-		}
+		},
+		"debuggers": [
+			{
+				"type": "cultsim",
+				"runtime": "node",
+				"label": "Cultist Simulator",
+				"program": "./dist/adapter.js",
+				"configurationAttributes": {
+					"launch": {}
+				},
+				"initialConfigurations": [
+					{
+						"type": "cultsim",
+						"request": "launch",
+						"name": "Start Cultist Simulator (Steam)"
+					}
+				],
+				"configurationSnippets": [
+					{
+						"label": "Cultist Simulator: Launch",
+						"description": "A new configuration for launching Cultist Simulator",
+						"body": {
+							"type": "cultsim",
+							"request": "launch",
+							"name": "Start Cultist Simulator (Steam)"
+						}
+					}
+				]
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "yarn run package",
@@ -135,7 +171,11 @@
 	},
 	"dependencies": {
 		"@types/leaflet": "^1.7.9",
+		"@vscode/debugadapter": "^1.53.0",
+		"await-notify": "^1.0.1",
+		"base64-js": "^1.5.1",
 		"geojson": "^0.5.0",
-		"leaflet": "^1.7.1"
+		"leaflet": "^1.7.1",
+		"path-browserify": "^1.0.1"
 	}
 }

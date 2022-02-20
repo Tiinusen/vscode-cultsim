@@ -9,6 +9,8 @@ import { ShowReferenceCommand } from './command/show_reference_command';
 import { ToggleEditorCommand } from './command/toggle_editor_command';
 import { Content } from './model/content';
 import { StartCultistCommand } from './command/start_cultist_command';
+import { CultsimSession } from './debug/session';
+import { workspace } from 'vscode';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // this method is called when your extension is activated
@@ -17,7 +19,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	let coreContent: Content = null;
 	try {
 		coreContent = await Content.fromCore();
-		if (!coreContent) {
+		if (!workspace.getConfiguration('cultsim').get('streamingAssetsPath') && !workspace.getConfiguration('cultsim').get('disableCoreContent')) {
 			vscode.window.showWarningMessage("Cultist Simulator streaming assets path not configurated");
 		}
 	} catch (e) {
@@ -32,9 +34,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	new StartCultistCommand(context);
 
 	// Views
-	new ExplorerView(context, await Content.fromCore(),);
-
+	new ExplorerView(context, coreContent);
 	await BoardEditor.register(context, coreContent);
+
+	// Debuggers
+	CultsimSession.register(context);
 }
 
 

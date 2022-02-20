@@ -46,6 +46,12 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 			return;
 		}
 
+		const disableInteractiveUI: boolean = vscode.workspace.getConfiguration('cultsim').get('disableInteractiveUI');
+		if (disableInteractiveUI) {
+			vscode.commands.executeCommand('workbench.action.toggleEditorType');
+			return;
+		}
+
 		const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
 			if (e.document.uri.toString() === document.uri.toString()) {
 				updateWebview();
