@@ -78,6 +78,7 @@ export class CultsimSession extends LoggingDebugSession {
     protected async terminateRequest(response: DebugProtocol.TerminateResponse, args: DebugProtocol.TerminateArguments, request?: DebugProtocol.Request) {
         await this.stopAll(false);
         this.output("Cultist Simulator was closed by debugger");
+        await delay(1500);
         this.sendResponse(response);
         this.end();
     }
@@ -104,12 +105,14 @@ export class CultsimSession extends LoggingDebugSession {
 
     private async run() {
         if (workspace.workspaceFolders.length == 0) throw new Error("no workspace open");
+
+        await delay(1500);
+
         const workspaceURI = workspace.workspaceFolders[0].uri;
         const logURI = Uri.joinPath(workspaceURI, "..", "..", "Player.log");
 
         // Clearing log or creating
         await workspace.fs.writeFile(logURI, new Uint8Array());
-
         this.output("Starting Cultist Simulator via Steam", "prio");
         await this.startCultistSimulator();
         await this.waitForCultistSimulatorToStart(logURI);
@@ -126,13 +129,10 @@ export class CultsimSession extends LoggingDebugSession {
             exec('killall CS.x86_64', (err, stdout, stderr) => {
                 if (err) {
                     reject(err);
-                    this.end();
                 } else if (stderr) {
                     reject(stderr);
-                    this.end();
                 } else {
                     resolve();
-                    this.end();
                 }
             });
         });
