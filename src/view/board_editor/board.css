@@ -709,6 +709,10 @@ body {
 	cursor: pointer;
 }
 
+.board-widget *[slot][add]:hover {
+	background-color: #102e10;
+}
+
 .board-widget *[slot] input {
 	font-size: 12px;
 	border: none;

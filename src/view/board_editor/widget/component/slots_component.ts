@@ -36,6 +36,7 @@ export class SlotsComponent<T> {
             this._addButton = document.createElement('div');
             this._addButton.toggleAttribute('slot', true);
             this._addButton.toggleAttribute('add', true);
+            this._addButton.setAttribute('title', 'Click to add slot');
             this._list.append(this._addButton);
         }
         if (this._addButton) this._addButton.onclick = () => this.onAdd();
