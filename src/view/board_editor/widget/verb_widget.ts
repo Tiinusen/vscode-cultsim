@@ -45,8 +45,8 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
 
         // Remove slot template
         if (!this.slotsElement) {
-            this.slotsElement = this.element.querySelector('.slots');
-            this.slotTemplateElement = this.slotsElement.querySelector('.slot');
+            this.slotsElement = this.element.querySelector('*[slots]');
+            this.slotTemplateElement = this.slotsElement.querySelector('*[slot]');
             this.slotsElement.removeChild(this.slotTemplateElement);
         }
 

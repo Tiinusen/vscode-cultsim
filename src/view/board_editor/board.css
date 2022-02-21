@@ -689,11 +689,11 @@ body {
  * Slot Widget
  */
 
-.board-widget .slots {
+.board-widget *[slots] {
 	vertical-align: top;
 }
 
-.board-widget .slot {
+.board-widget *[slot] {
 	float: left;
 	margin-top: 15px;
 	margin-left: 15px;
@@ -704,17 +704,17 @@ body {
 	background-color: #0a0a1b;
 }
 
-.board-widget .slot:hover {
+.board-widget *[slot]:hover {
 	background-color: #10102e;
 	cursor: pointer;
 }
 
-.board-widget .slot input {
+.board-widget *[slot] input {
 	font-size: 12px;
 	border: none;
 }
 
-.board-widget .slot input[name="label"] {
+.board-widget *[slot] input[name="label"] {
 	position: relative;
 	top: -22px;
 	left: -8px;
@@ -723,11 +723,11 @@ body {
 	text-align: center;
 }
 
-.board-widget .slot:not([open]) .panel {
+.board-widget *[slot]:not([open]) .panel {
 	display: none;
 }
 
-.board-widget .slot[open] .panel {
+.board-widget *[slot][open] .panel {
 	position: relative;
 	top: -150px;
 	left: -75px;
@@ -739,7 +739,7 @@ body {
 	cursor: default;
 }
 
-.board-widget .slot input[type="checkbox"] {
+.board-widget *[slot] input[type="checkbox"] {
 	transform: scale(2);
 	padding: 10px;
 	margin-right: 10px;
@@ -748,7 +748,7 @@ body {
 	margin-bottom: 20px;
 }
 
-.board-widget .slot i[close] {
+.board-widget *[slot] i[close] {
 	position: relative;
 	float: right;
 	font-size: 35px;
@@ -756,11 +756,11 @@ body {
 	cursor: pointer;
 }
 
-.board-widget .slot i[close]:hover {
+.board-widget *[slot] i[close]:hover {
 	color: #fffd92
 }
 
-.board-widget .slot label {
+.board-widget *[slot] label {
 	position: relative;
 	font-size: 16px;
 	top: -1px;
@@ -768,17 +768,17 @@ body {
 	font-weight: bold;
 }
 
-.board-widget .slot table {
+.board-widget *[slot] table {
 	width: 100%;
 }
 
-.board-widget .slot th {
+.board-widget *[slot] th {
 	font-size: 16px;
 	font-weight: bold;
 	cursor: help;
 }
 
-.board-widget .slot td {
+.board-widget *[slot] td {
 	vertical-align: top;
 	width: 50%;
 }
