@@ -8,6 +8,8 @@ import { VSCode } from "../vscode";
 import { DictionaryComponent } from "./component/dictionary_component";
 import { PickerComponent } from "./component/picker_component";
 import { InduceComponent } from "./component/induce_component";
+import { Slot } from "../../../model/slot";
+import { SlotsComponent } from "./component/slots_component";
 
 export interface ICElementWidgetState extends IWidgetState {
     slotOpen: boolean
@@ -19,6 +21,7 @@ export class CElementWidget extends Widget<CElement, ICElementWidgetState> {
     private induces: InduceComponent;
     private aspects: DictionaryComponent;
     private decayTo: PickerComponent;
+    private slots: SlotsComponent<CElementWidget>;
 
     constructor(board: Board, data: CElement) {
         super(board, data, html, "element-widget");
@@ -40,6 +43,20 @@ export class CElementWidget extends Widget<CElement, ICElementWidgetState> {
         this.decayTo.onChange = () => {
             this.board.save();
             this.onUpdate();
+        };
+
+        this.slots = new SlotsComponent(this.board, "slots", this, this.element.querySelector('*[name="slots"]'), 0, 6);
+        this.slots.onOpen = (slotNumber: number) => {
+            this.state.openSlot = slotNumber;
+            this.save(true);
+        };
+        this.slots.onClose = () => {
+            this.state.openSlot = 0;
+            this.save(true);
+        };
+        this.slots.onChange = () => {
+            this.element.toggleAttribute('large', this.slots.size >= 3);
+            this.save();
         };
     }
 
@@ -78,6 +95,9 @@ export class CElementWidget extends Widget<CElement, ICElementWidgetState> {
             await this.induces?.onUpdate(this.data, this?.parentData);
             await this.aspects?.onUpdate(this.data, this?.parentData);
             await this.decayTo?.onUpdate(this.data, this?.parentData);
+            await this.slots.onUpdate(this.data, this?.parentData);
+            this.element.toggleAttribute('large', this.slots.size >= 3);
+            this.slots.open(this?.state?.openSlot || 0);
         } catch (e) {
             console.error(e);
             VSCode.emitError(e);

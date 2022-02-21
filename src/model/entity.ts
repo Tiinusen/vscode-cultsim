@@ -11,6 +11,11 @@ export abstract class Entity<T>{
         SerializationHelper.toInstance<Entity<T>, T>(this, data);
     }
 
+    public replace(data: T) {
+        this._data = {} as T;
+        SerializationHelper.toInstance<Entity<T>, T>(this, data);
+    }
+
     public has(key: string): boolean {
         return key in this._data;
     }

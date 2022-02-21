@@ -7,15 +7,14 @@ import html from "./verb_widget.html";
 import { VSCode } from "../vscode";
 import { get, has, set, setDebounce } from "../../../util/helpers";
 import { SlotComponent } from "./component/slot_component";
+import { SlotsComponent } from "./component/slots_component";
 
 export interface IVerbWidgetState extends IWidgetState {
     slotOpen: boolean
 }
 
 export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
-    private slot?: SlotComponent<VerbWidget>;
-    private slotsElement?: Element;
-    private slotTemplateElement?: Element;
+    private slot: SlotsComponent<VerbWidget>;
     private icon: HTMLImageElement;
     private lastIconFetch?: number;
 
@@ -29,6 +28,22 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
         this.icon.setAttribute('src', imageURL);
     }
 
+    protected onInit() {
+        this.icon = this.element.querySelector('.icon');
+        this.slot = new SlotsComponent(this.board, "slot", this, this.element.querySelector('*[name="slot"]'));
+        this.slot.onOpen = (slotNumber: number) => {
+            this.state.openSlot = slotNumber;
+            this.save(true);
+        };
+        this.slot.onClose = () => {
+            this.state.openSlot = 0;
+            this.save(true);
+        };
+        this.slot.onChange = () => {
+            this.save();
+        };
+    }
+
     protected async onUpdate() {
         // Fetch data
         if (this.data?.id && !this.parentData) {
@@ -37,24 +52,9 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
         }
 
         // Icon
-        this.icon = this.element.querySelector('.icon');
         if (!this.lastIconFetch || (this.lastIconFetch + 5 * 1000) < new Date().getTime()) {
             this.lastIconFetch = new Date().getTime();
             this.setImage(await VSCode.request('image', 'verbs', this.data?.id));
-        }
-
-        // Remove slot template
-        if (!this.slotsElement) {
-            this.slotsElement = this.element.querySelector('*[slots]');
-            this.slotTemplateElement = this.slotsElement.querySelector('*[slot]');
-            this.slotsElement.removeChild(this.slotTemplateElement);
-        }
-
-        // Slot
-        if (!this.slot) {
-            const slotElement = this.slotTemplateElement.cloneNode(true) as HTMLElement;
-            this.slotsElement.appendChild(slotElement);
-            this.slot = new SlotComponent<VerbWidget>(this.board, this.data.slot, this, slotElement);
         }
 
         // Buttons
@@ -64,21 +64,13 @@ export class VerbWidget extends Widget<Verb, IVerbWidgetState> {
         // Inputs
         this.element.querySelectorAll('input[name],textarea[name]').forEach((input: HTMLInputElement) => this.bindInput(input));
 
-        this.slot.data = this.data.slot;
-        if (this.parentData) this.slot.parentData = this.parentData.slot;
-        await this.slot.onUpdate();
-        this.slot.onOpen = null;
-        if (this.state.openSlot == 1) {
-            this.slot.open();
+        try{
+            await this.slot.onUpdate(this.data, this.parentData);
+            this.slot.open(this?.state?.openSlot || 0);
+        }catch(e){
+            console.error(e);
+            VSCode.emitError(e);
         }
-        this.slot.onOpen = () => {
-            this.state.openSlot = 1;
-            this.save(true);
-        };
-        this.slot.onClose = () => {
-            this.state.openSlot = 0;
-            this.save(true);
-        };
     }
 
     protected onClickClose() {

@@ -392,8 +392,8 @@ body {
 	display: none;
 }
 
-.element-widget[large] {
-	width: 625px !important;
+.element-widget[large] .content {
+	height: 500px !important;
 }
 
 .element-widget .header {
@@ -737,6 +737,7 @@ body {
 	background-color: #111122;
 	padding: 10px;
 	cursor: default;
+	z-index: 10000000;
 }
 
 .board-widget *[slot] input[type="checkbox"] {

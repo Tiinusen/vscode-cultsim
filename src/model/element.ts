@@ -192,7 +192,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
             decayTo: this?.decayTo || this.get('decayTo'),
             verbicon: this?.verbicon || this.get('verbicon'),
 
-            // slots: this?.slots?.map(slot => slot?.toJSON() || slot), // TODO: Broken
+            slots: this?.slots?.map(slot => JSON.parse(JSON.stringify(slot))),
 
             // Card Properties
             aspects: this?.aspects || this.get('aspects'),
@@ -221,6 +221,11 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
         this.lifetime = obj?.lifetime || this.get('lifetime');
         this.resaturate = obj?.resaturate || this.get('resaturate');
         this.slots = obj?.slots || this.get('slots');
+        const slots = [];
+        for(const slot of (obj?.slots || this.get('slots') || [])){
+            slots.push(new Slot().fromJSON(slot));
+        }
+        this.slots = slots;
         return this;
     }
 }

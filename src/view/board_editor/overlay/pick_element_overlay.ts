@@ -96,11 +96,19 @@ export class PickElementOverlay extends BoardOverlay {
     public async pick(type: string, noLevel = false, levelLabel = 'Level'): Promise<[id: string, level: number]> {
         this._type = type;
         this._idInput.value = "";
+        if(type){
+            this._idInput.setAttribute('placeholder', 'Existing ID');
+            this._icon.toggleAttribute('hide', false);
+        }else{
+            this._idInput.setAttribute('placeholder', 'ID');
+            this._icon.toggleAttribute('hide', true);
+        }
         this._levelInput.value = "";
         this._levelInput.toggleAttribute('hide', noLevel);
         this._levelInput.setAttribute('title', levelLabel);
         this._levelInput.setAttribute('placeholder', levelLabel);
-        this._ids = await VSCode.request('IDs', this._type);
+        this._ids = [];
+        if (this._type) this._ids = await VSCode.request('IDs', this._type);
         this._idsDataList.innerHTML = "";
         for (const id of this._ids) {
             const option = document.createElement('option');
