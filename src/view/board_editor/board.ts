@@ -17,6 +17,9 @@ import { Legacy } from "../../model/legacy";
 import { LegacyWidget } from "./widget/legacy_widget";
 import { Ending } from "../../model/ending";
 import { EndingWidget } from "./widget/ending_widget";
+import { CElementWidget } from "./widget/element_widget";
+import { CElement } from "../../model/element";
+import { PickChoiceOverlay } from "./overlay/pick_choice_overlay";
 
 export const BOARD_SIZE_WIDTH = 1920;
 export const BOARD_SIZE_HEIGHT = 1104;
@@ -26,6 +29,7 @@ export class Board {
     private _bottomHUD: BottomHUD = null;
     private _pickIDImageOverlay: PickIDImageOverlay = null;
     private _pickElementOverlay: PickElementOverlay = null;
+    private _pickChoiceOverlay: PickChoiceOverlay = null;
     private _widgets: Array<any> = [];
     private _bounds = L.latLngBounds(xy(0, 0), xy(BOARD_SIZE_WIDTH, BOARD_SIZE_HEIGHT));
     private _content?: Content;
@@ -40,6 +44,10 @@ export class Board {
 
     public get pickElementOverlay(): PickElementOverlay {
         return this._pickElementOverlay;
+    }
+
+    public get pickChoiceOverlay(): PickChoiceOverlay {
+        return this._pickChoiceOverlay;
     }
 
     public get map(): L.Map {
@@ -129,7 +137,7 @@ export class Board {
             if (init) {
                 this.xy = state.camera;
                 if (VSCode.state.widgetState.size == 0) {
-                    Arrange.Grid(this.widgets, this.map.getBounds());
+                    this._bottomHUD.onSort();
                 }
                 VSCode.saveState();
             }
@@ -143,6 +151,7 @@ export class Board {
             if (init) {
                 this._pickIDImageOverlay = new PickIDImageOverlay(this);
                 this._pickElementOverlay = new PickElementOverlay(this);
+                this._pickChoiceOverlay = new PickChoiceOverlay(this);
             }
 
             if (this.content == null) {
@@ -192,6 +201,14 @@ export class Board {
                             return true;
                         }
                     }
+                } else if (widget instanceof CElementWidget) {
+                    if (this.content.type == ContentType.Elements) {
+                        const data = this.content.elements.find(element => element.id == widget.data.id);
+                        if (data) {
+                            widget.data = data;
+                            return true;
+                        }
+                    }
                 }
                 this.removeWidget(widget);
                 return false;
@@ -224,6 +241,12 @@ export class Board {
                         this.addWidget(new VerbWidget(this, verb));
                     });
                 case ContentType.Elements:
+                    return this.content.elements.forEach((element: CElement) => {
+                        if (this.widgets.some((widget: CElementWidget) => widget instanceof CElementWidget && widget.data.id == element.id)) {
+                            return;
+                        }
+                        this.addWidget(new CElementWidget(this, element));
+                    });
                 case ContentType.Recipes:
                 case ContentType.Decks:
                 case ContentType.Legacies:

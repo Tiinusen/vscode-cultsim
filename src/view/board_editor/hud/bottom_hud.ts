@@ -1,12 +1,14 @@
 import * as L from 'leaflet';
 import { ContentType } from '../../../model/content';
+import { CElement } from '../../../model/element';
 import { Ending } from '../../../model/ending';
 import { Legacy } from '../../../model/legacy';
 import { Verb } from '../../../model/verb';
 import { setDebounce } from '../../../util/helpers';
-import { Arrange } from '../../../util/layout';
+import { Arrange, LayoutAlignment } from '../../../util/layout';
 import { Board } from '../board';
 import { VSCode } from '../vscode';
+import { CElementWidget } from '../widget/element_widget';
 import { EndingWidget } from '../widget/ending_widget';
 import { LegacyWidget } from '../widget/legacy_widget';
 import { VerbWidget } from '../widget/verb_widget';
@@ -67,14 +69,21 @@ export class BottomHUD extends L.Control {
         const sortButton = this.element.querySelector('button[action="Sort"]') as HTMLButtonElement;
         const addButton = this.element.querySelector('button[action="Add"]') as HTMLButtonElement;
         const deleteButton = this.element.querySelector('button[action="Delete"]') as HTMLButtonElement;
-        sortButton.onclick = () => this.onSortClick();
+        sortButton.onclick = () => this.onSort();
         addButton.onclick = () => this.onAddClick();
         deleteButton.onclick = () => this.onDeleteClick();
     }
 
-    protected onSortClick() {
+    public onSort() {
         this.board.widgets.forEach(widget => widget.close());
-        Arrange.Grid(this.board.widgets, this.board.map.getBounds());
+        let margin = 60;
+        if (this.board.content.type == ContentType.Elements) margin = 2;
+        if (this.board.widgets.length > 36) {
+            margin = 0;
+            Arrange.Grid(this.board.widgets, this.board.bounds, LayoutAlignment.CENTER, margin);
+        } else {
+            Arrange.Grid(this.board.widgets, this.board.map.getBounds(), LayoutAlignment.CENTER, margin);
+        }
     }
 
     protected async onAddClick() {
@@ -97,7 +106,7 @@ export class BottomHUD extends L.Control {
                             await VSCode.request('clone', 'legacies', imageToCloneID, id);
                             VSCode.emitInfo(`Image has successfully been added to your workspace`);
                         }
-                        return new LegacyWidget(this.board, this.board.content.add(new Legacy({ id: id, slot: { id: id } } as any))).bringToFront();
+                        return new LegacyWidget(this.board, this.board.content.add(new Legacy({ id: id } as any))).bringToFront();
                     }
                     case ContentType.Endings: {
                         const [id, imageToCloneID] = await this.board.pickIDImageOverlay.pick('endings');
@@ -106,7 +115,18 @@ export class BottomHUD extends L.Control {
                             await VSCode.request('clone', 'endings', imageToCloneID, id);
                             VSCode.emitInfo(`Image has successfully been added to your workspace`);
                         }
-                        return new EndingWidget(this.board, this.board.content.add(new Ending({ id: id, slot: { id: id } } as any))).bringToFront();
+                        return new EndingWidget(this.board, this.board.content.add(new Ending({ id: id } as any))).bringToFront();
+                    }
+                    case ContentType.Elements: {
+                        const [id, imageToCloneID] = await this.board.pickIDImageOverlay.pick('elements');
+                        if (!id) return null;
+                        if (imageToCloneID) {
+                            await VSCode.request('clone', 'elements', imageToCloneID, id);
+                            VSCode.emitInfo(`Image has successfully been added to your workspace`);
+                        }
+                        const alreadyExisting = await VSCode.request('entity', 'elements', id) as CElement;
+                        const isAspect = alreadyExisting?.isAspect || await this.board.pickChoiceOverlay.pick('Card', 'Aspect') == "Aspect";
+                        return new CElementWidget(this.board, this.board.content.add(new CElement({ id: id, isAspect: isAspect } as any))).bringToFront();
                     }
                 }
                 throw new Error("Add not supported yet for this content type");

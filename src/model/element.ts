@@ -1,36 +1,36 @@
 import { Entity } from "./entity";
 import { Slot } from "./slot";
 
-
 interface IElementSerialized {
     id: string
     label: string
     description: string
     isAspect: boolean
     icon: string
-    induces: any
-    decayTo: any
-    verbicon: any
+    induces: Array<{ id: string, chance: number }>
+    decayTo: string
+    verbicon: string
 
+    // Shared
     isHidden: boolean
-    xtriggers: any
+    xtriggers: Map<string, string | Array<{ id: string, morpheffect: 'spawn' | 'mutate' | 'transform', chance: number, level: number }>>
 
     // Aspect Properties
     noArtNeeded: boolean
 
     // Card Properties
-    aspects: any
+    aspects: Map<string, number>
     lifetime: number
     resaturate: boolean
     slots: Array<Slot>
     unique: boolean
-    uniquenessgroup: any
+    uniquenessgroup: string
 }
 
 export class CElement extends Entity<IElementSerialized> implements IElementSerialized {
     // id
     public get id(): string {
-        return this.get('id');
+        return this.get('id') || "";
     }
     public set id(value: string) {
         this.set('id', value);
@@ -38,7 +38,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
 
     // label
     public get label(): string {
-        return this.get('label');
+        return this.get('label') || "";
     }
     public set label(value: string) {
         this.set('label', value);
@@ -46,7 +46,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
 
     // description
     public get description(): string {
-        return this.get('description');
+        return this.get('description') || "";
     }
     public set description(value: string) {
         this.set('description', value);
@@ -54,7 +54,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
 
     // isAspect
     public get isAspect(): boolean {
-        return this.get('isAspect');
+        return this.get('isAspect') || false;
     }
     public set isAspect(value: boolean) {
         this.set('isAspect', value);
@@ -62,23 +62,23 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
 
     // icon
     public get icon(): string {
-        return this.get('icon');
+        return this.get('icon') || "";
     }
     public set icon(value: string) {
         this.set('icon', value);
     }
 
     // induces
-    public get induces(): string {
+    public get induces(): Array<{ id: string, chance: number }> {
         return this.get('induces');
     }
-    public set induces(value: string) {
+    public set induces(value: Array<{ id: string, chance: number }>) {
         this.set('induces', value);
     }
 
     // decayTo
     public get decayTo(): string {
-        return this.get('decayTo');
+        return this.get('decayTo') || "";
     }
     public set decayTo(value: string) {
         this.set('decayTo', value);
@@ -86,7 +86,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
 
     // verbicon
     public get verbicon(): string {
-        return this.get('verbicon');
+        return this.get('verbicon') || "";
     }
     public set verbicon(value: string) {
         this.set('verbicon', value);
@@ -94,7 +94,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
 
     // isHidden
     public get isHidden(): boolean {
-        return this.get('isHidden');
+        return this.get('isHidden') || false;
     }
     public set isHidden(value: boolean) {
         this.set('isHidden', value);
@@ -102,31 +102,31 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
 
     // noArtNeeded
     public get noArtNeeded(): boolean {
-        return this.get('noArtNeeded');
+        return this.get('noArtNeeded') || false;
     }
     public set noArtNeeded(value: boolean) {
         this.set('noArtNeeded', value);
     }
 
     // xtriggers
-    public get xtriggers(): string {
+    public get xtriggers(): Map<string, string | Array<{ id: string, morpheffect: 'spawn' | 'mutate' | 'transform', chance: number, level: number }>> {
         return this.get('xtriggers');
     }
-    public set xtriggers(value: string) {
+    public set xtriggers(value: Map<string, string | Array<{ id: string, morpheffect: 'spawn' | 'mutate' | 'transform', chance: number, level: number }>>) {
         this.set('xtriggers', value);
     }
 
     // aspects
-    public get aspects(): string {
+    public get aspects(): Map<string, number> {
         return this.get('aspects');
     }
-    public set aspects(value: string) {
+    public set aspects(value: Map<string, number>) {
         this.set('aspects', value);
     }
 
     // lifetime
     public get lifetime(): number {
-        return this.get('lifetime');
+        return this.get('lifetime') || 0;
     }
     public set lifetime(value: number) {
         this.set('lifetime', value);
@@ -134,7 +134,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
 
     // resaturate
     public get resaturate(): boolean {
-        return this.get('resaturate');
+        return this.get('resaturate') || false;
     }
     public set resaturate(value: boolean) {
         this.set('resaturate', value);
@@ -150,7 +150,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
 
     // unique
     public get unique(): boolean {
-        return this.get('unique');
+        return this.get('unique') || false;
     }
     public set unique(value: boolean) {
         this.set('unique', value);
@@ -158,7 +158,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
 
     // uniquenessgroup
     public get uniquenessgroup(): string {
-        return this.get('uniquenessgroup');
+        return this.get('uniquenessgroup') || "";
     }
     public set uniquenessgroup(value: string) {
         this.set('uniquenessgroup', value);
@@ -193,7 +193,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
             verbicon: this?.verbicon || this.get('verbicon'),
 
             // slots: this?.slots?.map(slot => slot?.toJSON() || slot), // TODO: Broken
-            
+
             // Card Properties
             aspects: this?.aspects || this.get('aspects'),
             lifetime: this?.lifetime || this.get('lifetime'),

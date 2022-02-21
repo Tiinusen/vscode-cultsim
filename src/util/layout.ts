@@ -8,6 +8,7 @@ export enum LayoutAlignment {
 export class Arrange {
     public static Grid(widgets: Widget<any, IWidgetState>[], bounds: L.LatLngBounds, align = LayoutAlignment.CENTER, margin = 60) {
         if (widgets.length == 0) return;
+        if (widgets.length > 36) margin = 0;
 
         const defaultWidgetSize = widgets[0].size;
         const center = bounds.getCenter().xy;
@@ -42,10 +43,14 @@ export class Arrange {
         for (let xIndex = 0, index = 0; xIndex < columns && index < widgets.length; xIndex++) {
             for (let yIndex = 0; yIndex < rows && index < widgets.length; yIndex++, index++) {
                 const widget = widgets[index];
-                widget.xy = [
+                const xy: [number, number] = [
                     origin[0] + (xIndex * (widget.size[0] + margin)),
                     origin[1] - (yIndex * (widget.size[1] + margin)),
                 ];
+                while (bottomLeft[1] > xy[1]) {
+                    xy[1] += height - widget.size[1] / 2;
+                }
+                widget.xy = xy;
                 widget.save(true);
             }
         }

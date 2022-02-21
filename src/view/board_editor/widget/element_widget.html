@@ -1,0 +1,212 @@
+<div class="box">
+    <label></label>
+</div>
+<!-- icon -->
+<img class="icon" />
+<div class="frame">
+    <div class="header">
+        <!-- label -->
+        <input name="label" placeholder="Label"
+            title="The name of the element displayed to the player when clicking on the token while no recipe is running." />
+        <!-- close button (widget) -->
+        <i class="fa-solid fa-xmark" title="Click to close" close></i>
+    </div>
+    <div class="content">
+        <table>
+            <tr>
+                <td>
+                    <!-- description -->
+                    <textarea name="description"
+                        title="Text displayed in-game when clicking on the token while no recipe is running."></textarea>
+
+                    <!-- resaturate -->
+                    <input type="checkbox" name="resaturate" card-only
+                        title="Only applies to elements with lifetimes. Normally, as the lifetime reaches 0, the art will desaturate. If this value is true, the card will start desaturated and gain saturation as it reaches 0 (like depleted ability cards, such as Health [Fatigued])." />
+                    <label card-only
+                        title="Only applies to elements with lifetimes. Normally, as the lifetime reaches 0, the art will desaturate. If this value is true, the card will start desaturated and gain saturation as it reaches 0 (like depleted ability cards, such as Health [Fatigued]).">
+                        Resaturate
+                    </label>
+
+                    <!-- isHidden -->
+                    <input type="checkbox" name="isHidden" card-only
+                        title="Cards will always be visible when on the table, but if this is true, they will be invisible while within a recipe." />
+                    <label card-only
+                        title="Cards will always be visible when on the table, but if this is true, they will be invisible while within a recipe.">
+                        Hidden
+                    </label>
+
+                    <table card-only>
+                        <tr>
+                            <td>
+                                <!-- unique -->
+                                <input type="checkbox" name="unique"
+                                    title="When true, only one can be present on the board. A new one spawning will cause the old one to fade. An example of this are rites. If you gain a second of the same rite, the first copy will disappear." />
+                            </td>
+                            <td>
+                                <!-- uniquenessgroup -->
+                                <div>
+                                    <input name="uniquenessgroup" type="text" placeholder="Uniqueness Group"
+                                        title="A special section that stores an aspect id. Any other elements with the same aspect for their Uniqueness Group cannot exist simultaneously on the board. (Placing one onto the board will cause all others on the board to vanish, just like with the 'unique' property.) The uniqueness group is technically an aspect like any other, and can be used for requirements and refinements." />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="slots" card-only>
+                        <!-- slot -->
+                        <div class="slot">
+                            <input name="label" placeholder="Label" title="The text displayed above the slot." />
+                            <div class="panel">
+                                <!-- consumes -->
+                                <input type="checkbox" name="consumes"
+                                    title="After the recipe concludes, any element in this slot will be destroyed. Shows the little candle at the bottom of the slot." />
+                                <label
+                                    title="After the recipe concludes, any element in this slot will be destroyed. Shows the little candle at the bottom of the slot.">
+                                    Consumes
+                                </label>
+
+
+                                <!-- description -->
+                                <textarea name="description"
+                                    title="Text displayed in the top right when the slot is clicked on"></textarea>
+                                <!-- actionId -->
+                                <div name="actionId"
+                                    title="The element ID where the slot will appear when the element is inserted.">
+                                </div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th
+                                                title="A list of required elements/aspects. Any card that meets any one of the properties in Required can be put in the slot, unlike the requirements property for recipes. Only uses positive values.">
+                                                Required
+                                            </th>
+                                            <th
+                                                title="A list of forbidden elements/aspects. Any card that meets any one of the properties in Forbidden cannot be put in the slot, even if it qualifies for the Required list.">
+                                                Forbidden
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td name="required">
+                                                <div items>
+                                                    <!-- required -->
+                                                    <div template>
+                                                        <img>
+                                                        <label>Label</label>
+                                                    </div>
+                                                </div>
+                                                <div title="Click to add required element" add>
+                                                    <i class="fa-solid fa-plus"></i>
+                                                    <label>Add</label>
+                                                </div>
+                                            </td>
+                                            <td name="forbidden">
+                                                <div items>
+                                                    <!-- forbidden -->
+                                                    <div template>
+                                                        <img>
+                                                        <label>Label</label>
+                                                    </div>
+                                                </div>
+                                                <div title="Click to add forbidden element" add>
+                                                    <i class="fa-solid fa-plus"></i>
+                                                    <label>Add</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <table card-only>
+                        <tr>
+                            <td>
+                                <!-- verbicon -->
+                                <div>
+                                    <input name="verbicon" placeholder="Verb Icon"
+                                        title="When this element is in a Verb, the Verb’s icon will become the icon indicated. Note that the icon must exist in “images\verbs”. It is currently unknown what happens when the image does not exist or more than one Verb Icon is defined." />
+                                </div>
+                            </td>
+                            <td>
+                                <!-- lifetime -->
+                                <div>
+                                    <input name="lifetime" placeholder="Lifetime" type="number"
+                                        title="The card duration. When it reaches 0, it will either transform into the Decay Element, or if there isn't one, it will disappear. If this is set to 0, the element will not have a lifetime, which is the default behaviour if lifetime is omitted." />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- decayTo -->
+                    <div name="decayTo" card-only>
+                        <h1 no-margin
+                            title="The element that this element will turn into when the lifetime reaches 0. Mutated aspects are kept through decay. (As an advanced feature, this can be applied to aspects to achieve a specific behaviour when used with Purge, but has no effect on it's own because aspects cannot decay.)
+                        Examples of decay elements being used include Restlessness decaying to Dread, or Health [Fatigued] decaying into Health.">
+                            Decay Element</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to select an element that this card decays into" select>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Select</label>
+                        </div>
+                    </div>
+
+                    <!-- noArtNeeded -->
+                    <input type="checkbox" name="noArtNeeded" aspect-only
+                        title="This keeps the game from searching for artwork for this element, and defaults to false. This supposedly offers a small improvement to performance. In general, this should only be true if 'isHidden' is true, or if this is an aspect that will only be used as a recipe aspect and XTrigger catalyst." />
+                    <label aspect-only
+                        title="This keeps the game from searching for artwork for this element, and defaults to false. This supposedly offers a small improvement to performance. In general, this should only be true if 'isHidden' is true, or if this is an aspect that will only be used as a recipe aspect and XTrigger catalyst.">
+                        No Art Needed
+                    </label>
+
+                    <!-- induces -->
+                    <div name="induces">
+                        <h1
+                            title="Whenever this element is present and face-up (ie: not from effects or deckeffects) at the conclusion of a recipe chain, the induced recipe may be created as a new situation token depending on the designated chance. This will not occur if an active token with the actionId of the specified verb is already on the table, but it will ignore any requirements, extantreqs, or tablereqs associated with the induced recipe.
+                            Examples of inductions include the Heart aspect starting 'Course of the Heart', or the Ingredient aspect starting 'needs'.">
+                            Induces</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to add element" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+
+                    <!-- xtriggers (TODO) -->
+
+                    <!-- aspects -->
+                    <div name="aspects" card-only>
+                        <h1
+                            title="A dictionary of aspects contained by the element, where the aspect id is associated to the amount of this aspect. They act as metadata.">
+                            Aspects
+                        </h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to add aspect" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="footer"></div>
+</div>

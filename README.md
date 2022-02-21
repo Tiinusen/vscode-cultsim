@@ -70,6 +70,10 @@ There is a known delay when picking an ID on windows, this is mostly due to cont
 core content and workspace content, if this becomes to annoying and if you are in no need of the core content
 just disabled it via settings.
 
+### Opening large files
+It's know that if you open large core content files it will render some items out of the board view.
+A improved layouter is on the way
+
 ## FAQ
 
 ### Where do I find the streaming assets path?

@@ -33,6 +33,15 @@ export class InputComponent {
                 this.board.save();
             };
             return;
+        } else if (type == "number") {
+            this.element.onkeyup = () => {
+                if (this.data[this._propertyName] == (parseInt(this.element.value) || void 0)) {
+                    return;
+                }
+                this.data[this._propertyName] = parseInt(this.element.value) || void 0;
+                this.board.save();
+            };
+            return;
         }
 
         this.element.onkeyup = () => {
@@ -76,9 +85,12 @@ export class InputComponent {
         } else if (type == "checkbox") {
             this.element.checked = this?.data?.[this.propertyName] || this?.parentData?.[this.propertyName] || false;
             return;
+        } else if (type == "number") {
+            this.element.value = this?.data?.[this.propertyName] || "";
+            return;
         }
 
-        this.element.value = this.data[this.propertyName];
-        this.element.placeholder = this?.parentData?.[this.propertyName] || "";
+        this.element.value = this.data?.[this.propertyName] || "";
+        this.element.placeholder = this?.parentData?.[this.propertyName] || this.element.placeholder;
     }
 }

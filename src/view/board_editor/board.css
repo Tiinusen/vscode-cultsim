@@ -51,6 +51,23 @@ body {
 }
 
 /*
+ * Pick Choice Overlay
+ */
+
+.board-overlay .pick-choice {
+	height: 50px;
+	background-color: #111122;
+	border: thick solid black;
+	border-radius: 12px;
+	padding: 5px;
+	padding-top: 3px;
+}
+
+.board-overlay .pick-choice button {
+	margin-top: 3px;
+}
+
+/*
  * Pick ID Image Overlay
  */
 
@@ -307,6 +324,135 @@ body {
 	padding-left: 5px;
 	padding-right: 5px;
 }
+
+/*
+ * Element Widget
+ */
+
+.element-widget[open] {
+	width: 550px !important;
+	height: 400px !important;
+	position: relative;
+	top: -200px;
+	left: -275px;
+}
+
+.element-widget[open][aspect] {
+	width: 550px !important;
+	height: 300px !important;
+	position: relative;
+	top: -150px;
+	left: -275px;
+}
+
+.element-widget .icon {
+	width: 104px !important;
+	height: 104px !important;
+}
+
+.element-widget .box {
+	position: relative;
+	left: -52px;
+	top: 52px;
+	width: 104px;
+	height: 52px;
+	background-color: #afafaf;
+	border: 4px solid #000000;
+	vertical-align: middle;
+}
+
+.element-widget[open] .box {
+	display: none;
+}
+
+.element-widget[aspect] .box {
+	display: none;
+}
+
+.element-widget .box label {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 100%;
+	text-align: center;
+	color: black;
+	font-weight: bold;
+}
+
+.element-widget[aspect] *[card-only] {
+	display: none;
+}
+
+.element-widget:not([aspect]) *[aspect-only] {
+	display: none;
+}
+
+.element-widget:not([open]) .frame {
+	display: none;
+}
+
+.element-widget[large] {
+	width: 625px !important;
+}
+
+.element-widget .header {
+	height: 50px;
+}
+
+.element-widget .content {
+	height: 400px;
+	background-color: #202041;
+	padding-top: 25px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.element-widget[aspect] .content {
+	height: 300px;
+}
+
+.element-widget .content>table>tbody>tr>td {
+	vertical-align: top;
+	padding-left: 5px;
+}
+
+.element-widget .content h1:not([no-margin]) {
+	margin-top: 20px;
+}
+
+.element-widget textarea {
+	resize: none;
+	background-color: #0f0f27;
+	font-size: 16px;
+	padding: 10px;
+	height: 160px;
+	width: 270px;
+	border-radius: 12px;
+	margin-bottom: 10px;
+}
+
+.element-widget input[type="checkbox"] {
+	transform: scale(2);
+	padding: 10px;
+	margin-right: 10px;
+	margin-left: 10px;
+	cursor: pointer;
+	margin-bottom: 20px;
+	position: relative;
+	top: 2px;
+}
+
+
+.element-widget .content input[type="text"] {
+	/* border-bottom: thin solid #FFFFFF !important; */
+	position: relative;
+	top: -8px;
+}
+
+/* .element-widget .content input[type="number"] {
+	width:60px;
+} */
 
 /*
  * Verb Widget

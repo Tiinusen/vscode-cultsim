@@ -28,6 +28,7 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
     private _isDragging = false
     private static xIndexCounter = 1;
     private static focused: Widget<any, IWidgetState>;
+    private _size: [number, number] = [140, 140];
 
     // Events
     protected onInit?(): any;
@@ -59,7 +60,11 @@ export abstract class Widget<EntityState, WidgetState> extends L.Marker {
     }
 
     public get size(): [number, number] {
-        return [140, 140];
+        return this._size;
+    }
+
+    public set size(value: [number, number]) {
+        this._size = value;
     }
 
     public get initialized(): boolean {
