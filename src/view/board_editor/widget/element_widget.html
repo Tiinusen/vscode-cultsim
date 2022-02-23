@@ -68,6 +68,9 @@
                                 <!-- close button (slot) -->
                                 <i class="fa-solid fa-xmark" title="Click to close" close></i>
 
+                                <!-- close button (slot) -->
+                                <i class="fa-solid fa-trash" title="Click to remove" delete></i>
+
 
                                 <!-- description -->
                                 <textarea name="description"
@@ -188,8 +191,6 @@
                         </div>
                     </div>
 
-                    <!-- xtriggers (TODO) -->
-
                     <!-- aspects -->
                     <div name="aspects" card-only>
                         <h1
@@ -203,6 +204,90 @@
                             </div>
                         </div>
                         <div title="Click to add aspect" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+
+                    <!-- xtriggers -->
+                    <div name="xtriggers">
+                        <h1 title="See documentation (Commands -> Show Documentation)">
+                            XTriggers</h1>
+                        <div items>
+                            <div item template>
+                                <img source>
+                                <label source>Source</label>
+                                <i class="fa-solid fa-arrow-right-long"></i>
+                                <label target>Target</label>
+                                <img target>
+                                <div panel>
+                                    <div>
+                                        <h2 name="key"></h2>
+                                        <!-- close button (xtrigger) -->
+                                        <i class="fa-solid fa-xmark" title="Click to close xtrigger" close></i>
+
+                                        <!-- delete button (xtrigger) -->
+                                        <i class="fa-solid fa-trash" title="Click to delete xtrigger" delete></i>
+
+                                        <!-- add button (xtrigger) -->
+                                        <i class="fa-solid fa-plus-circle" title="Click to add effect" add></i>
+                                    </div>
+                                    <br />
+                                    <table xtrigger-table>
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>
+                                                    Element
+                                                </th>
+                                                <th>
+                                                    Effect
+                                                </th>
+                                                <th>
+                                                    Level
+                                                </th>
+                                                <th>
+                                                    Chance
+                                                </th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody xtrigger-items>
+                                            <tr xtrigger-item template>
+                                                <td>
+                                                    <img />
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <label name="id">ID</label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <select name="morpheffect">
+                                                        <option value="spawn">Spawn</option>
+                                                        <option value="mutate">Mutate</option>
+                                                        <option value="transform">Transform</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="level" maxlength="3" max="100" min="0" />
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="chance" maxlength="3" max="100"
+                                                        min="0" />
+                                                </td>
+                                                <td>
+                                                    <!-- delete button (effect) -->
+                                                    <i class="fa-solid fa-trash" title="Click to delete effect"
+                                                        delete></i>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="Click to add xtrigger" add>
                             <i class="fa-solid fa-plus"></i>
                             <label>Add</label>
                         </div>

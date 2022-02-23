@@ -165,6 +165,16 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
     }
 
     public toJSON(): IElementSerialized | any {
+        const xtriggers = this?.xtriggers || this.get('xtriggers') || void 0;
+        if (xtriggers !== void 0) {
+            for (const key in xtriggers) {
+                if (Array.isArray(xtriggers[key]) && xtriggers[key].length == 1) {
+                    if (!xtriggers[key][0].chance && !xtriggers[key][0].level && xtriggers[key][0].morpheffect == 'transform') {
+                        xtriggers[key] = xtriggers[key][0].id;
+                    }
+                }
+            }
+        }
         if (this.isAspect) {
             return {
                 id: this?.id || this.get('id'),
@@ -179,7 +189,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
                 // Aspect Properties
                 isHidden: this?.isHidden || this.get('isHidden'),
                 noArtNeeded: this?.noArtNeeded || this.get('noArtNeeded'),
-                xtriggers: this?.xtriggers || this.get('xtriggers'),
+                xtriggers: xtriggers,
             };
         }
         return {
@@ -200,6 +210,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
             resaturate: this?.resaturate || this.get('resaturate'),
             unique: this?.unique || this.get('unique'),
             uniquenessgroup: this?.uniquenessgroup || this.get('uniquenessgroup'),
+            xtriggers: xtriggers,
         };
     }
 
@@ -222,7 +233,7 @@ export class CElement extends Entity<IElementSerialized> implements IElementSeri
         this.resaturate = obj?.resaturate || this.get('resaturate');
         this.slots = obj?.slots || this.get('slots');
         const slots = [];
-        for(const slot of (obj?.slots || this.get('slots') || [])){
+        for (const slot of (obj?.slots || this.get('slots') || [])) {
             slots.push(new Slot().fromJSON(slot));
         }
         this.slots = slots;

@@ -57,3 +57,11 @@ export function setDebounce<T>(callback: T, ms?: number): T {
 export function delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+export function setRestrictToTarget<T>(element: HTMLElement, callback: (e: MouseEvent) => void): T {
+    return function (e: MouseEvent) {
+        if (e.target !== element) return;
+        e.stopPropagation();
+        callback(e);
+    } as any;
+}

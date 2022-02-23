@@ -1,5 +1,5 @@
 import { Slot } from "../../../../model/slot";
-import { get, has, set, setDebounce } from "../../../../util/helpers";
+import { get, has, set, setDebounce, setRestrictToTarget } from "../../../../util/helpers";
 import { Board } from "../../board";
 import { VSCode } from "../../vscode";
 import { DictionaryComponent } from "./dictionary_component";
@@ -17,6 +17,7 @@ export class SlotComponent<T> {
     public onOpen?: () => void;
     public onClose?: () => void;
     public onChange?: () => void;
+    public onRemove?: () => void;
 
     constructor(board: Board, widget: T, element: HTMLElement) {
         this._board = board;
@@ -35,9 +36,12 @@ export class SlotComponent<T> {
         };
 
         const closeButton = this.element.querySelector('*[close]') as HTMLElement;
-        if(closeButton) closeButton.onclick = setDebounce(() => this.close(), 10);
+        if (closeButton) closeButton.onclick = setRestrictToTarget(closeButton, () => this.close());
 
-        this.element.onclick = () => this.open();
+        const deleteButton = this.element.querySelector('*[delete]') as HTMLElement;
+        if (deleteButton) deleteButton.onclick = setRestrictToTarget(deleteButton, () => this?.onRemove());
+
+        this.element.onclick = setRestrictToTarget(this.element, () => this.open());
 
         this.onUpdate = setDebounce(this.onUpdate.bind(this), 5);
 

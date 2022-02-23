@@ -234,7 +234,6 @@ body {
 	top: 5px;
 	left: 5px;
 	cursor: pointer;
-
 }
 
 .board-widget .header i[close]:hover {
@@ -393,7 +392,7 @@ body {
 }
 
 .element-widget[large] .content {
-	height: 500px !important;
+	min-height: 500px !important;
 }
 
 .element-widget .header {
@@ -401,7 +400,7 @@ body {
 }
 
 .element-widget .content {
-	height: 400px;
+	min-height: 400px;
 	background-color: #202041;
 	padding-top: 25px;
 	padding-left: 10px;
@@ -765,6 +764,19 @@ body {
 	color: #fffd92
 }
 
+.board-widget *[slot] i[delete] {
+	position: relative;
+	float: right;
+	font-size: 23px;
+	margin-right: 15px;
+	top: 6px;
+	cursor: pointer;
+}
+
+.board-widget *[slot] i[delete]:hover {
+	color: #fffd92
+}
+
 .board-widget *[slot] label {
 	position: relative;
 	font-size: 16px;
@@ -786,6 +798,130 @@ body {
 .board-widget *[slot] td {
 	vertical-align: top;
 	width: 50%;
+}
+
+/*
+ * XTriggers Component
+ */
+
+*[xtriggers] img {
+	height: 16px;
+	width: 16px;
+	margin-bottom: 0px;
+}
+
+*[xtriggers] i.fa-plus {
+	position: relative;
+	top: -1px;
+	padding: 3px;
+}
+
+*[xtriggers] label[source], *[xtriggers] label[target], *[xtriggers] i.fa-arrow-right-long {
+	position: relative;
+	top: -3px;
+	font-size: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
+	white-space: nowrap;
+	cursor: inherit;
+}
+
+*[xtriggers]>*[items]>div {
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	height: 20px;
+	padding-top: 1px;
+}
+
+*[xtriggers]>*[items]>*:not([open]):hover {
+	background-color: #576101;
+	cursor: pointer;
+}
+
+
+*[xtriggers]>*[add]:not([open]):hover {
+	background-color: #016101;
+	cursor: pointer;
+}
+
+*[xtriggers] *[item]:not([open]) div[panel] {
+	display: none;
+}
+
+*[xtriggers] *[item][open] {
+	position: absolute;
+}
+
+*[xtriggers] *[item][open] div[panel] {
+	position: relative;
+	top: -150px;
+	left: -250px;
+	width: 500px;
+	min-height: 200px;
+	height: auto;
+	border: 3px solid #002147;
+	background-color: #111122;
+	padding: 10px;
+	cursor: default;
+	z-index: 10000000;
+}
+
+*[xtriggers] *[item][open] div[panel] *[add] {
+	float: right;
+	font-size: 18px;
+	margin-right: 10px;
+	position: relative;
+	top: -2px;
+}
+
+*[xtriggers] *[item][open] div[panel] *[delete] {
+	float: right;
+	font-size: 18px;
+	margin-right: 10px;
+	position: relative;
+	top: -2px;
+}
+
+*[xtriggers] *[item][open] div[panel] *[close] {
+	float: right;
+	font-size: 22px;
+	position: relative;
+	top: -4px;
+}
+
+*[xtriggers] *[item][open] div[panel] *[close]:hover, *[xtriggers] *[item][open] div[panel] *[delete]:hover, *[xtriggers] *[item][open] div[panel] *[add]:hover {
+	color: #fffd92;
+	cursor: pointer;
+}
+
+*[xtriggers] *[xtrigger-table] {
+	width: 100%;
+}
+
+*[xtriggers] *[xtrigger-table] th {
+	text-align: left;
+}
+
+*[xtriggers] *[xtrigger-table] tr td:nth-child(2) div {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 120px;
+}
+
+*[xtriggers] *[xtrigger-table] img {
+	position: relative;
+	top: 2px;
+	margin-right: 5px;
+}
+
+*[xtriggers] *[xtrigger-table] select {
+	font-size: 14px;
+}
+
+*[xtriggers] *[xtrigger-table] input[type="number"] {
+	width: 60px;
+	font-size: 14px;
 }
 
 /*

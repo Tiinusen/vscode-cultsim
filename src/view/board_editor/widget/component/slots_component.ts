@@ -104,6 +104,7 @@ export class SlotsComponent<T> {
                 slotComp.onOpen = () => this?.onOpen(slotNumber);
                 slotComp.onClose = () => this?.onClose();
                 slotComp.onChange = () => this?.onChange();
+                slotComp.onRemove = () => this.onRemove(slot.id, element);
                 this._addButton.remove();
                 this._list.append(element);
                 this._list.append(this._addButton);

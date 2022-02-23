@@ -10,9 +10,10 @@ import { PickerComponent } from "./component/picker_component";
 import { InduceComponent } from "./component/induce_component";
 import { Slot } from "../../../model/slot";
 import { SlotsComponent } from "./component/slots_component";
+import { XTriggersComponent } from "./component/xtriggers_component";
 
 export interface ICElementWidgetState extends IWidgetState {
-    slotOpen: boolean
+    xtriggerOpen: string
 }
 
 export class CElementWidget extends Widget<CElement, ICElementWidgetState> {
@@ -22,6 +23,7 @@ export class CElementWidget extends Widget<CElement, ICElementWidgetState> {
     private aspects: DictionaryComponent;
     private decayTo: PickerComponent;
     private slots: SlotsComponent<CElementWidget>;
+    private xtriggers: XTriggersComponent<CElementWidget>;
 
     constructor(board: Board, data: CElement) {
         super(board, data, html, "element-widget");
@@ -31,18 +33,32 @@ export class CElementWidget extends Widget<CElement, ICElementWidgetState> {
         this.element.toggleAttribute('aspect', this?.data.isAspect || this?.parentData?.isAspect || false);
         this.induces = new InduceComponent(this.board, "induces", this.element.querySelector('div[name="induces"]'));
         this.induces.onChange = () => {
-            this.board.save();
+            this.save();
             this.onUpdate();
         };
         this.aspects = new DictionaryComponent(this.board, "aspects", "elements", this.element.querySelector('div[name="aspects"]'));
         this.aspects.onChange = () => {
-            this.board.save();
+            this.save();
             this.onUpdate();
         };
         this.decayTo = new PickerComponent(this.board, "decayTo", "elements", this.element.querySelector('div[name="decayTo"]'));
         this.decayTo.onChange = () => {
-            this.board.save();
+            this.save();
             this.onUpdate();
+        };
+
+        this.xtriggers = new XTriggersComponent(this.board, "xtriggers", this, this.element.querySelector('div[name="xtriggers"]'));
+        this.xtriggers.onChange = () => {
+            this.save();
+            this.onUpdate();
+        };
+        this.xtriggers.onOpen = (key: string) => {
+            (this.state as ICElementWidgetState).xtriggerOpen = key;
+            this.save(true);
+        };
+        this.xtriggers.onClose = () => {
+            (this.state as ICElementWidgetState).xtriggerOpen = void 0;
+            this.save(true);
         };
 
         this.slots = new SlotsComponent(this.board, "slots", this, this.element.querySelector('*[name="slots"]'), 0, 6);
@@ -96,8 +112,10 @@ export class CElementWidget extends Widget<CElement, ICElementWidgetState> {
             await this.aspects?.onUpdate(this.data, this?.parentData);
             await this.decayTo?.onUpdate(this.data, this?.parentData);
             await this.slots.onUpdate(this.data, this?.parentData);
+            await this.xtriggers?.onUpdate(this.data, this?.parentData);
             this.element.toggleAttribute('large', this.slots.size >= 3);
             this.slots.open(this?.state?.openSlot || 0);
+            this.xtriggers.open((this.state as ICElementWidgetState)?.xtriggerOpen || "");
         } catch (e) {
             console.error(e);
             VSCode.emitError(e);

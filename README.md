@@ -25,7 +25,7 @@ Extension supports a primitive debugger that can at the moment start, stop and r
 ## Requirements
 
 * Linux / Windows
-* Cultist Simulator (Steam Edition)
+* Cultist Simulator (Steam Edition) (For debugger and core content [*can be disabled*])
 
 ## Extension Settings
 
@@ -53,6 +53,8 @@ This extension contributes the following settings:
   * [ ] Support for `Deck`
   * [ ] Support for `Recipe`
 * [ ] Solving Known Issues
+* [ ] Add requested improvements
+* [ ] Add requested features
 
 ## Contributors
 Not all contributors know that they are, but we know and therefor they shall have our praise.
@@ -60,6 +62,21 @@ Not all contributors know that they are, but we know and therefor they shall hav
 This VSCode Extension would not see the light of day if it wasn't for the awesome people of the developer and modding
 community providing excellent documentation, tips and tricks and in general keeping the Cultist Simulator
 engine alive with new awesome content. and also thanks to the VSCode community for providing good examples to follow.
+
+
+Feel free to visit my Ko-Fi page if you think that this extension is awesome :)
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T0AST2M)
+
+Feel free to visit the [Issues]([da](https://github.com/Tiinusen/vscode-cultsim/issues)) pages if it sucks, your experience is very important to me.
+
+## FAQ
+
+### Where do I find the streaming assets path?
+
+It's located at "`steamapps/common/Cultist Simulator/CS_Data/StreamingAssets`" which differs depending on OS.
+Can easily be located by launching **Steam** and **right-click** on **Cultist Simulator** then go to
+**Local Files** and **left-click** on **Browse**.
 
 ## Known Issues
 
@@ -70,14 +87,9 @@ There is a known delay when picking an ID on windows, this is mostly due to cont
 core content and workspace content, if this becomes to annoying and if you are in no need of the core content
 just disabled it via settings.
 
+### Suggestions box far left than it's suppose to
+I don't know why it occurs, I have tried solving it without luck, thinks it's due to Leaflet will look into it at the end of the MVP.
+
 ### Opening large files
 It's know that if you open large core content files it will render some items out of the board view.
 A improved layouter is on the way
-
-## FAQ
-
-### Where do I find the streaming assets path?
-
-It's located at "`steamapps/common/Cultist Simulator/CS_Data/StreamingAssets`" which differs depending on OS.
-Can easily be located by launching **Steam** and **right-click** on **Cultist Simulator** then go to
-**Local Files** and **left-click** on **Browse**.
