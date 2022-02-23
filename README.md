@@ -49,7 +49,7 @@ This extension contributes the following settings:
   * [x] Support for `Verb`
   * [x] Support for `Legacy`
   * [x] Support for `Ending`
-  * [ ] Support for `Element`
+  * [x] Support for `Element`
   * [ ] Support for `Deck`
   * [ ] Support for `Recipe`
 * [ ] Solving Known Issues
