@@ -54,6 +54,7 @@ This extension contributes the following settings:
   * [ ] Support for `Recipe`
 * [ ] Solving Known Issues
 * [ ] Optimization
+* [ ] Kindly ask developers to dump assets with game uncompressed to remove need for using web assets
 * [ ] Add requested improvements
 * [ ] Add requested features
 
