@@ -53,6 +53,7 @@ This extension contributes the following settings:
   * [ ] Support for `Deck`
   * [ ] Support for `Recipe`
 * [ ] Solving Known Issues
+* [ ] Optimization
 * [ ] Add requested improvements
 * [ ] Add requested features
 
@@ -77,6 +78,12 @@ Feel free to visit the [Issues]([da](https://github.com/Tiinusen/vscode-cultsim/
 It's located at "`steamapps/common/Cultist Simulator/CS_Data/StreamingAssets`" which differs depending on OS.
 Can easily be located by launching **Steam** and **right-click** on **Cultist Simulator** then go to
 **Local Files** and **left-click** on **Browse**.
+
+### I press "New Project" nothing happens
+
+It's because the extension is activating and by default VSCode don't show a progress bar until a view is displayed,
+this is mostly due to the loading of the core content and it currently takes some time, can be speeded up by disableing
+the use of the core content. `cultsim.disableCoreContent`
 
 ## Known Issues
 
