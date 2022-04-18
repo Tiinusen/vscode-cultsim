@@ -57,6 +57,7 @@ This extension contributes the following settings:
 * [ ] Kindly ask developers to dump assets with game uncompressed to remove need for using web assets
 * [ ] Add requested improvements
 * [ ] Add requested features
+* [ ] Evaluate switching to VueJS
 
 ## Contributors
 Not all contributors know that they are, but we know and therefor they shall have our praise.
