@@ -27,8 +27,8 @@ interface IRecipeSerialized {
     burnimage: string
     portaleffect: string
     internaldeck: InternalDeck
-    // TODO: Deal with these ...
     mutations: Array<{ filter: string, mutate: string, level: number, additive: boolean }>
+    // TODO: Deal with these ...
     alt: Array<{ id: string, chance: number, additional: boolean, expulsion: { limit: number, filter: Map<string, number> } }>
     linked: Array<{ id: string, chance: number }>
 }

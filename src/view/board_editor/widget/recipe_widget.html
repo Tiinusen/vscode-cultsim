@@ -326,6 +326,63 @@
                     </div>
 
                     <!-- mutations -->
+                    <div name="mutations">
+                        <h1
+                            title="Mutations are used to add or remove aspects from an element. Mutated aspects remain even when the element changes via xtrigger or decay.  There are a few properties needed to set a mutation.">
+                            Mutations</h1>
+                        <div items>
+                            <div template>
+                                <img name="filter" content-type="elements">
+                                <label name="filter">Filter</label>
+                                <img name="mutate" content-type="elements">
+                                <label name="mutate">Mutate</label>
+                                <label name="level">Level</label>
+                                <label name="additive">Additive</label>
+                            </div>
+                        </div>
+                        <div title="Click to add mutation" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                        <div panel>
+                            <!-- close button -->
+                            <i class="fa-solid fa-xmark" title="Click to close" close></i>
+
+                            <!-- delete button -->
+                            <i class="fa-solid fa-trash" title="Click to remove" delete></i>
+
+                            <!-- filter -->
+                            <h1 no-margin name="filter" key content-type="elements"
+                                title="used to find the element that will be modified. Filters can be elements or aspects.">Filter</h1>
+
+                            <!-- mutate -->
+                            <div name="mutate" content-type="elements" component="picker">
+                                <h2 no-margin title="the aspect we are adding/removing on the element.">
+                                    Mutate</h2>
+                                <div items>
+                                    <div template>
+                                        <img>
+                                        <label>Label</label>
+                                    </div>
+                                </div>
+                                <div title="Click to select a mutation" select>
+                                    <i class="fa-solid fa-plus"></i>
+                                    <label>Select</label>
+                                </div>
+                            </div>
+
+                            <!-- level -->
+                            <input name="level" type="number" placeholder="Level" suffix="%"
+                                title="a positive or negative value to represent how much of the given aspect we are adding or taking away" />
+
+                            <!-- additive -->
+                            <input type="checkbox" name="additive"
+                                placeholder="Decides whether this change replaces the stated value with the current one, or adds/subtracts the value from the base element's values" />
+                            <label class="checkbox">
+                                Additive
+                            </label>
+                        </div>
+                    </div>
 
                     <!-- alt -->
                     <div name="alt">

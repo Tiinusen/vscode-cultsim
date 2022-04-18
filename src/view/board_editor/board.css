@@ -2,7 +2,8 @@
  * General
  */
 
-html, body {
+html,
+body {
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
@@ -185,11 +186,13 @@ body {
 	border: thick solid black;
 }
 
-.board-widget h1, input {
+.board-widget h1,
+input {
 	font-size: 20px;
 }
 
-.board-widget input, .board-widget textarea {
+.board-widget input,
+.board-widget textarea {
 	background-color: transparent;
 }
 
@@ -247,7 +250,9 @@ body {
 	padding: 5px;
 }
 
-.board-widget button, .hud button, .board-overlay button {
+.board-widget button,
+.hud button,
+.board-overlay button {
 	background-color: #84866b;
 	width: auto;
 	border-radius: 15px;
@@ -463,11 +468,16 @@ body {
 }
 
 .recipe-widget .content input[name="maxexecutions"] {
-	width:200px;
+	width: 200px;
 }
 
 .recipe-widget .content input[name="draws"] {
-	width:100px;
+	width: 100px;
+}
+
+.recipe-widget .content div[name="mutations"] label {
+	display: inline;
+	width: auto;
 }
 
 /*
@@ -962,7 +972,9 @@ body {
 	padding: 3px;
 }
 
-*[xtriggers] label[source], *[xtriggers] label[target], *[xtriggers] i.fa-arrow-right-long {
+*[xtriggers] label[source],
+*[xtriggers] label[target],
+*[xtriggers] i.fa-arrow-right-long {
 	position: relative;
 	top: -3px;
 	font-size: 10px;
@@ -1035,7 +1047,9 @@ body {
 	top: -4px;
 }
 
-*[xtriggers] *[item][open] div[panel] *[close]:hover, *[xtriggers] *[item][open] div[panel] *[delete]:hover, *[xtriggers] *[item][open] div[panel] *[add]:hover {
+*[xtriggers] *[item][open] div[panel] *[close]:hover,
+*[xtriggers] *[item][open] div[panel] *[delete]:hover,
+*[xtriggers] *[item][open] div[panel] *[add]:hover {
 	color: #fffd92;
 	cursor: pointer;
 }
@@ -1157,6 +1171,79 @@ body {
 
 *[list]>*[add]:hover {
 	background-color: #016101;
+	cursor: pointer;
+}
+
+/*
+ * Custom List Component
+ */
+
+*[custom-list] img {
+	height: 16px;
+	width: 16px;
+	margin-bottom: 0px;
+}
+
+*[custom-list] i.fa-plus {
+	position: relative;
+	top: -1px;
+	padding: 3px;
+}
+
+*[custom-list]>*[items]>div label {
+	font-size: 10px;
+	padding-left: 5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
+	width: 100px;
+	cursor: inherit;
+}
+
+*[custom-list]>*[items]>div {
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	height: 20px;
+	padding-top: 1px;
+}
+
+*[custom-list]>*[items]>*:hover {
+	background-color: #615601;
+	cursor: pointer;
+}
+
+
+*[custom-list]>*[add]:hover {
+	background-color: #016101;
+	cursor: pointer;
+}
+
+*[custom-list]>*[panel]:not(*[open]) {
+	display: none;
+}
+
+*[custom-list]>*[panel] {
+	position: absolute;
+	background-color: #111122;
+	border: thick solid black;
+	width: 200px;
+	z-index: 1000000;
+	padding:5px;
+}
+
+*[custom-list]>*[panel]>input[type="number"] {
+	width: 100% !important;
+}
+
+*[custom-list]>*[panel]>i.fa-solid {
+	float: right;
+	margin-left: 10px;
+	font-size: 20px;
+}
+
+*[custom-list]>*[panel]>i.fa-solid:hover {
+	color: #fffd92;
 	cursor: pointer;
 }
 

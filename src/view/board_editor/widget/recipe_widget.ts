@@ -9,6 +9,7 @@ import { DictionaryComponent } from "./component/dictionary_component";
 import { PickerComponent } from "./component/picker_component";
 import { SlotsComponent } from "./component/slots_component";
 import { InternalDeckComponent } from "./component/internal_deck_component";
+import { CustomListComponent } from "./component/custom_list_component";
 
 export interface IRecipeWidgetState extends IWidgetState {
     xtriggerOpen: string
@@ -24,6 +25,7 @@ export class RecipeWidget extends Widget<Recipe, IRecipeWidgetState> {
     private aspects: DictionaryComponent;
     private deckeffects: DictionaryComponent;
     private internaldeck: InternalDeckComponent<RecipeWidget>;
+    private mutations: CustomListComponent;
 
     private ending: PickerComponent;
 
@@ -93,6 +95,12 @@ export class RecipeWidget extends Widget<Recipe, IRecipeWidgetState> {
             this.board.save();
             this.onUpdate();
         };
+
+        this.mutations = new CustomListComponent(this.board, "mutations", this.element.querySelector('div[name="mutations"]'));
+        this.mutations.onChange = () => {
+            this.board.save();
+            this.onUpdate();
+        };
     }
 
     protected async onUpdate() {
@@ -122,6 +130,7 @@ export class RecipeWidget extends Widget<Recipe, IRecipeWidgetState> {
             await this.slots.onUpdate(this.data, this?.parentData);
             await this.internaldeck.onUpdate(this.data, this?.parentData);
             await this.ending.onUpdate(this.data, this?.parentData);
+            await this.mutations.onUpdate(this.data, this?.parentData);
             this.element.toggleAttribute('large', this.slots.size >= 3);
             this.slots.open(this?.state?.openSlot || 0);
         } catch (e) {
