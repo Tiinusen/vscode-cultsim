@@ -1,4 +1,5 @@
 import { Entity } from "./entity";
+import { InternalDeck } from "./internal_deck";
 import { Slot } from "./slot";
 
 
@@ -10,27 +11,26 @@ interface IRecipeSerialized {
     craftable: boolean
     hintonly: boolean
     signalimportantloop: boolean
-    internaldeck: boolean
     slots: Array<Slot>
     startdescription: string
     description: string
-    requirements: any
-    tablereqs: any
-    extantreqs: any
-    effects: any
-    purge: any
-    aspects: any
-    deckeffects: any
+    requirements: Map<string, number>
+    tablereqs: Map<string, number>
+    extantreqs: Map<string, number>
+    effects: Map<string, number>
+    purge: Map<string, number>
+    aspects: Map<string, number>
+    deckeffects: Map<string, number>
     actionId: string
     ending: string
     signalEndingFlavour: string
     burnimage: string
-    portaleffect: any
-    mutations: any
-    alt: any
-    linked: any
-    // Halt Verb?
-    // Delete Verb?
+    portaleffect: string
+    internaldeck: InternalDeck
+    // TODO: Deal with these ...
+    mutations: Array<{ filter: string, mutate: string, level: number, additive: boolean }>
+    alt: Array<{ id: string, chance: number, additional: boolean, expulsion: { limit: number, filter: Map<string, number> } }>
+    linked: Array<{ id: string, chance: number }>
 }
 
 /**
@@ -39,7 +39,7 @@ interface IRecipeSerialized {
 export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerialized {
     // id
     public get id(): string {
-        return this.get('id');
+        return this.get('id') || "";
     }
     public set id(value: string) {
         this.set('id', value);
@@ -47,7 +47,7 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
 
     // label
     public get label(): string {
-        return this.get('label');
+        return this.get('label') || "";
     }
     public set label(value: string) {
         this.set('label', value);
@@ -55,7 +55,7 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
 
     // maxexecutions
     public get maxexecutions(): number {
-        return this.get('maxexecutions');
+        return this.get('maxexecutions') || 0;
     }
     public set maxexecutions(value: number) {
         this.set('maxexecutions', value);
@@ -63,7 +63,7 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
 
     // warmup
     public get warmup(): number {
-        return this.get('warmup');
+        return this.get('warmup') || 0;
     }
     public set warmup(value: number) {
         this.set('warmup', value);
@@ -71,7 +71,7 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
 
     // craftable
     public get craftable(): boolean {
-        return this.get('craftable');
+        return this.get('craftable') || false;
     }
     public set craftable(value: boolean) {
         this.set('craftable', value);
@@ -79,7 +79,7 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
 
     // hintonly
     public get hintonly(): boolean {
-        return this.get('hintonly');
+        return this.get('hintonly') || false;
     }
     public set hintonly(value: boolean) {
         this.set('hintonly', value);
@@ -87,17 +87,17 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
 
     // signalimportantloop
     public get signalimportantloop(): boolean {
-        return this.get('signalimportantloop');
+        return this.get('signalimportantloop') || false;
     }
     public set signalimportantloop(value: boolean) {
         this.set('signalimportantloop', value);
     }
 
     // internaldeck
-    public get internaldeck(): boolean {
-        return this.get('internaldeck');
+    public get internaldeck(): InternalDeck {
+        return this.get('internaldeck') || this.set('internaldeck', new InternalDeck()).internaldeck;
     }
-    public set internaldeck(value: boolean) {
+    public set internaldeck(value: InternalDeck) {
         this.set('internaldeck', value);
     }
 
@@ -111,7 +111,7 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
 
     // startdescription
     public get startdescription(): string {
-        return this.get('startdescription');
+        return this.get('startdescription') || "";
     }
     public set startdescription(value: string) {
         this.set('startdescription', value);
@@ -119,71 +119,71 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
 
     // description
     public get description(): string {
-        return this.get('description');
+        return this.get('description') || "";
     }
     public set description(value: string) {
         this.set('description', value);
     }
 
     // requirements
-    public get requirements(): string {
+    public get requirements(): Map<string, number> {
         return this.get('requirements');
     }
-    public set requirements(value: string) {
+    public set requirements(value: Map<string, number>) {
         this.set('requirements', value);
     }
 
     // tablereqs
-    public get tablereqs(): string {
+    public get tablereqs(): Map<string, number> {
         return this.get('tablereqs');
     }
-    public set tablereqs(value: string) {
+    public set tablereqs(value: Map<string, number>) {
         this.set('tablereqs', value);
     }
 
     // extantreqs
-    public get extantreqs(): string {
+    public get extantreqs(): Map<string, number> {
         return this.get('extantreqs');
     }
-    public set extantreqs(value: string) {
+    public set extantreqs(value: Map<string, number>) {
         this.set('extantreqs', value);
     }
 
     // effects
-    public get effects(): string {
+    public get effects(): Map<string, number> {
         return this.get('effects');
     }
-    public set effects(value: string) {
+    public set effects(value: Map<string, number>) {
         this.set('effects', value);
     }
 
     // purge
-    public get purge(): string {
+    public get purge(): Map<string, number> {
         return this.get('purge');
     }
-    public set purge(value: string) {
+    public set purge(value: Map<string, number>) {
         this.set('purge', value);
     }
 
     // aspects
-    public get aspects(): string {
+    public get aspects(): Map<string, number> {
         return this.get('aspects');
     }
-    public set aspects(value: string) {
+    public set aspects(value: Map<string, number>) {
         this.set('aspects', value);
     }
 
     // deckeffects
-    public get deckeffects(): string {
+    public get deckeffects(): Map<string, number> {
         return this.get('deckeffects');
     }
-    public set deckeffects(value: string) {
+    public set deckeffects(value: Map<string, number>) {
         this.set('deckeffects', value);
     }
 
     // actionId
     public get actionId(): string {
-        return this.get('actionId');
+        return this.get('actionId') || "";
     }
     public set actionId(value: string) {
         this.set('actionId', value);
@@ -191,7 +191,7 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
 
     // ending
     public get ending(): string {
-        return this.get('ending');
+        return this.get('ending') || "";
     }
     public set ending(value: string) {
         this.set('ending', value);
@@ -199,7 +199,7 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
 
     // signalEndingFlavour
     public get signalEndingFlavour(): string {
-        return this.get('signalEndingFlavour');
+        return this.get('signalEndingFlavour') || "";
     }
     public set signalEndingFlavour(value: string) {
         this.set('signalEndingFlavour', value);
@@ -207,7 +207,7 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
 
     // burnimage
     public get burnimage(): string {
-        return this.get('burnimage');
+        return this.get('burnimage') || "";
     }
     public set burnimage(value: string) {
         this.set('burnimage', value);
@@ -215,33 +215,33 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
 
     // portaleffect
     public get portaleffect(): string {
-        return this.get('portaleffect');
+        return this.get('portaleffect') || "";
     }
     public set portaleffect(value: string) {
         this.set('portaleffect', value);
     }
 
     // mutations
-    public get mutations(): string {
+    public get mutations(): Array<{ filter: string, mutate: string, level: number, additive: boolean }> {
         return this.get('mutations');
     }
-    public set mutations(value: string) {
+    public set mutations(value: Array<{ filter: string, mutate: string, level: number, additive: boolean }>) {
         this.set('mutations', value);
     }
 
     // alt
-    public get alt(): string {
+    public get alt(): Array<{ id: string, chance: number, additional: boolean, expulsion: { limit: number, filter: Map<string, number> } }> {
         return this.get('alt');
     }
-    public set alt(value: string) {
+    public set alt(value: Array<{ id: string, chance: number, additional: boolean, expulsion: { limit: number, filter: Map<string, number> } }>) {
         this.set('alt', value);
     }
 
     // linked
-    public get linked(): string {
+    public get linked(): Array<{ id: string, chance: number }> {
         return this.get('linked');
     }
-    public set linked(value: string) {
+    public set linked(value: Array<{ id: string, chance: number }>) {
         this.set('linked', value);
     }
 
@@ -256,7 +256,7 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
             hintonly: this.get('hintonly'),
             signalimportantloop: this.get('signalimportantloop'),
             internaldeck: this.get('internaldeck'),
-            // slots: this?.slots?.map(slot => slot?.toJSON() || slot), // TODO: Broken
+            slots: this?.slots?.map(slot => JSON.parse(JSON.stringify(slot))),
             startdescription: this.get('startdescription'),
             description: this.get('description'),
             requirements: this.get('requirements'),
@@ -285,7 +285,7 @@ export class Recipe extends Entity<IRecipeSerialized> implements IRecipeSerializ
         this.craftable = obj?.craftable || this.get('craftable');
         this.hintonly = obj?.hintonly || this.get('hintonly');
         this.signalimportantloop = obj?.signalimportantloop || this.get('signalimportantloop');
-        this.internaldeck = obj?.internaldeck || this.get('internaldeck');
+        this.internaldeck = obj?.internaldeck ? this.internaldeck.fromJSON(obj.internaldeck) : this.get('internaldeck');
         this.slots = obj?.slots || this.get('slots');
         this.startdescription = obj?.startdescription || this.get('startdescription');
         this.description = obj?.description || this.get('description');

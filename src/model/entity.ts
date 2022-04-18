@@ -40,7 +40,9 @@ export abstract class Entity<T>{
 
 
     public clone(): Entity<T> {
-        return new (<any>this.constructor)(JSON.parse(JSON.stringify(this)));
+        const dataAsJSON = JSON.stringify(this);
+        if (dataAsJSON === void 0) return new (<any>this.constructor)();
+        return new (<any>this.constructor)(JSON.parse(dataAsJSON));
     }
 
     public merge(propertyName: string, from: T): Entity<T> {

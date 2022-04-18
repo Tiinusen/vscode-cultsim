@@ -18,6 +18,7 @@ export class XTriggerComponent<T> {
     private _iconTarget: HTMLImageElement;
     private _closeButton: HTMLElement;
     private _deleteButton: HTMLElement;
+    private _addButton: HTMLElement;
     private _list: HTMLElement;
     private _key: string;
 
@@ -57,8 +58,8 @@ export class XTriggerComponent<T> {
         this._deleteButton = this.element.querySelector('*[delete]');
         this._deleteButton.onclick = setRestrictToTarget(this._deleteButton, () => this.remove());
 
-        this._deleteButton = this.element.querySelector('*[add]');
-        this._deleteButton.onclick = setRestrictToTarget(this._deleteButton, () => this.onAdd());
+        this._addButton = this.element.querySelector('*[add]');
+        this._addButton.onclick = setRestrictToTarget(this._addButton, () => this.onAdd());
     }
 
     private async onAdd() {

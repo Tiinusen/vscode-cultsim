@@ -20,6 +20,8 @@ import { EndingWidget } from "./widget/ending_widget";
 import { CElementWidget } from "./widget/element_widget";
 import { CElement } from "../../model/element";
 import { PickChoiceOverlay } from "./overlay/pick_choice_overlay";
+import { RecipeWidget } from "./widget/recipe_widget";
+import { Recipe } from "../../model/recipe";
 
 export const BOARD_SIZE_WIDTH = 1920;
 export const BOARD_SIZE_HEIGHT = 1104;
@@ -201,6 +203,14 @@ export class Board {
                             return true;
                         }
                     }
+                } else if (widget instanceof RecipeWidget) {
+                    if (this.content.type == ContentType.Recipes) {
+                        const data = this.content.recipes.find(recipe => recipe.id == widget.data.id);
+                        if (data) {
+                            widget.data = data;
+                            return true;
+                        }
+                    }
                 } else if (widget instanceof CElementWidget) {
                     if (this.content.type == ContentType.Elements) {
                         const data = this.content.elements.find(element => element.id == widget.data.id);
@@ -248,6 +258,12 @@ export class Board {
                         this.addWidget(new CElementWidget(this, element));
                     });
                 case ContentType.Recipes:
+                    return this.content.recipes.forEach((recipe: Recipe) => {
+                        if (this.widgets.some((widget: RecipeWidget) => widget instanceof RecipeWidget && widget.data.id == recipe.id)) {
+                            return;
+                        }
+                        this.addWidget(new RecipeWidget(this, recipe));
+                    });
                 case ContentType.Decks:
                 case ContentType.Legacies:
                     return this.content.legacies.forEach((legacy: Legacy) => {

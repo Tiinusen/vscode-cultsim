@@ -3,6 +3,7 @@ import { ContentType } from '../../../model/content';
 import { CElement } from '../../../model/element';
 import { Ending } from '../../../model/ending';
 import { Legacy } from '../../../model/legacy';
+import { Recipe } from '../../../model/recipe';
 import { Verb } from '../../../model/verb';
 import { setDebounce } from '../../../util/helpers';
 import { Arrange, LayoutAlignment } from '../../../util/layout';
@@ -11,6 +12,7 @@ import { VSCode } from '../vscode';
 import { CElementWidget } from '../widget/element_widget';
 import { EndingWidget } from '../widget/ending_widget';
 import { LegacyWidget } from '../widget/legacy_widget';
+import { RecipeWidget } from '../widget/recipe_widget';
 import { VerbWidget } from '../widget/verb_widget';
 import html from './bottom_hud.html';
 
@@ -127,6 +129,12 @@ export class BottomHUD extends L.Control {
                         const alreadyExisting = await VSCode.request('entity', 'elements', id) as CElement;
                         const isAspect = alreadyExisting?.isAspect || await this.board.pickChoiceOverlay.pick('Card', 'Aspect') == "Aspect";
                         return new CElementWidget(this.board, this.board.content.add(new CElement({ id: id, isAspect: isAspect } as any))).bringToFront();
+                    }
+                    case ContentType.Recipes: {
+                        const [id] = await this.board.pickIDImageOverlay.pick('recipes', true);
+                        if (!id) return null;
+                        const alreadyExisting = await VSCode.request('entity', 'elements', id) as CElement;
+                        return new RecipeWidget(this.board, this.board.content.add(new Recipe({ id: id } as any))).bringToFront();
                     }
                 }
                 throw new Error("Add not supported yet for this content type");

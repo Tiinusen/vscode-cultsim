@@ -16,6 +16,7 @@ export class DictionaryComponent {
     public onChange?: () => void;
 
     constructor(board: Board, propertyName: string, contentType: string, element: HTMLElement) {
+        if (!element) throw new Error(propertyName + " element not found");
         this._contentType = contentType;
         this._propertyName = propertyName;
         this._board = board;

@@ -1,0 +1,445 @@
+<div class="box">
+    <label>Label</label>
+</div>
+<!-- icon -->
+<img class="icon" />
+<div class="frame">
+    <div class="header">
+        <!-- label -->
+        <input name="label" placeholder="Label"
+            title="The name of the recipe displayed to the player when clicking on the token while no recipe is running." />
+        <!-- close button (widget) -->
+        <i class="fa-solid fa-xmark" title="Click to close" close></i>
+    </div>
+    <div class="content">
+        <table>
+            <tr>
+                <td>
+                    <!-- description -->
+                    <textarea name="description" placeholder="Description"
+                        title="This is the description displayed after the recipe has been completed. This text is never displayed if the recipe routes to another linked recipe, as the action is not considered completed until a recipe ends without starting another one."></textarea>
+
+                    <!-- startdescription -->
+                    <textarea name="startdescription" placeholder="Start Description"
+                        title="This is the description displayed before the recipe is started and while the warmup counter executes."></textarea>
+
+                    <div slots name="slots">
+                        <!-- slot -->
+                        <div slot>
+                            <input name="label" placeholder="Label" title="The text displayed above the slot." />
+                            <div class="panel">
+                                <!-- consumes -->
+                                <input type="checkbox" name="consumes"
+                                    title="After the recipe concludes, any recipe in this slot will be destroyed. Shows the little candle at the bottom of the slot." />
+                                <label class="checkbox"
+                                    title="After the recipe concludes, any recipe in this slot will be destroyed. Shows the little candle at the bottom of the slot.">
+                                    Consumes
+                                </label>
+
+                                <!-- close button (slot) -->
+                                <i class="fa-solid fa-xmark" title="Click to close" close></i>
+
+                                <!-- close button (slot) -->
+                                <i class="fa-solid fa-trash" title="Click to remove" delete></i>
+
+
+                                <!-- description -->
+                                <textarea name="description"
+                                    title="Text displayed in the top right when the slot is clicked on"></textarea>
+                                <!-- actionId -->
+                                <div name="actionId"
+                                    title="The recipe ID where the slot will appear when the recipe is inserted.">
+                                </div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th
+                                                title="A list of required recipes/aspects. Any card that meets any one of the properties in Required can be put in the slot, unlike the requirements property for recipes. Only uses positive values.">
+                                                Required
+                                            </th>
+                                            <th
+                                                title="A list of forbidden recipes/aspects. Any card that meets any one of the properties in Forbidden cannot be put in the slot, even if it qualifies for the Required list.">
+                                                Forbidden
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td name="required">
+                                                <div items>
+                                                    <!-- required -->
+                                                    <div template>
+                                                        <img>
+                                                        <label>Label</label>
+                                                    </div>
+                                                </div>
+                                                <div title="Click to add required recipe" add>
+                                                    <i class="fa-solid fa-plus"></i>
+                                                    <label>Add</label>
+                                                </div>
+                                            </td>
+                                            <td name="forbidden">
+                                                <div items>
+                                                    <!-- forbidden -->
+                                                    <div template>
+                                                        <img>
+                                                        <label>Label</label>
+                                                    </div>
+                                                </div>
+                                                <div title="Click to add forbidden recipe" add>
+                                                    <i class="fa-solid fa-plus"></i>
+                                                    <label>Add</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <!-- maxexecutions -->
+                                <div>
+                                    <input name="maxexecutions" placeholder="Max Executions" type="number"
+                                        title="This is the maximum number of times you want to allow a recipe to be executed. Every recipe is tracked whether it has this property or not, but this is the only evaluation that can be made against that value." />
+                                </div>
+                            </td>
+                            <td>
+                                <!-- warmup -->
+                                <div>
+                                    <input name="warmup" placeholder="Warmup" type="number"
+                                        title="This is the length of the timer that counts down after starting a recipe. If the recipe is executed as an Alternative Recipe, this property is not needed, and will be ignored." />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- signalEndingFlavour -->
+                    <input name="signalEndingFlavour" placeholder="Signal Ending Flavour"
+                        title="This will change the colour of the warmup circle around the tile, and trigger fancy music. If it is not one of the predefined and hardcoded values it will default to None. The predefined values include Grand for a golden effect, Melancholy for a red effect, Pale for a white effect, and Vile for an edge-green effect." />
+
+                    <!-- craftable -->
+                    <input type="checkbox" name="craftable"
+                        title="This boolean property enables or disables the start button when recipe conditions are fulfilled. Recipes can always be executed by other recipes; this just controls which recipes players can manually start through the verb tiles. It defaults to false if not stated." />
+                    <label class="checkbox"
+                        title="This boolean property enables or disables the start button when recipe conditions are fulfilled. Recipes can always be executed by other recipes; this just controls which recipes players can manually start through the verb tiles. It defaults to false if not stated.">
+                        Craftable
+                    </label>
+
+                    <!-- hintonly -->
+                    <input type="checkbox" name="hintonly"
+                        title="This disables the start button but still displays the recipe when true. If the requirements for a hint recipe and a normal, craftable recipe are met, the normal recipe is preferred. Hintonly recipes do not need to also have craftable set to true." />
+                    <label class="checkbox"
+                        title="This disables the start button but still displays the recipe when true. If the requirements for a hint recipe and a normal, craftable recipe are met, the normal recipe is preferred. Hintonly recipes do not need to also have craftable set to true.">
+                        Hint Only
+                    </label>
+
+                    <!-- ending -->
+                    <div name="ending">
+                        <h1 no-margin
+                            title="This is the ID of an ending you’d like to trigger at the conclusion of this recipe.">
+                            Ending</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to select a ending" select>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Select</label>
+                        </div>
+                    </div>
+
+                    <!-- deckeffects -->
+                    <div name="deckeffects">
+                        <h1
+                            title="This is a set of deck IDs that are drawn from the specified number of times and added to the element list at the conclusion of the recipe.">
+                            Deck Effects</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to add deck effect" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+
+                    <!-- effects -->
+                    <div name="effects">
+                        <h1
+                            title="This is a set of operations to apply to the element stack. When an element is added, it will be added as a card of that element type. When an element is removed, the first encountered source of that element will be removed. This could be a card of that element or it could be a card with that element as an aspect. Negative values can be used to remove elements. If an aspect is specified for removal, an entire card with that aspect will be removed. Comparisons are also available for effects; for example, having element_1 : element_2 will create as many new element_1s as there are element_2s in the recipe stack.">
+                            Effects</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to add effect" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+
+                    <!-- purge -->
+                    <div name="purge">
+                        <h1
+                            title="This is a set of operations to apply to the game board. It will decay up to the specified amount of the element sources. If a specific element type is specified, it will decay to whatever is indicated in that element's decayTo property, even if the element has no lifetime to cause it to decay naturally. If no element is specified under decayTo, the element will be destroyed. If Purge is used on an aspect, all elements with the aspect will normally be destroyed since aspects do not normally have a decayTo property. However, if for some reason the aspect does have a decayTo property, then instead of destroying elements with the aspect, elements with the aspect will be decayed. This works well because the element that the aspect has been set to decayTo will be ignored; instead, each element that has the aspect will decay according to its own decayTo aspect. If the individual element has no decayTo aspect, then it is destroyed.">
+                            Purge</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to add deck effect" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+
+                    <!-- extantreqs -->
+                    <div name="extantreqs">
+                        <h1
+                            title="This is an inclusive set of conditions that is evaluated whenever the recipe is encountered in a recipe link to decide whether or not to execute the recipe. The list of elements (and aspects) must all be present somewhere within the game. They can be in another recipe, in the player’s hand, or on the board. Like requirements, extantreqs support less than and comparisons.">
+                            Extant Requirements</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to add extant requirement" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+
+                    <!-- internaldeck -->
+                    <div name="internaldeck">
+                        <!-- internaldeck.spec -->
+                        <h1
+                            title="This is a deck of elements that is only accessible to the recipe accessing it. When this has a value, it will be drawn from exactly as it is told to in the internal deck specifications. It is preferable to use external decks, since these can be modified by other mods, while internal decks can only be overwritten.">
+                            Internal Deck</h1>
+                        <div name="spec">
+                            <div items>
+                                <div template>
+                                    <img>
+                                    <label>Label</label>
+                                </div>
+                            </div>
+                            <div title="Click to add effect" add>
+                                <i class="fa-solid fa-plus"></i>
+                                <label>Add</label>
+                            </div>
+                        </div>
+                        <!-- internaldeck.draws -->
+                        <input name="draws" type="number" placeholder="Draws" />
+                        <!-- internaldeck.resetonexhaustion -->
+                        <input type="checkbox" name="resetonexhaustion" />
+                        <label class="checkbox">
+                            Reset on Exhaustion
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <!-- burnimage -->
+                                <input name="burnimage" placeholder="Burn Image"
+                                    title="This is the image filename of a png file located in the “images/burns” folder that you’d like to display on the board when the recipe begins." />
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- portaleffect -->
+                    <input name="portaleffect" placeholder="Portal Effect"
+                        title="This is the property that tells a recipe to transition into the Mansus and which door to open to. This causes the recipe to draw a card from each deck associated with the door and let you choose from them on the board." />
+
+                    <!-- signalimportantloop -->
+                    <input type="checkbox" name="signalimportantloop"
+                        title="This changes the color of the recipe warmup timer to a yellow-gold color and plays a sound that lets you know something important is happening. Usually true for ending recipes. Is also true for the recipe that plays when the season of sickness recipe fails to grab a health card or follower." />
+                    <label class="checkbox"
+                        title="This changes the color of the recipe warmup timer to a yellow-gold color and plays a sound that lets you know something important is happening. Usually true for ending recipes. Is also true for the recipe that plays when the season of sickness recipe fails to grab a health card or follower.">
+                        Signal Important Loop
+                    </label>
+
+                    <!-- requirements -->
+                    <div name="requirements">
+                        <h1 no-margin
+                            title="This is an inclusive set of conditions that is evaluated whenever the recipe is encountered in a recipe link to decide whether or not to execute the recipe. The list of elements (and aspects) must all be present within the recipe’s element stack. This can also be used comparatively, having a requirement of element_1 : element_2 requires that you have a greater than or equal quantity of element_1 as element_2. Furthermore, negative numbers are allowed, and function as less than, allowing -1 to represent 0, -2 to represent having 1 or 0, etc.">
+                            Requirements</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to add requirement" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+
+                    <!-- tablereqs -->
+                    <div name="tablereqs">
+                        <h1
+                            title="This is an inclusive set of conditions that is evaluated whenever the recipe is encountered in a recipe link to decide whether or not to execute the recipe. The list of elements (and aspects) must all be present on the game board, and not in a verb tile. Accordingly, elements that are in slots, both for ongoing and yet unstarted recipes, and elements that aren’t yet picked from the verb after the situation ended, are considered to be outside of the tablereqs scope. Like requirements, tablereqs support less than and comparisons.">
+                            Table Requirements</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to add table requirement" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+
+                    <!-- aspects -->
+                    <div name="aspects">
+                        <h1
+                            title="This is a set of operations to apply to the recipe’s aspect stack. The aspect stack is the sum of all the aspects of the cards in the element stack. The effects of this property do not apply to the cards themselves, just to the stack produced by their sum. This is usually used to introduce temporary aspects for the purpose of triggering an XTrigger reaction, since the aspects disappear after the recipe ends, and don't proc inductions.">
+                            Aspects
+                        </h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to add aspect" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+
+                    <!-- mutations -->
+                    <div name="mutations">
+                        <h1 title="See documentation (Commands -> Show Documentation)">
+                            Mutations</h1>
+                        <div items>
+                            <div item template>
+                                <img source>
+                                <label source>Source</label>
+                                <i class="fa-solid fa-arrow-right-long"></i>
+                                <label target>Target</label>
+                                <img target>
+                                <div panel>
+                                    <div>
+                                        <h2 name="key"></h2>
+                                        <!-- close button (mutation) -->
+                                        <i class="fa-solid fa-xmark" title="Click to close mutation" close></i>
+
+                                        <!-- delete button (mutation) -->
+                                        <i class="fa-solid fa-trash" title="Click to delete mutation" delete></i>
+
+                                        <!-- add button (mutation) -->
+                                        <i class="fa-solid fa-plus-circle" title="Click to add mutation" add></i>
+                                    </div>
+                                    <br />
+                                    <table mutation-table>
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>
+                                                    Filter
+                                                </th>
+                                                <th>
+                                                    Mutate
+                                                </th>
+                                                <th>
+                                                    Level
+                                                </th>
+                                                <th>
+                                                    Additive
+                                                </th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody mutation-items>
+                                            <tr mutation-item template>
+                                                <td>
+                                                    <img />
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <label name="id">ID</label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="mutate" />
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="level" maxlength="3" max="100" min="0" />
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox" name="additive" />
+                                                </td>
+                                                <td>
+                                                    <!-- delete button (mutation) -->
+                                                    <i class="fa-solid fa-trash" title="Click to delete mutation"
+                                                        delete></i>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="Click to add mutate" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+
+                    <!-- alt -->
+                    <div name="alt">
+                        <h1
+                            title="This is a list of Recipe Link specifications. Every time the aspect stack of the recipe changes, this property is evaluated for a valid recipe and then the active recipe is switched to it, preserving the timer but only executing the effects of the specified alternative recipe. Recipes are evaluated in the order of the list; evaluation stops once a new recipe is found, with the exception of additional recipes, which are always evaluated.">
+                            Alternative Recipes</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to add alternative recipe" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+
+                    <!-- linked -->
+                    <div name="linked">
+                        <h1
+                            title="A list of recipes to be executed after the current recipe is resolved. This is different from alternative recipes because it does not replace the current recipe's effects with the new one. Also, additional recipes must be alternatives, not linked. A few properties are required.">
+                            Linked Recipes</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to add alternative recipe" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="footer"></div>
+</div>

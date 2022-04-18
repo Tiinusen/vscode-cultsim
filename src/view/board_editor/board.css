@@ -325,6 +325,152 @@ body {
 }
 
 /*
+ * Recipe Widget
+ */
+
+.recipe-widget[open] {
+	width: 825px !important;
+	height: 400px !important;
+	position: relative;
+	top: -200px;
+	left: -275px;
+}
+
+.recipe-widget[open] .content>table>tbody>tr>td {
+	width: 30% !important;
+}
+
+.recipe-widget .icon {
+	display: none;
+	/* width: 104px !important;
+	height: 104px !important; */
+}
+
+.recipe-widget .box {
+	position: relative;
+	left: -52px;
+	top: 52px;
+	width: 104px;
+	height: 52px;
+	background-color: #afafaf;
+	border: 4px solid #000000;
+	vertical-align: middle;
+}
+
+.recipe-widget[open] .box {
+	display: none;
+}
+
+.recipe-widget .box label {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 100%;
+	text-align: center;
+	color: black;
+	font-weight: bold;
+}
+
+.recipe-widget[aspect] *[card-only] {
+	display: none;
+}
+
+.recipe-widget:not([aspect]) *[aspect-only] {
+	display: none;
+}
+
+.recipe-widget:not([open]) .frame {
+	display: none;
+}
+
+.recipe-widget[large] .content {
+	min-height: 500px !important;
+}
+
+.recipe-widget .header {
+	height: 50px;
+	padding: 0px;
+}
+
+.recipe-widget .header i[close] {
+	left: -15px;
+}
+
+.recipe-widget .content {
+	min-height: 400px;
+	background-color: #202041;
+	padding-top: 25px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.recipe-widget[aspect] .content {
+	height: 300px;
+}
+
+.recipe-widget .content>table>tbody>tr>td {
+	vertical-align: top;
+	padding-left: 5px;
+}
+
+.recipe-widget .content h1:not([no-margin]) {
+	margin-top: 20px;
+}
+
+.recipe-widget textarea {
+	resize: none;
+	background-color: #0f0f27;
+	font-size: 16px;
+	padding: 10px;
+	height: 160px;
+	width: 270px;
+	border-radius: 12px;
+	margin-bottom: 10px;
+}
+
+.recipe-widget input[type="checkbox"] {
+	transform: scale(2);
+	padding: 10px;
+	margin-right: 10px;
+	margin-left: 10px;
+	cursor: pointer;
+	margin-bottom: 20px;
+	position: relative;
+	top: 10px;
+}
+
+.recipe-widget .content label {
+	position: relative;
+	top: -2px;
+}
+
+.recipe-widget .content label.checkbox {
+	position: relative;
+	top: 8px;
+}
+
+
+.recipe-widget .content input[type="text"] {
+	/* border-bottom: thin solid #FFFFFF !important; */
+	position: relative;
+	/* top: -8px; */
+}
+
+.recipe-widget .content input[type="number"] {
+	/* border-bottom: thin solid #FFFFFF !important; */
+	width: 70px;
+}
+
+.recipe-widget .content input[name="maxexecutions"] {
+	width:200px;
+}
+
+.recipe-widget .content input[name="draws"] {
+	width:100px;
+}
+
+/*
  * Element Widget
  */
 
