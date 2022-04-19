@@ -25,8 +25,11 @@ export class RecipeWidget extends Widget<Recipe, IRecipeWidgetState> {
     private purge: DictionaryComponent;
     private aspects: DictionaryComponent;
     private deckeffects: DictionaryComponent;
+    private haltverb: DictionaryComponent;
+    private deleteverb: DictionaryComponent;
     private internaldeck: InternalDeckComponent<RecipeWidget>;
     private mutations: CustomListComponent;
+    private alt: CustomListComponent;
     private linked: PercentageListComponent;
     private ending: PickerComponent;
 
@@ -42,6 +45,16 @@ export class RecipeWidget extends Widget<Recipe, IRecipeWidgetState> {
         };
         this.deckeffects = new DictionaryComponent(this.board, "deckeffects", "elements", this.element.querySelector('div[name="deckeffects"]'));
         this.deckeffects.onChange = () => {
+            this.save();
+            this.onUpdate();
+        };
+        this.haltverb = new DictionaryComponent(this.board, "haltverb", "verbs", this.element.querySelector('div[name="haltverb"]'));
+        this.haltverb.onChange = () => {
+            this.save();
+            this.onUpdate();
+        };
+        this.deleteverb = new DictionaryComponent(this.board, "deleteverb", "verbs", this.element.querySelector('div[name="deleteverb"]'));
+        this.deleteverb.onChange = () => {
             this.save();
             this.onUpdate();
         };
@@ -103,6 +116,12 @@ export class RecipeWidget extends Widget<Recipe, IRecipeWidgetState> {
             this.onUpdate();
         };
 
+        this.alt = new CustomListComponent(this.board, "alt", this.element.querySelector('div[name="alt"]'));
+        this.alt.onChange = () => {
+            this.board.save();
+            this.onUpdate();
+        };
+
         this.linked = new PercentageListComponent(this.board, "linked", this.element.querySelector('div[name="linked"]'), "recipes");
         this.linked.onChange = () => {
             this.save();
@@ -133,12 +152,15 @@ export class RecipeWidget extends Widget<Recipe, IRecipeWidgetState> {
             await this.purge?.onUpdate(this.data, this?.parentData);
             await this.aspects?.onUpdate(this.data, this?.parentData);
             await this.deckeffects?.onUpdate(this.data, this?.parentData);
+            await this.haltverb?.onUpdate(this.data, this?.parentData);
+            await this.deleteverb?.onUpdate(this.data, this?.parentData);
             await this.aspects?.onUpdate(this.data, this?.parentData);
             await this.slots.onUpdate(this.data, this?.parentData);
             await this.internaldeck.onUpdate(this.data, this?.parentData);
             await this.ending.onUpdate(this.data, this?.parentData);
             await this.mutations.onUpdate(this.data, this?.parentData);
             await this.linked.onUpdate(this.data, this?.parentData);
+            await this.alt.onUpdate(this.data, this?.parentData);
             this.element.toggleAttribute('large', this.slots.size >= 3);
             this.slots.open(this?.state?.openSlot || 0);
         } catch (e) {

@@ -5,15 +5,23 @@ import { SerializationHelper } from "../util/serialization";
  * [A base]
  */
 export abstract class Entity<T>{
-    private _data: T = {} as T;
-    constructor(data?: T) {
+    protected _data: T = {} as T;
+    constructor(data?: T, clone = true) {
         if (!data) data = {} as T;
-        SerializationHelper.toInstance<Entity<T>, T>(this, data);
+        if(clone){
+            SerializationHelper.toInstance<Entity<T>, T>(this, data);
+        }else{
+            this._data = data;
+        }
     }
 
-    public replace(data: T) {
+    public replace(data: T, clone = true) {
         this._data = {} as T;
-        SerializationHelper.toInstance<Entity<T>, T>(this, data);
+        if(clone){
+            SerializationHelper.toInstance<Entity<T>, T>(this, data);
+        }else{
+            this._data = data;
+        }
     }
 
     public has(key: string): boolean {

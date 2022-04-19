@@ -475,9 +475,16 @@ input {
 	width: 100px;
 }
 
-.recipe-widget .content div[name="mutations"] label {
+.recipe-widget .content div[name="mutations"] *[items] label {
 	display: inline;
 	width: auto;
+	top: -4px;
+}
+
+.recipe-widget .content div[name="alt"] *[items] label {
+	display: inline;
+	width: auto;
+	top: -4px;
 }
 
 /*

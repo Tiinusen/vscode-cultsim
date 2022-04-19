@@ -1,4 +1,5 @@
 import { Entity } from "../../../../model/entity";
+import { FlatEntity } from "../../../../model/flat_entity";
 import { Board } from "../../board";
 import { VSCode } from "../../vscode";
 
@@ -28,6 +29,7 @@ export class DictionaryComponent {
     }
 
     public async onUpdate(data: Entity<any>, parentData?: Entity<any>) {
+        if (!(data instanceof Entity)) data = new FlatEntity(data);
         this._data = data;
         this._parentData = parentData;
         let merged: Entity<any> = null;

@@ -51,7 +51,7 @@ This extension contributes the following settings:
   * [x] Support for `Ending`
   * [x] Support for `Element`
   * [ ] Support for `Deck`
-  * [ ] Support for `Recipe`
+  * [x] Support for `Recipe`
 * [ ] Solving Known Issues
 * [ ] Optimization
 * [ ] Kindly ask developers to dump assets with game uncompressed to remove need for using web assets

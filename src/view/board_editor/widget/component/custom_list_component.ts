@@ -1,6 +1,7 @@
 import { Entity } from "../../../../model/entity";
 import { Board } from "../../board";
 import { VSCode } from "../../vscode";
+import { DictionaryComponent } from "./dictionary_component";
 import { PickerComponent } from "./picker_component";
 
 export class CustomListComponent {
@@ -77,7 +78,7 @@ export class CustomListComponent {
                     continue;
                 }
                 const value = item[name];
-                if(typeof value === 'boolean'){
+                if (typeof value === 'boolean') {
                     element.toggleAttribute('hide', !value);
                     continue;
                 }
@@ -92,7 +93,9 @@ export class CustomListComponent {
                         continue;
                     }
                     default: {
-                        element.innerText = value;
+                        const prefix = element.getAttribute('prefix') || "";
+                        const suffix = element.getAttribute('suffix') || "";
+                        element.innerText = prefix + value + suffix;
                     }
                 }
             }
@@ -117,8 +120,8 @@ export class CustomListComponent {
             obj[this._key] = id;
             if (!this._data?.[`${this._propertyName}`]) this._data[`${this._propertyName}`] = new Array<any>();
             this._data[`${this._propertyName}`].push(obj);
-
             if (this.onChange) this.onChange();
+            this.onEdit(id);
         } catch (e) {
             if (e == "closed") return;
             VSCode.emitError(e);
@@ -138,19 +141,49 @@ export class CustomListComponent {
         const elements: HTMLElement[] = [];
         this._panel.querySelectorAll('*[name]').forEach(element => elements.push(element as any));
         for (const element of elements) {
-            const name = element.getAttribute('name');
-            const value = item[name];
+            let name = element.getAttribute('name');
+            const nameParts = name.split('.');
+            let cursor = item;
+            while (nameParts.length > 1) {
+                const parent = nameParts.shift();
+                name = nameParts[0];
+                if (!(parent in cursor)) {
+                    cursor[parent] = {};
+                }
+                cursor = cursor[parent];
+            }
             const component = element.getAttribute('component');
             const contentType = element.getAttribute('content-type');
+            if (!(name in cursor) && component) {
+                switch (component) {
+                    case "dictionary":
+                        cursor[name] = {};
+                        break;
+                    case "list":
+                        cursor[name] = [];
+                        break;
+                }
+                this._board.save();
+            }
+            const value = cursor?.[name];
             if (component) {
                 switch (component) {
                     case "picker": {
                         const picker = new PickerComponent(this._board, name, contentType, element);
                         picker.onChange = () => {
-                            picker.onUpdate(item);
+                            picker.onUpdate(cursor);
                             this._board.save();
                         };
-                        picker.onUpdate(item);
+                        picker.onUpdate(cursor);
+                        continue;
+                    }
+                    case "dictionary": {
+                        const dictionary = new DictionaryComponent(this._board, name, contentType, element);
+                        dictionary.onChange = () => {
+                            dictionary.onUpdate(cursor);
+                            this._board.save();
+                        };
+                        dictionary.onUpdate(cursor);
                         continue;
                     }
                 }
@@ -162,17 +195,22 @@ export class CustomListComponent {
                             case "checkbox": {
                                 element.toggleAttribute('checked', value === true);
                                 element.onchange = () => {
-                                    item[name] = (element as HTMLInputElement).checked;
+                                    cursor[name] = (element as HTMLInputElement).checked;
                                     this._board.save();
                                 };
                                 continue;
                             }
                             case "number": {
-                                (element as HTMLInputElement).value = value;
+                                if (value) {
+                                    (element as HTMLInputElement).value = value;
+                                }
                                 element.onkeyup = () => {
                                     const value = parseInt((element as HTMLInputElement).value);
-                                    if (isNaN(value)) return;
-                                    item[name] = value;
+                                    if (isNaN(value)) {
+                                        cursor[name] = void 0;
+                                    } else {
+                                        cursor[name] = value;
+                                    }
                                     this._board.save();
                                 };
                                 continue;
@@ -180,14 +218,16 @@ export class CustomListComponent {
                             default:
                                 (element as HTMLInputElement).value = value;
                                 element.onkeyup = () => {
-                                    item[name] = (element as HTMLInputElement).value;
+                                    cursor[name] = (element as HTMLInputElement).value;
                                     this._board.save();
                                 };
                                 continue;
                         }
                     }
                     default: {
-                        element.innerText = value;
+                        const prefix = element.getAttribute('prefix') || "";
+                        const suffix = element.getAttribute('suffix') || "";
+                        element.innerText = prefix + value + suffix;
                         continue;
                     }
                 }
