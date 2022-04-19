@@ -7,8 +7,7 @@ import html from "./element_widget.html";
 import { VSCode } from "../vscode";
 import { DictionaryComponent } from "./component/dictionary_component";
 import { PickerComponent } from "./component/picker_component";
-import { InduceComponent } from "./component/induce_component";
-import { Slot } from "../../../model/slot";
+import { PercentageListComponent } from "./component/percentage_list_component";
 import { SlotsComponent } from "./component/slots_component";
 import { XTriggersComponent } from "./component/xtriggers_component";
 
@@ -19,7 +18,7 @@ export interface ICElementWidgetState extends IWidgetState {
 export class CElementWidget extends Widget<CElement, ICElementWidgetState> {
     private icon: HTMLImageElement;
     private lastIconFetch?: number;
-    private induces: InduceComponent;
+    private induces: PercentageListComponent;
     private aspects: DictionaryComponent;
     private decayTo: PickerComponent;
     private slots: SlotsComponent<CElementWidget>;
@@ -31,7 +30,7 @@ export class CElementWidget extends Widget<CElement, ICElementWidgetState> {
 
     protected onInit() {
         this.element.toggleAttribute('aspect', this?.data.isAspect || this?.parentData?.isAspect || false);
-        this.induces = new InduceComponent(this.board, "induces", this.element.querySelector('div[name="induces"]'));
+        this.induces = new PercentageListComponent(this.board, "induces", this.element.querySelector('div[name="induces"]'));
         this.induces.onChange = () => {
             this.save();
             this.onUpdate();

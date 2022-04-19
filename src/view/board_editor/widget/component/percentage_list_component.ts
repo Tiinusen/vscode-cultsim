@@ -2,7 +2,7 @@ import { Entity } from "../../../../model/entity";
 import { Board } from "../../board";
 import { VSCode } from "../../vscode";
 
-export class InduceComponent {
+export class PercentageListComponent {
     private _propertyName: string;
     private _list: HTMLElement;
     private _items: Map<string, HTMLElement> = new Map();
@@ -11,12 +11,14 @@ export class InduceComponent {
     private _parentData: any;
     private _board: Board;
     private _addButton: HTMLElement;
+    private _contentType: string;
 
     public onChange?: () => void;
 
-    constructor(board: Board, propertyName: string, element: HTMLElement) {
+    constructor(board: Board, propertyName: string, element: HTMLElement, contentType = "elements") {
         this._propertyName = propertyName;
         this._board = board;
+        this._contentType = contentType;
         element.toggleAttribute('list', true);
         this._list = element.querySelector('*[items]');
         this._template = element.querySelector('*[items] > *[template]');
@@ -47,7 +49,7 @@ export class InduceComponent {
         for (const item of list) {
             if (!this._items.has(item.id)) {
                 const element: HTMLElement = this._template.cloneNode(true) as any;
-                const imageURL: string = await VSCode.request('image', 'elements', item.id);
+                const imageURL: string = await VSCode.request('image', this._contentType, item.id);
                 const img = element.querySelector('img');
                 img.onerror = () => img.src = 'https://www.frangiclave.net/static/images/icons40/aspects/_x.png';
                 if (imageURL.indexOf('frangiclave') === -1) imageURL + "?" + (Math.random() * 100);
@@ -69,7 +71,7 @@ export class InduceComponent {
     private async onAdd() {
         try {
             // eslint-disable-next-line prefer-const
-            let [id, chance] = await this._board.pickElementOverlay.pick('elements', false, 'Chance');
+            let [id, chance] = await this._board.pickElementOverlay.pick(this._contentType, false, 'Chance');
             chance = chance || 1;
             if (this._parentData?.[`${this._propertyName}`] && !this._data?.[`${this._propertyName}`]) {
                 if (this._data?.[`${this._propertyName}$remove`] && this._data[`${this._propertyName}$remove`].indexOf(id) !== -1) {
