@@ -11,6 +11,7 @@
 		"Visualization",
 		"Other"
 	],
+	"repository": "https://github.com/Tiinusen/vscode-cultsim",
 	"activationEvents": [
 		"onCustomEditor:cultsim.editor.board",
 		"onCommand:cultsim.new.project",

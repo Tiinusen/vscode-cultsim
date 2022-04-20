@@ -70,7 +70,7 @@ engine alive with new awesome content. and also thanks to the VSCode community f
 
 Feel free to visit my Ko-Fi page if you think that this extension is awesome :)
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T0AST2M)
+[![ko-fi](media/readme/kofi.png)](https://ko-fi.com/T6T0AST2M)
 
 Feel free to visit the [Issues]([da](https://github.com/Tiinusen/vscode-cultsim/issues)) pages if it sucks, your experience is very important to me.
 
