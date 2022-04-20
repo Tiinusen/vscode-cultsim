@@ -2,7 +2,7 @@
 
 import { Board } from "../board";
 import { Widget } from "./widget";
-import html from "./select_content_type_widget.html";
+import html from "../../../../media/view/board_editor/widget/select_content_type_widget.html";
 import { ContentType } from "../../../model/content";
 
 export class SelectContentTypeWidget extends Widget<any, any> {

@@ -294,11 +294,11 @@ export class BoardEditor implements vscode.CustomTextEditorProvider {
 		const assetsBaseURI = Uri.joinPath(this.context.extensionUri, 'media', 'board');
 		return await Renderer.htmlForWebView(
 			webview,
-			Uri.joinPath(this.context.extensionUri, 'src', 'view', 'board_editor', 'board.html'),
+			Uri.joinPath(this.context.extensionUri, 'media', 'view', 'board_editor', 'board.html'),
 			assetsBaseURI,
 			"../reset.css",
 			"../vscode.css",
-			"../../src/view/board_editor/board.css",
+			"../../media/view/board_editor/board.css",
 			"../../dist/board.js",
 			"../fa/css/fontawesome.css",
 			"../fa/css/brands.css",

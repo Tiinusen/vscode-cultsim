@@ -3,7 +3,7 @@
 import { Recipe } from "../../../model/recipe";
 import { Board } from "../board";
 import { IWidgetState, Widget } from "./widget";
-import html from "./recipe_widget.html";
+import html from "../../../../media/view/board_editor/widget/recipe_widget.html";
 import { VSCode } from "../vscode";
 import { DictionaryComponent } from "./component/dictionary_component";
 import { PickerComponent } from "./component/picker_component";

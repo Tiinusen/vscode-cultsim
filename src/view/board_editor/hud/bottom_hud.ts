@@ -16,7 +16,7 @@ import { EndingWidget } from '../widget/ending_widget';
 import { LegacyWidget } from '../widget/legacy_widget';
 import { RecipeWidget } from '../widget/recipe_widget';
 import { VerbWidget } from '../widget/verb_widget';
-import html from './bottom_hud.html';
+import html from '../../../../media/view/board_editor/hud/bottom_hud.html';
 
 export class BottomHUD extends L.Control {
     private _board: Board;

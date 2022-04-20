@@ -3,7 +3,7 @@
 import { Verb } from "../../../model/verb";
 import { Board } from "../board";
 import { IWidgetState, Widget } from "./widget";
-import html from "./verb_widget.html";
+import html from "../../../../media/view/board_editor/widget/verb_widget.html";
 import { VSCode } from "../vscode";
 import { get, has, set, setDebounce } from "../../../util/helpers";
 import { SlotComponent } from "./component/slot_component";

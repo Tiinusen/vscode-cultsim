@@ -3,7 +3,7 @@
 import { Deck } from "../../../model/deck";
 import { Board } from "../board";
 import { IWidgetState, Widget } from "./widget";
-import html from "./deck_widget.html";
+import html from "../../../../media/view/board_editor/widget/deck_widget.html";
 import { VSCode } from "../vscode";
 import { ListComponent } from "./component/list_component";
 import { PickerComponent } from "./component/picker_component";

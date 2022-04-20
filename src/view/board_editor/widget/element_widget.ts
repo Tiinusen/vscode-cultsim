@@ -3,7 +3,7 @@
 import { CElement } from "../../../model/element";
 import { Board } from "../board";
 import { IWidgetState, Widget } from "./widget";
-import html from "./element_widget.html";
+import html from "../../../../media/view/board_editor/widget/element_widget.html";
 import { VSCode } from "../vscode";
 import { DictionaryComponent } from "./component/dictionary_component";
 import { PickerComponent } from "./component/picker_component";

@@ -2,7 +2,7 @@ import { setDebounce } from '../../../util/helpers';
 import { Board } from '../board';
 import { VSCode } from '../vscode';
 import { BoardOverlay } from './board_overlay';
-import html from './pick_element_overlay.html';
+import html from '../../../../media/view/board_editor/overlay/pick_element_overlay.html';
 
 export class PickElementOverlay extends BoardOverlay {
 

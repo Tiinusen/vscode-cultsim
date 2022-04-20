@@ -3,7 +3,7 @@
 import { Synopsis } from "../../../model/synopsis";
 import { Board } from "../board";
 import { Widget } from "./widget";
-import html from "./synopsis_widget.html";
+import html from "../../../../media/view/board_editor/widget/synopsis_widget.html";
 import { SemanticVersion } from "../../../util/versioning";
 import { VSCode } from "../vscode";
 

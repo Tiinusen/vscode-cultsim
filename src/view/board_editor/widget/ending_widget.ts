@@ -3,7 +3,7 @@
 import { Ending } from "../../../model/ending";
 import { Board } from "../board";
 import { IWidgetState, Widget } from "./widget";
-import html from "./ending_widget.html";
+import html from "../../../../media/view/board_editor/widget/ending_widget.html";
 import { VSCode } from "../vscode";
 import { DictionaryComponent } from "./component/dictionary_component";
 import { ListComponent } from "./component/list_component";
