@@ -488,6 +488,144 @@ input {
 }
 
 /*
+ * Deck Widget
+ */
+
+ .deck-widget[open] {
+	width: 550px !important;
+	height: 400px !important;
+	position: relative;
+	top: -200px;
+	left: -275px;
+}
+
+.deck-widget[open] .content>table>tbody>tr>td {
+	width: 30% !important;
+}
+
+.deck-widget .icon {
+	display: none;
+	/* width: 104px !important;
+	height: 104px !important; */
+}
+
+.deck-widget .box {
+	position: relative;
+	left: -52px;
+	top: 52px;
+	width: 104px;
+	height: 52px;
+	background-color: #afafaf;
+	border: 4px solid #000000;
+	vertical-align: middle;
+}
+
+.deck-widget[open] .box {
+	display: none;
+}
+
+.deck-widget .box label {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 100%;
+	text-align: center;
+	color: black;
+	font-weight: bold;
+}
+
+.deck-widget[aspect] *[card-only] {
+	display: none;
+}
+
+.deck-widget:not([aspect]) *[aspect-only] {
+	display: none;
+}
+
+.deck-widget:not([open]) .frame {
+	display: none;
+}
+
+.deck-widget[large] .content {
+	min-height: 500px !important;
+}
+
+.deck-widget .header {
+	height: 50px;
+	padding: 0px;
+}
+
+.deck-widget .header i[close] {
+	left: -15px;
+}
+
+.deck-widget .content {
+	min-height: 400px;
+	background-color: #202041;
+	padding-top: 25px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.deck-widget[aspect] .content {
+	height: 300px;
+}
+
+.deck-widget .content>table>tbody>tr>td {
+	vertical-align: top;
+	padding-left: 5px;
+}
+
+.deck-widget .content h1:not([no-margin]) {
+	margin-top: 20px;
+}
+
+.deck-widget textarea {
+	resize: none;
+	background-color: #0f0f27;
+	font-size: 16px;
+	padding: 10px;
+	height: 160px;
+	width: 270px;
+	border-radius: 12px;
+	margin-bottom: 10px;
+}
+
+.deck-widget input[type="checkbox"] {
+	transform: scale(2);
+	padding: 10px;
+	margin-right: 10px;
+	margin-left: 10px;
+	cursor: pointer;
+	margin-bottom: 20px;
+	position: relative;
+	top: 10px;
+}
+
+.deck-widget .content label {
+	position: relative;
+	top: -2px;
+}
+
+.deck-widget .content label.checkbox {
+	position: relative;
+	top: 8px;
+}
+
+
+.deck-widget .content input[type="text"] {
+	/* border-bottom: thin solid #FFFFFF !important; */
+	position: relative;
+	/* top: -8px; */
+}
+
+.deck-widget .content input[type="number"] {
+	/* border-bottom: thin solid #FFFFFF !important; */
+	width: 70px;
+}
+
+/*
  * Element Widget
  */
 

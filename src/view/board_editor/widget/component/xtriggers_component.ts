@@ -84,7 +84,6 @@ export class XTriggersComponent<T> {
 
     protected onRemove(id: string, element: HTMLElement) {
         if(this._data.get(this._propertyName) == void 0) return;
-        console.log(id, this._data.get(this._propertyName));
         delete this._data.get(this._propertyName)[id];
         if (Object.keys(this._data.get(this._propertyName)).length == 0) {
             this._data.set(this._propertyName, void 0);

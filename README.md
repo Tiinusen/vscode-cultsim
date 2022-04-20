@@ -44,13 +44,13 @@ This extension contributes the following settings:
   * [x] Show Documentation
   * [x] Show Reference
   * [x] Show Log
-* [ ] Content
+* [x] Content
   * [x] Support for `Synopsis`
   * [x] Support for `Verb`
   * [x] Support for `Legacy`
   * [x] Support for `Ending`
   * [x] Support for `Element`
-  * [ ] Support for `Deck`
+  * [x] Support for `Deck`
   * [x] Support for `Recipe`
 * [ ] Solving Known Issues
 * [ ] Kindly ask developers to dump assets with game uncompressed to remove need for using web assets

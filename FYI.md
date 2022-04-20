@@ -1,6 +1,6 @@
 # FYI
 
-This is first iteration code, so I am completly aware that it needs consistency and optimization (and lots and lots of tests)
+This is first iteration code, so I am completly aware that it needs consistency and optimization (and lots and lots of tests) (Uncle Bob would kill me if he saw the code quality)
 
 However, since this project is single handly developed by myself I can't provide a timeline, but if you feel like helping out: discuss, fork and provide a pull request and then together we can make this the extension great.
 

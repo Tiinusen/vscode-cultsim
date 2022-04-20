@@ -1,5 +1,6 @@
 import * as L from 'leaflet';
 import { ContentType } from '../../../model/content';
+import { Deck } from '../../../model/deck';
 import { CElement } from '../../../model/element';
 import { Ending } from '../../../model/ending';
 import { Legacy } from '../../../model/legacy';
@@ -9,6 +10,7 @@ import { setDebounce } from '../../../util/helpers';
 import { Arrange, LayoutAlignment } from '../../../util/layout';
 import { Board } from '../board';
 import { VSCode } from '../vscode';
+import { DeckWidget } from '../widget/deck_widget';
 import { CElementWidget } from '../widget/element_widget';
 import { EndingWidget } from '../widget/ending_widget';
 import { LegacyWidget } from '../widget/legacy_widget';
@@ -135,6 +137,12 @@ export class BottomHUD extends L.Control {
                         if (!id) return null;
                         const alreadyExisting = await VSCode.request('entity', 'elements', id) as CElement;
                         return new RecipeWidget(this.board, this.board.content.add(new Recipe({ id: id } as any))).bringToFront();
+                    }
+                    case ContentType.Decks: {
+                        const [id] = await this.board.pickIDImageOverlay.pick('decks', true);
+                        if (!id) return null;
+                        const alreadyExisting = await VSCode.request('entity', 'decks', id) as CElement;
+                        return new DeckWidget(this.board, this.board.content.add(new Deck({ id: id } as any))).bringToFront();
                     }
                 }
                 throw new Error("Add not supported yet for this content type");

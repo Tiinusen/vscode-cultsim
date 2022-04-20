@@ -1,0 +1,77 @@
+<div class="box">
+    <label>Label</label>
+</div>
+<!-- icon -->
+<img class="icon" />
+<div class="frame">
+    <div class="header">
+        <!-- label -->
+        <input name="label" placeholder="Label"
+            title="The name of the deck displayed to the player when clicking on the token while no recipe is running." />
+        <!-- close button (widget) -->
+        <i class="fa-solid fa-xmark" title="Click to close" close></i>
+    </div>
+    <div class="content">
+        <table>
+            <tr>
+                <td>
+                    <!-- description -->
+                    <textarea name="description"
+                        title="Text displayed in-game when clicking on the token while no recipe is running."></textarea>
+
+                    <!-- resetonexhaustion -->
+                    <input type="checkbox" name="resetonexhaustion"
+                        title="Whether or not the deck will be reshuffled after all cards have been drawn. Any unique cards in the deck will not be shuffled back in." />
+                    <label class="checkbox"
+                        title="Whether or not the deck will be reshuffled after all cards have been drawn. Any unique cards in the deck will not be shuffled back in.">
+                        Reset on Exhaustion
+                    </label>
+
+                    <!-- drawmessages -->
+                    <div name="drawmessages">
+                        <h1
+                            title="A dictionary of element names and messages to be displayed once the cards are revealed depending on which cards are drawn. Used in the Mansus rather than standard deck draws.">
+                            Draw Messages (Mansus Only)</h1>
+                        Not Supported
+                    </div>
+                </td>
+                <td>
+                    <!-- defaultcard -->
+                    <div name="defaultcard" required>
+                        <h1
+                            title="Once the deck has been exhausted and the deck does not reset, this card will be the only card drawn from then on. This is required if your deck doesn’t reset - your mod will not execute otherwise.">
+                            Default Card</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to select a default card" select>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Select</label>
+                        </div>
+                    </div>
+
+                    <!-- spec -->
+                    <div name="spec">
+                        <h1
+                            title="The actual list of elements to draw from. There can be duplicates of cards: this is often used to influence the probability of one card to be drawn. This cannot be used to allow a given unique card to be drawn more than once.">
+                            Spec</h1>
+                        <div items>
+                            <div template>
+                                <img>
+                                <label>Label</label>
+                            </div>
+                        </div>
+                        <div title="Click to add element" add>
+                            <i class="fa-solid fa-plus"></i>
+                            <label>Add</label>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="footer"></div>
+</div>

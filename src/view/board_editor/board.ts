@@ -10,7 +10,6 @@ import { Verb } from "../../model/verb";
 import { VerbWidget } from "./widget/verb_widget";
 import { Entity } from "../../model/entity";
 import { BottomHUD } from "./hud/bottom_hud";
-import { Arrange } from "../../util/layout";
 import { PickIDImageOverlay } from "./overlay/pick_id_image_overlay";
 import { PickElementOverlay } from "./overlay/pick_element_overlay";
 import { Legacy } from "../../model/legacy";
@@ -22,6 +21,8 @@ import { CElement } from "../../model/element";
 import { PickChoiceOverlay } from "./overlay/pick_choice_overlay";
 import { RecipeWidget } from "./widget/recipe_widget";
 import { Recipe } from "../../model/recipe";
+import { DeckWidget } from "./widget/deck_widget";
+import { Deck } from "../../model/deck";
 
 export const BOARD_SIZE_WIDTH = 1920;
 export const BOARD_SIZE_HEIGHT = 1104;
@@ -187,6 +188,14 @@ export class Board {
                             return true;
                         }
                     }
+                } else if (widget instanceof DeckWidget) {
+                    if (this.content.type == ContentType.Decks) {
+                        const data = this.content.decks.find(deck => deck.id == widget.data.id);
+                        if (data) {
+                            widget.data = data;
+                            return true;
+                        }
+                    }
                 } else if (widget instanceof LegacyWidget) {
                     if (this.content.type == ContentType.Legacies) {
                         const data = this.content.legacies.find(legacy => legacy.id == widget.data.id);
@@ -250,6 +259,13 @@ export class Board {
                         }
                         this.addWidget(new VerbWidget(this, verb));
                     });
+                case ContentType.Decks:
+                    return this.content.decks.forEach((deck: Deck) => {
+                        if (this.widgets.some((widget: DeckWidget) => widget instanceof DeckWidget && widget.data.id == deck.id)) {
+                            return;
+                        }
+                        this.addWidget(new DeckWidget(this, deck));
+                    });
                 case ContentType.Elements:
                     return this.content.elements.forEach((element: CElement) => {
                         if (this.widgets.some((widget: CElementWidget) => widget instanceof CElementWidget && widget.data.id == element.id)) {
@@ -264,7 +280,6 @@ export class Board {
                         }
                         this.addWidget(new RecipeWidget(this, recipe));
                     });
-                case ContentType.Decks:
                 case ContentType.Legacies:
                     return this.content.legacies.forEach((legacy: Legacy) => {
                         if (this.widgets.some((widget: LegacyWidget) => widget instanceof LegacyWidget && widget.data.id == legacy.id)) {
