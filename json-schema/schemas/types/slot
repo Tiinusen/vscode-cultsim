@@ -1,0 +1,92 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "title": "Slot",
+    "description": "Slots are...slots, defined by elements, verbs or recipes. They act as filters, giving the possibility to put cards into them, if they match their requirements.",
+    "properties": {
+        "id": {
+            "type": "string",
+            "description": "Slots all have an ID; they will not display without one. It must be unique in the event that there are multiple slots on the same element, otherwise they will merge and only appear once."
+        },
+        "label": {
+            "type": "string",
+            "description": "The text displayed above the slot."
+        },
+        "description": {
+            "type": "string",
+            "description": "Text displayed in the top right when the slot is clicked on."
+        },
+        "required": {
+            "type": "object",
+            "additionalProperties": false,
+            "title": "Required",
+            "description": "A list of required elements/aspects. Any card that meets any one of the properties in Required can be put in the slot, unlike the requirements property for recipes. Only uses positive values.",
+            "patternProperties": {
+                ".*": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "title": "Aspect/Element: Amount"
+                }
+            }
+        },
+        "required$add": {
+            "type": "object",
+            "additionalProperties": false,
+            "title": "Required (Merge-Overwrite) (Add)",
+            "patternProperties": {
+                ".*": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "title": "Aspect/Element: Amount"
+                }
+            }
+        },
+        "required$remove": {
+            "type": "array",
+            "additionalItems": false,
+            "title": "Required (Merge-Overwrite) (Remove)",
+            "items": {
+                "type": "string",
+                "title": "Aspect/Element"
+            }
+        },
+        "forbidden": {
+            "type": "object",
+            "additionalProperties": false,
+            "title": "Forbidden",
+            "description": "A list of forbidden elements/aspects. Any card that meets any one of the properties in Forbidden cannot be put in the slot, even if it qualifies for the Required list.",
+            "patternProperties": {
+                ".*": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "title": "Aspect/Element: Amount"
+                }
+            }
+        },
+        "forbidden$add": {
+            "type": "object",
+            "additionalProperties": false,
+            "title": "Forbidden (Merge-Overwrite) (Add)",
+            "patternProperties": {
+                ".*": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "title": "Aspect/Element: Amount"
+                }
+            }
+        },
+        "forbidden$remove": {
+            "type": "array",
+            "additionalItems": false,
+            "title": "Forbidden (Merge-Overwrite) (Remove)",
+            "items": {
+                "type": "string",
+                "title": "Aspect/Element"
+            }
+        },
+        "consumes": {
+            "type": "boolean",
+            "description": "After the recipe concludes, any element in this slot will be destroyed. Shows the little candle at the bottom of the slot."
+        }
+    }
+}

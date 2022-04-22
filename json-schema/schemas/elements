@@ -58,89 +58,13 @@
                         "description": "Elements can have multiple slots. When an element is placed into a verb tile, slots with the appropriate Action ID will appear prior to recipe start. Slots have their own properties (see the Slots section). Element slots are only available when an element is first put into a verb, and thus can only be used at the start of recipe chains. The flexibility of slots allows for craftable recipes with lots of requirements to be met by multiple cards. Element and verb slots often work to control what sorts of cards are able to get into recipe chains to prevent cases where weird elements appear in recipes.",
                         "additionalItems": false,
                         "items": {
-                            "type": "object",
-                            "additionalProperties": false,
-                            "title": "Slot",
-                            "description": "Slots are...slots, defined by elements, verbs or recipes. They act as filters, giving the possibility to put cards into them, if they match their requirements.",
+                            "$ref": "./types/slot",
+                            "allOf": [
+                                {
+                                    "$ref": "./types/slot"
+                                }
+                            ],
                             "properties": {
-                                "id": {
-                                    "type": "string",
-                                    "description": "Slots all have an ID; they will not display without one. It must be unique in the event that there are multiple slots on the same element, otherwise they will merge and only appear once."
-                                },
-                                "label": {
-                                    "type": "string",
-                                    "description": "The text displayed above the slot."
-                                },
-                                "description": {
-                                    "type": "string",
-                                    "description": "Text displayed in the top right when the slot is clicked on."
-                                },
-                                "required": {
-                                    "type": "object",
-                                    "additionalProperties": false,
-                                    "title": "Required",
-                                    "description": "A list of required elements/aspects. Any card that meets any one of the properties in Required can be put in the slot, unlike the requirements property for recipes. Only uses positive values.",
-                                    "patternProperties": {
-                                        ".*": {
-                                            "type": "integer",
-                                            "minimum": 0
-                                        }
-                                    }
-                                },
-                                "required$add": {
-                                    "type": "object",
-                                    "additionalProperties": false,
-                                    "title": "Required (Merge-Overwrite) (Add)",
-                                    "patternProperties": {
-                                        ".*": {
-                                            "type": "integer",
-                                            "minimum": 0
-                                        }
-                                    }
-                                },
-                                "required$remove": {
-                                    "type": "array",
-                                    "additionalItems": false,
-                                    "title": "Required (Merge-Overwrite) (Remove)",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                },
-                                "forbidden": {
-                                    "type": "object",
-                                    "additionalProperties": false,
-                                    "title": "Forbidden",
-                                    "description": "A list of forbidden elements/aspects. Any card that meets any one of the properties in Forbidden cannot be put in the slot, even if it qualifies for the Required list.",
-                                    "patternProperties": {
-                                        ".*": {
-                                            "type": "integer",
-                                            "minimum": 0
-                                        }
-                                    }
-                                },
-                                "forbidden$add": {
-                                    "type": "object",
-                                    "additionalProperties": false,
-                                    "title": "Forbidden (Merge-Overwrite) (Add)",
-                                    "patternProperties": {
-                                        ".*": {
-                                            "type": "integer",
-                                            "minimum": 0
-                                        }
-                                    }
-                                },
-                                "forbidden$remove": {
-                                    "type": "array",
-                                    "additionalItems": false,
-                                    "title": "Forbidden (Merge-Overwrite) (Remove)",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                },
-                                "consumes": {
-                                    "type": "boolean",
-                                    "description": "After the recipe concludes, any element in this slot will be destroyed. Shows the little candle at the bottom of the slot."
-                                },
                                 "actionid": {
                                     "type": "string",
                                     "description": "The verb name where the slot will appear when the element is inserted."
@@ -162,75 +86,10 @@
                     },
                     "burnTo": {
                         "type": "string",
-                        "description": "@TODO"
+                        "$comment": "@TODO: Research and write description"
                     },
                     "xtriggers": {
-                        "type": "object",
-                        "additionalProperties": false,
-                        "description": "These allow the element to transform itself, mutate itself, and/or spawn new cards when it's used in a recipe with a specific catalyst present.",
-                        "patternProperties": {
-                            ".*": {
-                                "oneOf": [
-                                    {
-                                        "type": "string",
-                                        "title": "Basic (Transform)",
-                                        "description": "The “basic” XTrigger is only for transformation: you list the element that catalyzes the trigger, then what this element will turn into. Transforming a card with xTriggers keeps any mutated aspects."
-                                    },
-                                    {
-                                        "type": "array",
-                                        "title": "Advanced",
-                                        "additionalItems": false,
-                                        "description": "The advanced use allows for spawning new cards as well. You once again start with the element that activates the trigger, then open a JSON list. In the list, open a dictionary, which should contain the ID of the new element and a ‘morpheffect’, which can be ‘spawn’, ‘mutate’, or ‘transform’.\n\nXTriggers are executed bottom-to-top, so any transformation XTriggers should be declared before any spawn of mutate XTriggers. Otherwise the element will transform, and the other XTriggers won't proc.",
-                                        "items": {
-                                            "type": "object",
-                                            "title": "Effect",
-                                            "additionalProperties": false,
-                                            "required": [
-                                                "id"
-                                            ],
-                                            "properties": {
-                                                "id": {
-                                                    "type": "string",
-                                                    "description": "id should be the ID of the new element (spawned, mutated, or transformed)."
-                                                },
-                                                "morpheffect": {
-                                                    "type": "string",
-                                                    "description": "morpheffect should be `spawn`, `mutate`, or `transform`, based on the desired behavior.",
-                                                    "oneOf": [
-                                                        {
-                                                            "const": "spawn",
-                                                            "description": "`Spawn` XTriggers create new cards. When ‘level’ is specified, the card stack that is created will have a size equal to the level."
-                                                        },
-                                                        {
-                                                            "const": "mutate",
-                                                            "description": "`Mutate` XTriggers apply mutations to the card with the XTrigger. The amount of the aspect mutated onto the card (which can be negative, though a negative amount of an aspect on a card is considered to be zero) is equal to the ‘level’ of the XTrigger. Unlike the mutations shown in the recipes section below, XTrigger mutations are always additive."
-                                                        },
-                                                        {
-                                                            "const": "transform",
-                                                            "description": "`Transform` is the default behaviour, and generally only occurs in the advanced syntax when multiple effects are needed, or a chance or level is desired. Level is used to determine the size of the new stack."
-                                                        }
-                                                    ]
-                                                },
-                                                "chance": {
-                                                    "type": "integer",
-                                                    "description": "Chance is the likelihood of the XTrigger`s effects happening; chance defaults to 100%",
-                                                    "default": 100,
-                                                    "minimum": 0,
-                                                    "maximum": 100
-                                                },
-                                                "level": {
-                                                    "type": "integer",
-                                                    "description": "The behavior of `level` changes based on the morpheffect, but defaults to 1.",
-                                                    "default": 1,
-                                                    "minimum": 0,
-                                                    "maximum": 100
-                                                }
-                                            }
-                                        }
-                                    }
-                                ]
-                            }
-                        }
+                        "$ref": "./types/xtriggers-card"
                     }
                 }
             },
@@ -281,71 +140,7 @@
                         "description": "This keeps the game from searching for artwork for this element, and defaults to false. This supposedly offers a small improvement to performance. In general, this should only be true if `isHidden` is true, or if this is an aspect that will only be used as a recipe aspect and XTrigger catalyst. More on XTriggers later."
                     },
                     "xtriggers": {
-                        "type": "object",
-                        "description": "XTriggers allow a mutated aspect to modify itself. These allow the aspect to transform itself, to mutate the card it belongs to, and/or spawn new cards. Like card XTriggers, aspect XTriggers apply when they are in a recipe with a specific catalyst present.",
-                        "patternProperties": {
-                            ".*": {
-                                "oneOf": [
-                                    {
-                                        "type": "string",
-                                        "title": "Basic (Transform)",
-                                        "description": "The “basic” XTrigger is only for transformation: you list the element that catalyzes the trigger, then what this aspect will turn into. This replaces the existing mutation with an equal mutation of a different element."
-                                    },
-                                    {
-                                        "type": "array",
-                                        "title": "Advanced",
-                                        "additionalItems": false,
-                                        "description": "The advanced use allows for a wider variety of effects. Once again, you start with the element that activates the trigger, but then you open a JSON dictionary. In the list, open an object. This object must have an ID, and may have a `morpheffect`, `chance`, and/or `level`.",
-                                        "items": {
-                                            "type": "object",
-                                            "title": "Effect",
-                                            "additionalProperties": false,
-                                            "required": [
-                                                "id"
-                                            ],
-                                            "properties": {
-                                                "id": {
-                                                    "type": "string",
-                                                    "description": "id should be the ID of the new element (spawned, mutated, or transformed)."
-                                                },
-                                                "morpheffect": {
-                                                    "type": "string",
-                                                    "description": "morpheffect should be `spawn`, `mutate`, or `transform`, based on the desired behavior.",
-                                                    "oneOf": [
-                                                        {
-                                                            "const": "spawn",
-                                                            "description": "XTriggers create new cards. When `level` is specified, the card stack that is created will have a size equal to the level. This is equivalent to the `spawn` behavior for card XTriggers."
-                                                        },
-                                                        {
-                                                            "const": "mutate",
-                                                            "description": "XTriggers apply mutations to the card with the mutated aspect. The amount of the aspect mutated onto the card (which can be negative, though a negative amount of an aspect on a card is considered to be zero) is equal to the `level` of the XTrigger. Unlike the mutations shown in the recipes section below, XTrigger mutations are always additive."
-                                                        },
-                                                        {
-                                                            "const": "transform",
-                                                            "description": "Transform is the default behaviour, and generally only occurs in the advanced syntax when multiple effects are needed, or a chance or level is desired. The effects of `level` applied to transform-aspect XTriggers is currently unknown, especially when the mutated aspect is already at a non-one level."
-                                                        }
-                                                    ]
-                                                },
-                                                "chance": {
-                                                    "type": "integer",
-                                                    "description": "Chance is the likelihood of the XTrigger`s effects happening; chance defaults to 100%",
-                                                    "default": 100,
-                                                    "minimum": 0,
-                                                    "maximum": 100
-                                                },
-                                                "level": {
-                                                    "type": "integer",
-                                                    "description": "The behavior of `level` changes based on the morpheffect, but defaults to 1.",
-                                                    "default": 1,
-                                                    "minimum": 0,
-                                                    "maximum": 100
-                                                }
-                                            }
-                                        }
-                                    }
-                                ]
-                            }
-                        }
+                        "$ref": "./types/xtriggers-aspect"
                     }
                 }
             }

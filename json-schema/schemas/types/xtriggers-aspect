@@ -1,0 +1,69 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "additionalProperties": false,
+    "description": "XTriggers allow a mutated aspect to modify itself. These allow the aspect to transform itself, to mutate the card it belongs to, and/or spawn new cards. Like card XTriggers, aspect XTriggers apply when they are in a recipe with a specific catalyst present.",
+    "patternProperties": {
+        ".*": {
+            "oneOf": [
+                {
+                    "type": "string",
+                    "title": "Basic (Transform)",
+                    "description": "The “basic” XTrigger is only for transformation: you list the element that catalyzes the trigger, then what this aspect will turn into. This replaces the existing mutation with an equal mutation of a different element."
+                },
+                {
+                    "type": "array",
+                    "title": "Advanced",
+                    "additionalItems": false,
+                    "description": "The advanced use allows for a wider variety of effects. Once again, you start with the element that activates the trigger, but then you open a JSON dictionary. In the list, open an object. This object must have an ID, and may have a `morpheffect`, `chance`, and/or `level`.",
+                    "items": {
+                        "type": "object",
+                        "title": "Effect",
+                        "additionalProperties": false,
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "description": "id should be the ID of the new element (spawned, mutated, or transformed)."
+                            },
+                            "morpheffect": {
+                                "type": "string",
+                                "description": "morpheffect should be `spawn`, `mutate`, or `transform`, based on the desired behavior.",
+                                "oneOf": [
+                                    {
+                                        "const": "spawn",
+                                        "description": "XTriggers create new cards. When `level` is specified, the card stack that is created will have a size equal to the level. This is equivalent to the `spawn` behavior for card XTriggers."
+                                    },
+                                    {
+                                        "const": "mutate",
+                                        "description": "XTriggers apply mutations to the card with the mutated aspect. The amount of the aspect mutated onto the card (which can be negative, though a negative amount of an aspect on a card is considered to be zero) is equal to the `level` of the XTrigger. Unlike the mutations shown in the recipes section below, XTrigger mutations are always additive."
+                                    },
+                                    {
+                                        "const": "transform",
+                                        "description": "Transform is the default behaviour, and generally only occurs in the advanced syntax when multiple effects are needed, or a chance or level is desired. The effects of `level` applied to transform-aspect XTriggers is currently unknown, especially when the mutated aspect is already at a non-one level."
+                                    }
+                                ]
+                            },
+                            "chance": {
+                                "type": "integer",
+                                "description": "Chance is the likelihood of the XTrigger`s effects happening; chance defaults to 100%",
+                                "default": 100,
+                                "minimum": 0,
+                                "maximum": 100
+                            },
+                            "level": {
+                                "type": "integer",
+                                "description": "The behavior of `level` changes based on the morpheffect, but defaults to 1.",
+                                "default": 1,
+                                "minimum": 0,
+                                "maximum": 100
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
