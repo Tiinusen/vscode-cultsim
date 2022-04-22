@@ -71,7 +71,9 @@
           {
             "title": "Aspect",
             "type": "object",
-            "required": ["isAspect"],
+            "required": [
+              "isAspect"
+            ],
             "properties": {
               "isAspect": {
                 "type": "boolean",
@@ -89,22 +91,27 @@
               "xtriggers": {
                 "type": "object",
                 "description": "XTriggers allow a mutated aspect to modify itself. These allow the aspect to transform itself, to mutate the card it belongs to, and/or spawn new cards. Like card XTriggers, aspect XTriggers apply when they are in a recipe with a specific catalyst present.",
-                "properties": {
-                  "$ref": {
-                    "type": "object",
-                    "anyOf": [
-                      {
+                "anyOf": [
+                  {
+                    "patternProperties": {
+                      ".*": {
                         "type": "string",
                         "title": "Basic (Transform)",
                         "description": "The “basic” XTrigger is only for transformation: you list the element that catalyzes the trigger, then what this aspect will turn into. This replaces the existing mutation with an equal mutation of a different element."
-                      },
-                      {
+                      }
+                    }
+                  },
+                  {
+                    "patternProperties": {
+                      ".*": {
                         "type": "array",
                         "title": "Advanced",
+                        "additionalItems": false,
                         "description": "The advanced use allows for a wider variety of effects. Once again, you start with the element that activates the trigger, but then you open a JSON dictionary. In the list, open an object. This object must have an ID, and may have a `morpheffect`, `chance`, and/or `level`.",
                         "items": {
                           "type": "object",
                           "title": "Effects",
+                          "additionalProperties": false,
                           "required": [
                             "id"
                           ],
@@ -148,9 +155,9 @@
                           }
                         }
                       }
-                    ]
+                    }
                   }
-                }
+                ]
               }
             }
           },
@@ -166,8 +173,8 @@
               "aspects": {
                 "type": "object",
                 "description": "A dictionary of aspects contained by the element, where the aspect id is associated to the amount of this aspect. They act as metadata.",
-                "properties": {
-                  "$ref": {
+                "patternProperties": {
+                  ".*": {
                     "type": "integer",
                     "title": "Amount",
                     "description": "Amount of aspect"
@@ -206,8 +213,8 @@
                       "type": "object",
                       "title": "Required",
                       "description": "A list of required elements/aspects. Any card that meets any one of the properties in Required can be put in the slot, unlike the requirements property for recipes. Only uses positive values.",
-                      "properties": {
-                        "$ref": {
+                      "patternProperties": {
+                        ".*": {
                           "type": "integer",
                           "minimum": 0
                         }
@@ -216,8 +223,8 @@
                     "required$add": {
                       "type": "object",
                       "title": "Required (Merge-Overwrite) (Add)",
-                      "properties": {
-                        "$ref": {
+                      "patternProperties": {
+                        ".*": {
                           "type": "integer",
                           "minimum": 0
                         }
@@ -234,8 +241,8 @@
                       "type": "object",
                       "title": "Forbidden",
                       "description": "A list of forbidden elements/aspects. Any card that meets any one of the properties in Forbidden cannot be put in the slot, even if it qualifies for the Required list.",
-                      "properties": {
-                        "$ref": {
+                      "patternProperties": {
+                        ".*": {
                           "type": "integer",
                           "minimum": 0
                         }
@@ -244,8 +251,8 @@
                     "forbidden$add": {
                       "type": "object",
                       "title": "Forbidden (Merge-Overwrite) (Add)",
-                      "properties": {
-                        "$ref": {
+                      "patternProperties": {
+                        ".*": {
                           "type": "integer",
                           "minimum": 0
                         }
