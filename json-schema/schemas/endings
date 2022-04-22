@@ -3,5 +3,78 @@
     "type": "array",
     "additionalItems": false,
     "title": "Endings",
-    "description": "Endings are the endings to our stories. They tell us what became of us."
+    "description": "Endings are the endings to our stories. They tell us what became of us.",
+    "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+            "id",
+            "achievement"
+        ],
+        "properties": {
+            "id": {
+                "type": "string",
+                "description": "Internal name of the ending"
+            },
+            "label": {
+                "type": "string",
+                "description": "The name of the Ending as displayed on the Ending Screen to the player."
+            },
+            "description": {
+                "type": "string",
+                "description": "The text shown to the player on the ending screen"
+            },
+            "image": {
+                "type": "string",
+                "description": "The image shown on the left of the ending screen"
+            },
+            "flavour": {
+                "type": "string",
+                "title": "Ending Music",
+                "description": "accepts the Values \"Grand\", \"Melancholy\", and \"Vile\". This decides which music plays after getting the ending.",
+                "oneOf": [
+                    {
+                        "const": "Grand"
+                    },
+                    {
+                        "const": "Melancholy"
+                    },
+                    {
+                        "const": "Vile"
+                    }
+                ]
+            },
+            "anim": {
+                "type": "string",
+                "title": "Ending Animation",
+                "description": "Decides the colour of the lights, and the cosmetics of the ending. Accepts \"DramaticLight\", \"DramaticLightCool\", and \"DramaticLightEvil\".",
+                "oneOf": [
+                    {
+                        "const": "DramaticLight"
+                    },
+                    {
+                        "const": "DramaticLightCool"
+                    },
+                    {
+                        "const": "DramaticLightEvil"
+                    }
+                ]
+            },
+            "achievementid": {
+                "$ref": "#/definitions/achievementid",
+                "$comment": "No constraint on this field, was not found in core content, however found in google documentation, @TODO: Find out which one is right"
+            },
+            "achievement": {
+                "$ref": "#/definitions/achievementid",
+                "$comment": "Found in core content, achievementid was not"
+            }
+        }
+    },
+    "definitions": {
+        "achievementid": {
+            "type": "string",
+            "description": "Used to trigger a steam/gog achievement. Since this value is required, something must be put. Endings in-game that have no achievement have this value set to \"XXX\".",
+            "default": "XXX"
+        }
+    }
 }
