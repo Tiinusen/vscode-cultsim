@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "$comment": "Maintained by Tiinusen via reading \"Cultist Simulator Modding Guide\"",
   "title": "JSON Schema for Cultist Simulators content files",
   "description": "Schema for the big six (elements, recipes, decks, legacies, endings and verbs)",
   "type": "object",
