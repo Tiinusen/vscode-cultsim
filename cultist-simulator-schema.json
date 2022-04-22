@@ -1,0 +1,294 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JSON Schema for Cultist Simulators content files",
+  "description": "Schema for the big six (elements, recipes, decks, legacies, endings and verbs)",
+  "type": "object",
+  "additionalProperties": false,
+  "minProperties": 1,
+  "maxProperties": 1,
+  "properties": {
+    "elements": {
+      "type": "array",
+      "description": "Elements are the nouns of the sentence. They are things that are.\n\nElements encompass two categories; cards and aspects. Cards are the nouns, the things you use in the game. They are, among other things, defined by a set of aspects. The aspects are special elements with fewer properties, that can be seen as metadata, or a more granular type of information we can act on.\n\nThe cards on the table are elements. The aspects of cards are also elements. Everything that`s represented as a card, from Lore, Books, Patrons, Influences, is an element.",
+      "required": [
+        "id"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identification of the element. This is used to refer to the element. If an element with this ID already exists, the properties specified will be merged with that of the existing element. This is used to modify pre-existing elements, like those from the base game."
+          },
+          "label": {
+            "type": "string",
+            "description": "The name displayed on the card. For aspects, the label is displayed when it's icon is clicked on, and it is prefixed with “Aspect: ”."
+          },
+          "description": {
+            "type": "string",
+            "description": "Shown in the top-right when the aspect/card is clicked on."
+          },
+          "isAspect": {
+            "type": "boolean",
+            "description": "For cards (“full elements”, “non aspects”), this should always be false. It defaults to false, and can be safely omitted. For aspects, this should be true. This is used by many modding tools to differentiate aspects from other elements (as the two can have very different properties), but the game only considers this value when determining where to look for the element`s art. (If the element is on a card as an aspect, the game will check “images\\aspects” only if this value is set to true. If the element is a card, or if it does not have this value as true, the game will check “images\\elements” instead.)"
+          },
+          "icon": {
+            "type": "string",
+            "description": "The name of the file for the icon of this element. Cards get their art from images/elements. Aspects get their art from images/aspects (see the isAspect property for their distinction). This value defaults to the ID of the element, and can be removed if the desired image has a filename matching the ID of the element, and is in the appropriate folder."
+          },
+          "induces": {
+            "type": "array",
+            "description": "Whenever this element is present and face-up (ie: not from effects or deckeffects) at the conclusion of a recipe chain, the induced recipe may be created as a new situation token depending on the designated chance. This will not occur if an active token with the actionId of the specified verb is already on the table, but it will ignore any requirements, extantreqs, or tablereqs associated with the induced recipe.\nExamples of inductions include the Heart aspect starting 'Course of the Heart', or the Ingredient aspect starting 'needs'.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "chance"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "chance": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              }
+            }
+          },
+          "decayTo": {
+            "type": "string",
+            "description": "The element that this element will turn into when the lifetime reaches 0. Mutated aspects are kept through decay. (As an advanced feature, this can be applied to aspects to achieve a specific behaviour when used with Purge, but has no effect on it's own because aspects cannot decay.)\nExamples of decay elements being used include Restlessness decaying to Dread, or Health [Fatigued] decaying into Health."
+          },
+          "verbicon": {
+            "type": "string",
+            "description": "When this element is in a Verb, the Verbs icon will become the icon indicated. Note that the icon must exist in “images\\verbs”. It is currently unknown what happens when the image does not exist or more than one Verb Icon is defined."
+          }
+        },
+        "oneOf": [
+          {
+            "title": "Aspect",
+            "type": "object",
+            "required": ["isAspect"],
+            "properties": {
+              "isAspect": {
+                "type": "boolean",
+                "description": "For cards (“full elements”, “non aspects”), this should always be false. It defaults to false, and can be safely omitted. For aspects, this should be true. This is used by many modding tools to differentiate aspects from other elements (as the two can have very different properties), but the game only considers this value when determining where to look for the element`s art. (If the element is on a card as an aspect, the game will check “images\\aspects” only if this value is set to true. If the element is a card, or if it does not have this value as true, the game will check “images\\elements” instead.)",
+                "const": true
+              },
+              "isHidden": {
+                "type": "boolean",
+                "description": "This causes the aspect not to appear on any in-game aspect lists.\nAn example of a hidden aspect is `legacyplotitem`, which does not appear on the aspect list of A Bequest, nor does it appear on the required/allowed aspect list of the Study Verb, despite it being in both lists."
+              },
+              "noArtNeeded": {
+                "type": "boolean",
+                "description": "This keeps the game from searching for artwork for this element, and defaults to false. This supposedly offers a small improvement to performance. In general, this should only be true if `isHidden` is true, or if this is an aspect that will only be used as a recipe aspect and XTrigger catalyst. More on XTriggers later."
+              },
+              "xtriggers": {
+                "type": "object",
+                "description": "XTriggers allow a mutated aspect to modify itself. These allow the aspect to transform itself, to mutate the card it belongs to, and/or spawn new cards. Like card XTriggers, aspect XTriggers apply when they are in a recipe with a specific catalyst present.",
+                "properties": {
+                  "$ref": {
+                    "type": "object",
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "title": "Basic (Transform)",
+                        "description": "The “basic” XTrigger is only for transformation: you list the element that catalyzes the trigger, then what this aspect will turn into. This replaces the existing mutation with an equal mutation of a different element."
+                      },
+                      {
+                        "type": "array",
+                        "title": "Advanced",
+                        "description": "The advanced use allows for a wider variety of effects. Once again, you start with the element that activates the trigger, but then you open a JSON dictionary. In the list, open an object. This object must have an ID, and may have a `morpheffect`, `chance`, and/or `level`.",
+                        "items": {
+                          "type": "object",
+                          "title": "Effects",
+                          "required": [
+                            "id"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "description": "id should be the ID of the new element (spawned, mutated, or transformed)."
+                            },
+                            "morpheffect": {
+                              "type": "string",
+                              "description": "morpheffect should be `spawn`, `mutate`, or `transform`, based on the desired behavior.",
+                              "oneOf": [
+                                {
+                                  "const": "spawn",
+                                  "description": "XTriggers create new cards. When `level` is specified, the card stack that is created will have a size equal to the level. This is equivalent to the `spawn` behavior for card XTriggers."
+                                },
+                                {
+                                  "const": "mutate",
+                                  "description": "XTriggers apply mutations to the card with the mutated aspect. The amount of the aspect mutated onto the card (which can be negative, though a negative amount of an aspect on a card is considered to be zero) is equal to the `level` of the XTrigger. Unlike the mutations shown in the recipes section below, XTrigger mutations are always additive."
+                                },
+                                {
+                                  "const": "transform",
+                                  "description": "Transform is the default behaviour, and generally only occurs in the advanced syntax when multiple effects are needed, or a chance or level is desired. The effects of `level` applied to transform-aspect XTriggers is currently unknown, especially when the mutated aspect is already at a non-one level."
+                                }
+                              ]
+                            },
+                            "chance": {
+                              "type": "integer",
+                              "description": "Chance is the likelihood of the XTrigger`s effects happening; chance defaults to 100%",
+                              "default": 100,
+                              "minimum": 0,
+                              "maximum": 100
+                            },
+                            "level": {
+                              "type": "integer",
+                              "description": "The behavior of `level` changes based on the morpheffect, but defaults to 1.",
+                              "default": 1,
+                              "minimum": 0,
+                              "maximum": 100
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "title": "Card",
+            "type": "object",
+            "properties": {
+              "isAspect": {
+                "type": "boolean",
+                "description": "For cards (“full elements”, “non aspects”), this should always be false. It defaults to false, and can be safely omitted. For aspects, this should be true. This is used by many modding tools to differentiate aspects from other elements (as the two can have very different properties), but the game only considers this value when determining where to look for the element`s art. (If the element is on a card as an aspect, the game will check “images\\aspects” only if this value is set to true. If the element is a card, or if it does not have this value as true, the game will check “images\\elements” instead.)",
+                "const": false
+              },
+              "aspects": {
+                "type": "object",
+                "description": "A dictionary of aspects contained by the element, where the aspect id is associated to the amount of this aspect. They act as metadata.",
+                "properties": {
+                  "$ref": {
+                    "type": "integer",
+                    "title": "Amount",
+                    "description": "Amount of aspect"
+                  }
+                }
+              },
+              "lifetime": {
+                "type": "number",
+                "description": "The card duration. When it reaches 0, it will either transform into the Decay Element, or if there isn't one, it will disappear. If this is set to 0, the element will not have a lifetime, which is the default behaviour if lifetime is omitted."
+              },
+              "resaturate": {
+                "type": "boolean",
+                "description": "Only applies to elements with lifetimes. Normally, as the lifetime reaches 0, the art will desaturate. If this value is true, the card will start desaturated and gain saturation as it reaches 0 (like depleted ability cards, such as Health [Fatigued])."
+              },
+              "slots": {
+                "type": "array",
+                "description": "Elements can have multiple slots. When an element is placed into a verb tile, slots with the appropriate Action ID will appear prior to recipe start. Slots have their own properties (see the Slots section). Element slots are only available when an element is first put into a verb, and thus can only be used at the start of recipe chains. The flexibility of slots allows for craftable recipes with lots of requirements to be met by multiple cards. Element and verb slots often work to control what sorts of cards are able to get into recipe chains to prevent cases where weird elements appear in recipes.",
+                "items": {
+                  "type": "object",
+                  "title": "Slot",
+                  "description": "Slots are...slots, defined by elements, verbs or recipes. They act as filters, giving the possibility to put cards into them, if they match their requirements.",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Slots all have an ID; they will not display without one. It must be unique in the event that there are multiple slots on the same element, otherwise they will merge and only appear once."
+                    },
+                    "label": {
+                      "type": "string",
+                      "description": "The text displayed above the slot."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Text displayed in the top right when the slot is clicked on."
+                    },
+                    "required": {
+                      "type": "object",
+                      "title": "Required",
+                      "description": "A list of required elements/aspects. Any card that meets any one of the properties in Required can be put in the slot, unlike the requirements property for recipes. Only uses positive values.",
+                      "properties": {
+                        "$ref": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    },
+                    "required$add": {
+                      "type": "object",
+                      "title": "Required (Merge-Overwrite) (Add)",
+                      "properties": {
+                        "$ref": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    },
+                    "required$remove": {
+                      "type": "array",
+                      "title": "Required (Merge-Overwrite) (Remove)",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "forbidden": {
+                      "type": "object",
+                      "title": "Forbidden",
+                      "description": "A list of forbidden elements/aspects. Any card that meets any one of the properties in Forbidden cannot be put in the slot, even if it qualifies for the Required list.",
+                      "properties": {
+                        "$ref": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    },
+                    "forbidden$add": {
+                      "type": "object",
+                      "title": "Forbidden (Merge-Overwrite) (Add)",
+                      "properties": {
+                        "$ref": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    },
+                    "forbidden$remove": {
+                      "type": "array",
+                      "title": "Forbidden (Merge-Overwrite) (Remove)",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "consumes": {
+                      "type": "boolean",
+                      "description": "After the recipe concludes, any element in this slot will be destroyed. Shows the little candle at the bottom of the slot."
+                    },
+                    "actionId": {
+                      "type": "string",
+                      "description": "The verb name where the slot will appear when the element is inserted."
+                    }
+                  }
+                }
+              },
+              "isHidden": {
+                "type": "boolean",
+                "description": "Cards will always be visible when on the table, but if this is true, they will be invisible while within a recipe."
+              },
+              "unique": {
+                "type": "boolean",
+                "description": "When true, only one can be present on the board. A new one spawning will cause the old one to fade. \nAn example of this are rites. If you gain a second of the same rite, the first copy will disappear."
+              },
+              "uniquenessgroup": {
+                "type": "string",
+                "description": "A special section that stores an aspect id. Any other elements with the same aspect for their Uniqueness Group cannot exist simultaneously on the board. (Placing one onto the board will cause all others on the board to vanish, just like with the “unique” property.) The uniqueness group is technically an aspect like any other, and can be used for requirements and refinements."
+              }
+            }
+          }
+        ]
+      }
+    },
+    "recipes": {
+      "type": "array",
+      "description": "Recipes are, in essence, sentences. They require nouns and verbs, and transform them in ways that aren`t possible with individual words. Recipes can be chained together to form metaphorical paragraphs, or they can stand on their own. While “Neville”, “Explore”, and “Forgotten Mithraeum” are all terms we can identify and understand, recipes are how we`re able to tie all those things together into their logical conclusion: Neville exploring the forgotten mithraeum."
+    }
+  }
+}
