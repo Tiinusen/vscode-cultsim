@@ -52,13 +52,13 @@ This extension contributes the following settings:
   * [x] Support for `Element`
   * [x] Support for `Deck`
   * [x] Support for `Recipe`
+* [ ] JSON Validation and Completion
 * [ ] Solving Known Issues
-* [ ] Kindly ask developers to dump assets with game uncompressed to remove need for using web assets
+* [ ] Swap web assets to new provided URL from frangiclave
 * [ ] Optimization
 * [ ] Add requested improvements
 * [ ] Add requested features
 * [ ] Evaluate switching to VueJS
-* [ ] Evaluate adding completion and popup documentation to content files (when editing as JSON)
 
 ## Contributors
 Not all contributors know that they are, but we know and therefor they shall have our praise.
