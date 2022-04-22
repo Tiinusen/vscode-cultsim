@@ -1,0 +1,7 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "array",
+    "additionalItems": false,
+    "title": "Legacies",
+    "description": "Legacies are the beginning of our story. They tell us where we start, what we start with, and who we start as."
+}

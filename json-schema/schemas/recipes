@@ -1,0 +1,7 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "array",
+    "additionalItems": false,
+    "title": "Recipes",
+    "description": "Recipes are, in essence, sentences. They require nouns and verbs, and transform them in ways that aren`t possible with individual words. Recipes can be chained together to form metaphorical paragraphs, or they can stand on their own. While “Neville”, “Explore”, and “Forgotten Mithraeum” are all terms we can identify and understand, recipes are how we`re able to tie all those things together into their logical conclusion: Neville exploring the forgotten mithraeum."
+}

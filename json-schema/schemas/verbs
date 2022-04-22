@@ -1,0 +1,7 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "array",
+    "additionalItems": false,
+    "title": "Verbs",
+    "description": "Verbs are verbs. They are the things that you do. Things that you initiate. If a verb is defined in a file, it will stay on the board after it is called once. These are Permanent Verbs. Undefined Verbs, or Temporary Verbs (sometimes called tokens), will disappear once their recipes resolve and the situation ends."
+}

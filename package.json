@@ -28,7 +28,7 @@
 		"jsonValidation": [
 			{
 				"fileMatch": "content/**/*.json",
-				"url": "./cultist-simulator-schema.json"
+				"url": "./json-schema/files"
 			}
 		],
 		"configuration": [

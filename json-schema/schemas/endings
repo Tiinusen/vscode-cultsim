@@ -1,0 +1,7 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "array",
+    "additionalItems": false,
+    "title": "Endings",
+    "description": "Endings are the endings to our stories. They tell us what became of us."
+}
