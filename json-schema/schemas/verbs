@@ -3,5 +3,30 @@
     "type": "array",
     "additionalItems": false,
     "title": "Verbs",
-    "description": "Verbs are verbs. They are the things that you do. Things that you initiate. If a verb is defined in a file, it will stay on the board after it is called once. These are Permanent Verbs. Undefined Verbs, or Temporary Verbs (sometimes called tokens), will disappear once their recipes resolve and the situation ends."
+    "description": "Verbs are verbs. They are the things that you do. Things that you initiate. If a verb is defined in a file, it will stay on the board after it is called once. These are Permanent Verbs. Undefined Verbs, or Temporary Verbs (sometimes called tokens), will disappear once their recipes resolve and the situation ends.",
+    "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+            "id": {
+                "type": "string",
+                "description": "The internal name of the verb. Determines the image used, found in images/verbs. Permanent and Temporary verbs check for images here. The actionId of recipes and elements should match this value if you want the action token to persist."
+            },
+            "label": {
+                "type": "string",
+                "description": "The name of the verb displayed to the player when clicking on the token while no recipe is running."
+            },
+            "description": {
+                "type": "string",
+                "description": "Text displayed in-game when clicking on the token while no recipe is running."
+            },
+            "icon": {
+                "type": "string",
+                "$comment": "@TODO: Research and provide a description"
+            },
+            "slot": {
+                "$ref": "./types/slot"
+            }
+        }
+    }
 }
