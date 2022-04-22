@@ -52,7 +52,7 @@ This extension contributes the following settings:
   * [x] Support for `Element`
   * [x] Support for `Deck`
   * [x] Support for `Recipe`
-* [ ] JSON Validation and Completion
+* [x] JSON Validation and Completion
 * [ ] Solving Known Issues
 * [ ] Swap web assets to new provided URL from frangiclave
 * [ ] Optimization
