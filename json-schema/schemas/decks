@@ -3,5 +3,114 @@
     "type": "array",
     "additionalItems": false,
     "title": "Decks",
-    "description": "Decks are collections of nouns. A simple, shuffled list, with extras. They are a list of shuffled non-aspect elements (cards) that can be drawn by recipes during their execution. They can be reshuffled on exhaustion, or not.\n\n`Deck` can refer to the deck state (a list of cards in a set order and a list of forbidden cards, which is stored in the game’s save files and does not persist across playthroughs), or the deck object (which is all the data about every instance of a given deck, regardless of what part of which game it may be from… unless the object is changed after the state is made). This distinction is important when decks are modified mid-game: the deck object is changed, but the deck state is not. Cards that might have been removed from the deck object may still be in the deck state, and cards added to the deck object will not be added to the deck state.\n\nDeck states keep track of unique cards (either cards where unique = true, or where ‘uniquenessgroup’ is set) that already exist: when a unique card is generated anywhere in the game, it, and all elements that share a uniqueness group with it, are added to a forbidden list on all decks that contain that element or group. If a card is in a deck state’s forbidden list, it is removed from the deck’s draw list, and will never be shuffled back into the draw list for the rest of the game. This way, duplicate unique cards are not drawn from decks."
+    "description": "Decks are collections of nouns. A simple, shuffled list, with extras. They are a list of shuffled non-aspect elements (cards) that can be drawn by recipes during their execution. They can be reshuffled on exhaustion, or not.\n\n`Deck` can refer to the deck state (a list of cards in a set order and a list of forbidden cards, which is stored in the game’s save files and does not persist across playthroughs), or the deck object (which is all the data about every instance of a given deck, regardless of what part of which game it may be from… unless the object is changed after the state is made). This distinction is important when decks are modified mid-game: the deck object is changed, but the deck state is not. Cards that might have been removed from the deck object may still be in the deck state, and cards added to the deck object will not be added to the deck state.\n\nDeck states keep track of unique cards (either cards where unique = true, or where ‘uniquenessgroup’ is set) that already exist: when a unique card is generated anywhere in the game, it, and all elements that share a uniqueness group with it, are added to a forbidden list on all decks that contain that element or group. If a card is in a deck state’s forbidden list, it is removed from the deck’s draw list, and will never be shuffled back into the draw list for the rest of the game. This way, duplicate unique cards are not drawn from decks.",
+    "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+            "id"
+        ],
+        "properties": {
+            "id": {
+                "type": "string",
+                "description": "Internal name of Deck.  If a deck with this ID already exists, the properties specified will be merged with that of the existing deck. This functionality replaces and streamlines the extends property."
+            },
+            "label": {
+                "type": "string",
+                "description": "Displayed name of Deck"
+            },
+            "description": {
+                "type": "string",
+                "description": "Displayed description"
+            },
+            "resetonexhaustion": {
+                "type": "boolean",
+                "title": "Reset on Exhaustion",
+                "description": "Whether or not the deck will be reshuffled after all cards have been drawn. Any unique cards in the deck will not be shuffled back in."
+            },
+            "spec": {
+                "type": "array",
+                "title": "Spec",
+                "description": "The actual list of elements to draw from. There can be duplicates of cards: this is often used to influence the probability of one card to be drawn. This cannot be used to allow a given unique card to be drawn more than once.",
+                "additionalItems": false,
+                "items": {
+                    "type": "string",
+                    "title": "element"
+                }
+            },
+            "spec$append": {
+                "type": "array",
+                "additionalItems": false,
+                "title": "Spec (Merge-Overwrite) (Append)",
+                "items": {
+                    "type": "string",
+                    "title": "element"
+                }
+            },
+            "spec$prepend": {
+                "type": "array",
+                "additionalItems": false,
+                "title": "Spec (Merge-Overwrite) (Prepend)",
+                "items": {
+                    "type": "string",
+                    "title": "element"
+                }
+            },
+            "spec$remove": {
+                "type": "array",
+                "additionalItems": false,
+                "title": "Spec (Merge-Overwrite) (Remove)",
+                "items": {
+                    "type": "string",
+                    "title": "element"
+                }
+            },
+            "defaultcard": {
+                "type": "string",
+                "description": "Once the deck has been exhausted and the deck does not reset, this card will be the only card drawn from then on. This is required if your deck doesn’t reset - your mod will not execute otherwise."
+            },
+            "comments": {
+                "$ref": "#/definitions/comments"
+            },
+            "drawmessages": {
+                "type": "object",
+                "additionalProperties": false,
+                "title": "Draw Messages",
+                "description": "A dictionary of element names and messages to be displayed once the cards are revealed depending on which cards are drawn. Used in the Mansus rather than standard deck draws.",
+                "patternProperties": {
+                    ".*": {
+                        "type": "string",
+                        "title": "Aspect/Element: Message"
+                    }
+                }
+            },
+            "drawmessages$add": {
+                "type": "object",
+                "additionalProperties": false,
+                "title": "Draw Messages (Merge-Overwrite) (Add)",
+                "patternProperties": {
+                    ".*": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "title": "Aspect/Element: Message"
+                    }
+                }
+            },
+            "drawmessages$remove": {
+                "type": "array",
+                "additionalItems": false,
+                "title": "Draw Messages (Merge-Overwrite) (Remove)",
+                "items": {
+                    "type": "string",
+                    "title": "Aspect/Element"
+                }
+            }
+        }
+    },
+    "definitions": {
+        "comments": {
+            "type": "string",
+            "description": "Provide a comment or more not displayed in-game for you or other developers"
+        }
+    }
 }

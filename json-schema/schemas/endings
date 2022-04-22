@@ -67,10 +67,17 @@
             "achievement": {
                 "$ref": "#/definitions/achievementid",
                 "$comment": "Found in core content, achievementid was not"
+            },
+            "comments": {
+                "$ref": "#/definitions/comments"
             }
         }
     },
     "definitions": {
+        "comments": {
+            "type": "string",
+            "description": "Provide a comment or more not displayed in-game for you or other developers"
+        },
         "achievementid": {
             "type": "string",
             "description": "Used to trigger a steam/gog achievement. Since this value is required, something must be put. Endings in-game that have no achievement have this value set to \"XXX\".",
