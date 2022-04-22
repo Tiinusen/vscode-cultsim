@@ -25,6 +25,12 @@
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
+		"jsonValidation": [
+			{
+				"fileMatch": "content/**/*.json",
+				"url": "./cultist-simulator-schema.json"
+			}
+		],
 		"configuration": [
 			{
 				"title": "Cultist Simulator",
