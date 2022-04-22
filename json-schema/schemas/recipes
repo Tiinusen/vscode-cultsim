@@ -7,11 +7,287 @@
     "items": {
         "type": "object",
         "additionalProperties": false,
+        "required": [
+            "id"
+        ],
         "properties": {
-
+            "id": {
+                "type": "string",
+                "description": "This is the internal identifier for the recipe, you will always use this to reference the recipe. If a recipe with this ID already exists, the properties specified will be merged with that of the existing recipe. This functionality replaces and streamlines the extends property."
+            },
+            "label": {
+                "type": "string",
+                "description": "This is the name of the recipe that is displayed to the player"
+            },
+            "maxexecutions": {
+                "type": "integer",
+                "description": "This is the maximum number of times you want to allow a recipe to be executed. Every recipe is tracked whether it has this property or not, but this is the only evaluation that can be made against that value.",
+                "minimum": 0
+            },
+            "warmup": {
+                "type": "number",
+                "description": "This is the length of the timer that counts down after starting a recipe. If the recipe is executed as an Alternative Recipe, this property is not needed, and will be ignored.",
+                "minimum": 0
+            },
+            "craftable": {
+                "type": "boolean",
+                "description": "This boolean property enables or disables the start button when recipe conditions are fulfilled. Recipes can always be executed by other recipes; this just controls which recipes players can manually start through the verb tiles. It defaults to false if not stated."
+            },
+            "hintonly": {
+                "type": "boolean",
+                "description": "This disables the start button but still displays the recipe when true. If the requirements for a hint recipe and a normal, craftable recipe are met, the normal recipe is preferred. Hintonly recipes do not need to also have craftable set to true."
+            },
+            "signalimportantloop": {
+                "type": "boolean",
+                "description": "This changes the color of the recipe warmup timer to a yellow-gold color and plays a sound that lets you know something important is happening. Usually true for ending recipes. Is also true for the recipe that plays when the season of sickness recipe fails to grab a health card or follower."
+            },
+            "internaldeck": {
+                "type": "object",
+                "description": "This is a deck of elements that is only accessible to the recipe accessing it. When this has a value, it will be drawn from exactly as it is told to in the internal deck specifications. It is preferable to use external decks, since these can be modified by other mods, while internal decks can only be overwritten.",
+                "additionalProperties": false,
+                "properties": {
+                    "spec": {
+                        "type": "array",
+                        "title": "Cards",
+                        "description": "The actual list of elements to draw from. There can be duplicates of cards: this is often used to influence the probability of one card to be drawn. This cannot be used to allow a given unique card to be drawn more than once.",
+                        "additionalItems": false,
+                        "items": {
+                            "type": "string",
+                            "title": "Card (Element)"
+                        }
+                    },
+                    "draws": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "$comment": "@TODO: Provide title and description"
+                    },
+                    "defaultcard": {
+                        "type": "string",
+                        "description": "Once the deck has been exhausted and the deck does not reset, this card will be the only card drawn from then on. This is required if your deck doesn’t reset - your mod will not execute otherwise."
+                    },
+                    "resetonexhaustion": {
+                        "type": "boolean",
+                        "description": "Whether or not the deck will be reshuffled after all cards have been drawn. Any unique cards in the deck will not be shuffled back in."
+                    }
+                }
+            },
+            "slots": {
+                "type": "array",
+                "description": "This is basically the slot for a Quick Time Event that is available when the recipe is warming up, usually used to give the players input on a decision for the recipe. Such as the decision for a rebellious spirit, either supplying a reason or passion or choosing to ignore it completely. Recipes can have only one slot, see the Slots section for more information.",
+                "additionalItems": false,
+                "items": {
+                    "$ref": "./types/slot",
+                    "allOf": [
+                        {
+                            "$ref": "./types/slot"
+                        }
+                    ],
+                    "properties": {
+                        "greedy": {
+                            "type": "boolean",
+                            "description": "When this is true, the slot will pull a qualifying card off the table into the slot automatically, rather than letting the player choose whether to insert a card, or which card to insert."
+                        }
+                    }
+                }
+            },
+            "startdescription": {
+                "type": "string",
+                "description": "This is the description displayed before the recipe is started and while the warmup counter executes."
+            },
+            "description": {
+                "type": "string",
+                "description": "This is the description displayed after the recipe has been completed. This text is never displayed if the recipe routes to another linked recipe, as the action is not considered completed until a recipe ends without starting another one."
+            },
+            "requirements": {
+                "$ref": "#/definitions/dictionary",
+                "description": "This is an inclusive set of conditions that is evaluated whenever the recipe is encountered in a recipe link to decide whether or not to execute the recipe. The list of elements (and aspects) must all be present within the recipe’s element stack. This can also be used comparatively, having a requirement of \"element_1\" : \"element_2\" requires that you have a greater than or equal quantity of \"element_1\" as \"element_2\". Furthermore, negative numbers are allowed, and function as \"less than\", allowing -1 to represent 0, -2 to represent having 1 or 0, etc."
+            },
+            "tablereqs": {
+                "$ref": "#/definitions/dictionary",
+                "description": "This is an inclusive set of conditions that is evaluated whenever the recipe is encountered in a recipe link to decide whether or not to execute the recipe. The list of elements (and aspects) must all be present on the game board, and not in a verb tile. Accordingly, elements that are in slots, both for ongoing and yet unstarted recipes, and elements that aren’t yet picked from the verb after the situation ended, are considered to be outside of the tablereqs scope. Like requirements, tablereqs support less than and comparisons."
+            },
+            "extantreqs": {
+                "$ref": "#/definitions/dictionary",
+                "description": "This is an inclusive set of conditions that is evaluated whenever the recipe is encountered in a recipe link to decide whether or not to execute the recipe. The list of elements (and aspects) must all be present somewhere within the game. They can be in another recipe, in the player’s hand, or on the board. Like requirements, extantreqs support less than and comparisons."
+            },
+            "effects": {
+                "$ref": "#/definitions/dictionary",
+                "description": "This is a set of operations to apply to the element stack. When an element is added, it will be added as a card of that element type. When an element is removed, the first encountered source of that element will be removed. This could be a card of that element or it could be a card with that element as an aspect. Negative values can be used to remove elements. If an aspect is specified for removal, an entire card with that aspect will be removed. Comparisons are also available for effects; for example, having \"element_1\" : \"element_2\" will create as many new \"element_1\"s as there are \"element_2\"s in the recipe stack."
+            },
+            "purge": {
+                "$ref": "#/definitions/dictionary",
+                "description": "This is a set of operations to apply to the game board. It will decay up to the specified amount of the element sources. If a specific element type is specified, it will decay to whatever is indicated in that element's \"decayTo\" property, even if the element has no lifetime to cause it to decay naturally. If no element is specified under \"decayTo\", the element will be destroyed. If Purge is used on an aspect, all elements with the aspect will normally be destroyed since aspects do not normally have a decayTo property. However, if for some reason the aspect does have a decayTo property, then instead of destroying elements with the aspect, elements with the aspect will be decayed. This works well because the element that the aspect has been set to decayTo will be ignored; instead, each element that has the aspect will decay according to its own decayTo aspect. If the individual element has no decayTo aspect, then it is destroyed."
+            },
+            "aspects": {
+                "$ref": "#/definitions/dictionary",
+                "description": "This is a set of operations to apply to the recipe’s aspect stack. The aspect stack is the sum of all the aspects of the cards in the element stack. The effects of this property do not apply to the cards themselves, just to the stack produced by their sum. This is usually used to introduce temporary aspects for the purpose of triggering an XTrigger reaction, since the aspects disappear after the recipe ends, and don't proc inductions."
+            },
+            "deckeffects": {
+                "$ref": "#/definitions/dictionary",
+                "description": "This is a set of deck IDs that are drawn from the specified number of times and added to the element list at the conclusion of the recipe."
+            },
+            "haltverb": {
+                "$ref": "#/definitions/dictionary",
+                "description": "This halts the specified verb up to the given (and seemingly required) number of different tokens. The active recipe transitions into a closable form that is signified by the clickable button at the bottom left corner of the token. Ending the recipe in the verb will delete the verb token and return any cards still in the stack."
+            },
+            "deleteverb": {
+                "$ref": "#/definitions/dictionary",
+                "description": "This halts the specified verb and deletes the token at the same time, also deleting any elements within the verb at the time of deletion."
+            },
+            "actionId": {
+                "$ref": "#/definitions/actionId",
+                "$comment": "Seen mixed caseing with this property in core content"
+            },
+            "actionid": {
+                "$ref": "#/definitions/actionId",
+                "$comment": "Seen mixed caseing with this property in core content"
+            },
+            "ending": {
+                "type": "string",
+                "description": "This is the ID of an ending you’d like to trigger at the conclusion of this recipe."
+            },
+            "signalEndingFlavour": {
+                "type": "string",
+                "description": "This will change the colour of the warmup circle around the tile, and trigger fancy music. If it is not one of the predefined and hardcoded values it will default to None. The predefined values include Grand for a golden effect, Melancholy for a red effect, Pale for a white effect, and Vile for an edge-green effect.",
+                "oneOf": [
+                    {
+                        "const": "None"
+                    },
+                    {
+                        "const": "Grand",
+                        "description": "Golden Effect"
+                    },
+                    {
+                        "const": "Melancholy",
+                        "description": "Red Effect"
+                    },
+                    {
+                        "const": "Pale",
+                        "description": "White Effect"
+                    }
+                ]
+            },
+            "burnimage": {
+                "type": "string",
+                "description": "This is the image filename of a png file located in the “images/burns” folder that you’d like to display on the board when the recipe begins."
+            },
+            "portaleffect": {
+                "type": "string",
+                "description": "This is the property that tells a recipe to transition into the Mansus and which door to open to. This causes the recipe to draw a card from each deck associated with the door and let you choose from them on the board."
+            },
+            "mutations": {
+                "type": "array",
+                "additionalItems": false,
+                "description": "Mutations are used to add or remove aspects from an element. Mutated aspects remain even when the element changes via xtrigger or decay",
+                "items": {
+                    "type": "object",
+                    "title": "Mutation",
+                    "additionalProperties": false,
+                    "required": [
+                        "filter"
+                    ],
+                    "properties": {
+                        "filter": {
+                            "type": "string",
+                            "title": "Filter",
+                            "description": "Used to find the element that will be modified. Filters can be elements or aspects."
+                        },
+                        "mutate": {
+                            "type": "string",
+                            "title": "Mutation Aspect",
+                            "description": "The aspect we are adding/removing on the element."
+                        },
+                        "level": {
+                            "type": "integer",
+                            "title": "Level",
+                            "description": "A positive or negative value to represent how much of the given aspect we are adding or taking away."
+                        },
+                        "additive": {
+                            "type": "boolean",
+                            "title": "Additive",
+                            "description": "A boolean value that decides whether this change replaces the stated value with the current one, or adds/subtracts the value from the base element's values. This defaults to false."
+                        }
+                    }
+                }
+            },
+            "alt": {
+                "type": "array",
+                "title": "Alternative Recipes",
+                "description": "This is a list of Recipe Link specifications. Every time the aspect stack of the recipe changes, this property is evaluated for a valid recipe and then the active recipe is switched to it, preserving the timer but only executing the effects of the specified alternative recipe. Recipes are evaluated in the order of the list; evaluation stops once a new recipe is found, with the exception of additional recipes, which are always evaluated.",
+                "additionalItems": false,
+                "items": {
+                    "type": "object",
+                    "description": "Recipe Link Specification",
+                    "additionalProperties": false,
+                    "required": [
+                        "id"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "description": "This is the ID of the recipe this link points to"
+                        },
+                        "chance": {
+                            "type": "integer",
+                            "description": "This is a value from 0-100 that represents the percent chance this recipe will be selected from among the list of recipes when the conditions are met. If the requirements for the new are not met, the recipe will not run, regardless of the chance.",
+                            "minimum": 0,
+                            "maximum": 100
+                        },
+                        "additional": {
+                            "type": "boolean",
+                            "description": "This is whether or not a new situation token will be generated for the specified recipe. If the Additional property is true and an alternative recipe is chosen for execution (requirements are met and it passes the chance roll) then it is added to a queue that is iterated through upon completion to create situation tokens. See Order of Operations for more details.\n\nChallenges (\"challenges\") - This overrides the chance property with an aspect-based challenge. There are two types of challenge, base and advanced. A base challenge scales the chance into a histogram based on the level of the specified aspect in the current recipe’s aspect stack. For Base, the chances are: 0 for 0%, 1-4 for 30%, 5-9 for 70% and 10+ for 90%. For Advanced, and then assign the chance based on the following: 0-5 for 0%, 6-10 for 10%, 11-15 for 30% and 16-20 for 70%, and 20+ for 90%.\n\nExpulsions (\"expulsion\") - This is a dictionary of filters and limits. An expulsion will try to grab up to the specified number of the source of the specified element in the filter. It will grab either cards or cards with the element as an aspect. Once it has grabbed all the cards that it is told you, it will carry them into a newly generated situation token if Additional is true. Nothing happens if Expulsions are set while Additional is false, the cards are basically put back."
+                        }
+                    }
+                }
+            },
+            "linked": {
+                "type": "array",
+                "title": "Linked Recipes",
+                "description": "A list of recipes to be executed after the current recipe is resolved. This is different from alternative recipes because it does not replace the current recipe's effects with the new one. Also, additional recipes must be alternatives, not linked. A few properties are required",
+                "additionalItems": false,
+                "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "title": "Linked Recipe",
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "description": "The ID of the recipe to be executed."
+                        },
+                        "chance": {
+                            "type": "integer",
+                            "description": "A number from 0 to 100, inclusive. Represents the percent chance of the recipe executing.",
+                            "minimum": 0,
+                            "maximum": 100
+                        },
+                        "challenges": {
+                            "$comment": "@TODO: Research and provide proper meta"
+                        }
+                    }
+                }
+            },
+            "comments": {
+                "$ref": "#/definitions/comments"
+            }
         }
     },
     "definitions": {
-        
+        "comments": {
+            "type": "string",
+            "description": "Provide a comment or more not displayed in-game for you or other developers"
+        },
+        "actionId": {
+            "type": "string",
+            "description": "This is the Situation Token ID that is used to execute the recipe, if it corresponds to a defined verb, the verb will persist once the recipe ends. If the token for a recipe is already present on the board, it cannot be spawned again. When calling an alt-additional recipe, the actionId of the new recipe should be different from that of the original recipe. This needs to remain consistent throughout a recipe chain, as saving and loading uses an active recipe's actionId to determine which tile to place on the board."
+        },
+        "dictionary": {
+            "type": "object",
+            "patternProperties": {
+                ".*": {
+                    "type": "integer",
+                    "title": "Element: Amount"
+                }
+            }
+        }
     }
 }

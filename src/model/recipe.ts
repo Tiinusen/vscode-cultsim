@@ -13,6 +13,7 @@ interface IRecipeSerialized {
     craftable: boolean
     hintonly: boolean
     signalimportantloop: boolean
+    internaldeck: InternalDeck
     slots: Array<Slot>
     startdescription: string
     description: string
@@ -30,7 +31,6 @@ interface IRecipeSerialized {
     signalEndingFlavour: string
     burnimage: string
     portaleffect: string
-    internaldeck: InternalDeck
     mutations: Array<{ filter: string, mutate: string, level: number, additive: boolean }>
     alt: Array<AlternativeRecipe>
     linked: Array<{ id: string, chance: number }>
