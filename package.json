@@ -2,7 +2,7 @@
 	"name": "cultsim",
 	"displayName": "Cultist Simulator IDE",
 	"description": "Cultist Simulator IDE for Modding Core Game",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"publisher": "Tiinusen",
 	"engines": {
 		"vscode": "^1.64.0"
