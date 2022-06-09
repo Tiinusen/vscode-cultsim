@@ -236,6 +236,9 @@
                         "additional": {
                             "type": "boolean",
                             "description": "This is whether or not a new situation token will be generated for the specified recipe. If the Additional property is true and an alternative recipe is chosen for execution (requirements are met and it passes the chance roll) then it is added to a queue that is iterated through upon completion to create situation tokens. See Order of Operations for more details.\n\nChallenges (\"challenges\") - This overrides the chance property with an aspect-based challenge. There are two types of challenge, base and advanced. A base challenge scales the chance into a histogram based on the level of the specified aspect in the current recipe’s aspect stack. For Base, the chances are: 0 for 0%, 1-4 for 30%, 5-9 for 70% and 10+ for 90%. For Advanced, and then assign the chance based on the following: 0-5 for 0%, 6-10 for 10%, 11-15 for 30% and 16-20 for 70%, and 20+ for 90%.\n\nExpulsions (\"expulsion\") - This is a dictionary of filters and limits. An expulsion will try to grab up to the specified number of the source of the specified element in the filter. It will grab either cards or cards with the element as an aspect. Once it has grabbed all the cards that it is told you, it will carry them into a newly generated situation token if Additional is true. Nothing happens if Expulsions are set while Additional is false, the cards are basically put back."
+                        },
+                        "expulsion": {
+                            "$ref": "./types/expulsion"
                         }
                     }
                 }
